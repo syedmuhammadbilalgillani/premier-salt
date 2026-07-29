@@ -1,0 +1,2 @@
+ALTER TABLE "categories" ADD COLUMN "parent_category_id" uuid;--> statement-breakpoint
+ALTER TABLE "categories" ADD CONSTRAINT "categories_parent_category_id_categories_id_fkey" FOREIGN KEY ("parent_category_id") REFERENCES "categories"("id");
