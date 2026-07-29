@@ -39,8 +39,7 @@ function SpecList({ spec }: { spec: Record<string, string> }) {
 function productSummary(product: CatalogProduct, columns: string[]): string {
   return columns
     .map((col) => {
-      const values = product.optionsByName[col];
-      const text = values?.length ? values.join(", ") : product.spec?.[col];
+      const text = product.spec?.[col];
       return text ? `${col}: ${text}` : null;
     })
     .filter((v): v is string => Boolean(v))
@@ -69,7 +68,7 @@ function ProductsSection({
   }
 
   const columns = Array.from(
-    new Set(products.flatMap((p) => Object.keys(p.optionsByName))),
+    new Set(products.flatMap((p) => Object.keys(p.spec ?? {}))),
   );
 
   return (
@@ -144,17 +143,11 @@ function ProductsSection({
                   <td className="px-4 py-3 font-medium text-charcoal">
                     {product.title}
                   </td>
-                  {columns.map((col) => {
-                    const values = product.optionsByName[col];
-                    const text = values?.length
-                      ? values.join(", ")
-                      : (product.spec?.[col] ?? "—");
-                    return (
-                      <td key={col} className="px-4 py-3 text-muted">
-                        {text}
-                      </td>
-                    );
-                  })}
+                  {columns.map((col) => (
+                    <td key={col} className="px-4 py-3 text-muted">
+                      {product.spec?.[col] ?? "—"}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>

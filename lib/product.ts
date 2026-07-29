@@ -130,11 +130,11 @@ export interface CatalogProduct {
   title: string;
   slug: string;
   sku: string | null;
+  /** e.g. { "Size": "500g", "Packing": "Pouch" } — drives the category
+   *  page's dynamic table columns. Catalog products don't have variants;
+   *  this is the only source of size/packing-type info for them. */
   spec: Record<string, string> | null;
   imageUrl: string | null;
-  /** e.g. { "Size": ["500g","1kg"], "Packing": ["Pouch","Bag"] } — drives the
-   *  category page's dynamic table columns. */
-  optionsByName: Record<string, string[]>;
 }
 
 /**
@@ -177,37 +177,9 @@ async function getCatalogProductsForCategoryData(
     }
   }
 
-  const options = await db
-    .select()
-    .from(productOptions)
-    .where(inArray(productOptions.productId, ids))
-    .orderBy(asc(productOptions.position));
-  const optionIds = options.map((o) => o.id);
-  const values = optionIds.length
-    ? await db
-        .select()
-        .from(productOptionValues)
-        .where(inArray(productOptionValues.optionId, optionIds))
-        .orderBy(asc(productOptionValues.position))
-    : [];
-  const valuesByOptionId = new Map<string, string[]>();
-  for (const v of values) {
-    const list = valuesByOptionId.get(v.optionId) ?? [];
-    list.push(v.value);
-    valuesByOptionId.set(v.optionId, list);
-  }
-
-  const optionsByProductId = new Map<string, Record<string, string[]>>();
-  for (const option of options) {
-    const map = optionsByProductId.get(option.productId) ?? {};
-    map[option.name] = valuesByOptionId.get(option.id) ?? [];
-    optionsByProductId.set(option.productId, map);
-  }
-
   return rows.map((row) => ({
     ...row,
     imageUrl: imageByProductId.get(row.id) ?? null,
-    optionsByName: optionsByProductId.get(row.id) ?? {},
   }));
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -88,7 +88,22 @@ export function ProductForm({
   const hasVariants = form.watch("hasVariants");
   const images = form.watch("images");
   const channel = form.watch("channel");
+  const isCatalog = channel === "catalog";
   const priceRequired = channel === "shop";
+
+  // Catalog products are quote-based — no price, stock or variants. Reset
+  // those fields when switching into catalog so a stale value from a prior
+  // "shop" edit never gets silently saved.
+  useEffect(() => {
+    if (!isCatalog) return;
+    form.setValue("hasVariants", false);
+    form.setValue("basePrice", "");
+    form.setValue("compareAtPrice", "");
+    form.setValue("stockQuantity", "0");
+    setOptions([]);
+    setVariants([]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isCatalog]);
 
   const fields: DynamicField<ProductFormValues>[] = [
     {
@@ -136,7 +151,7 @@ export function ProductForm({
       type: "input",
       name: "sku",
       label: "SKU",
-      colSpan: 4,
+      colSpan: isCatalog ? 6 : 4,
       helperText: "Only used when the product has no variants.",
     },
     {
@@ -145,15 +160,12 @@ export function ProductForm({
       label: "Base Price",
       inputType: "number",
       colSpan: 4,
+      hidden: isCatalog,
       required: priceRequired,
       rules: priceRequired
         ? { required: "Base price is required for shop products" }
         : undefined,
-      helperText: priceRequired
-        ? hasVariants
-          ? "Fallback/reference price."
-          : "Selling price."
-        : "Optional — catalog products are quote-based and don't show a fixed price.",
+      helperText: hasVariants ? "Fallback/reference price." : "Selling price.",
     },
     {
       type: "input",
@@ -161,6 +173,7 @@ export function ProductForm({
       label: "Compare-at Price",
       inputType: "number",
       colSpan: 4,
+      hidden: isCatalog,
       helperText: "Optional — shown as a strikethrough price.",
     },
     {
@@ -169,7 +182,7 @@ export function ProductForm({
       label: "Stock Quantity",
       inputType: "number",
       colSpan: 4,
-      hidden: hasVariants,
+      hidden: isCatalog || hasVariants,
       helperText: "Only used when the product has no variants.",
     },
     {
@@ -185,6 +198,7 @@ export function ProductForm({
       label: "Has Variants",
       helperText: "Turn on to sell this product in multiple options (e.g. Color, Size).",
       colSpan: 12,
+      hidden: isCatalog,
     },
     {
       type: "image-gallery",

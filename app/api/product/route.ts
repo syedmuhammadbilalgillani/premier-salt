@@ -118,28 +118,33 @@ export function validateProductPayload(body: ProductPayload):
       ? (channel as (typeof CHANNELS)[number])
       : "catalog";
 
-  // Shop products need a fixed price to sell directly. Catalog products are
-  // wholesale/quote-based and don't have to carry a price at all — but if
-  // one is given, it still has to be valid.
-  const rawBasePrice = typeof basePrice === "string" ? basePrice.trim() : "";
+  // Catalog products are wholesale/quote-based — no pricing or stock at all
+  // (they're informational, sold via a quote request, not this system). Shop
+  // products need a fixed price to sell directly.
   let resolvedBasePrice: string | null = null;
-  if (rawBasePrice) {
+  let resolvedCompareAtPrice: string | null = null;
+  if (resolvedChannel === "shop") {
+    const rawBasePrice = typeof basePrice === "string" ? basePrice.trim() : "";
+    if (!rawBasePrice) {
+      return { ok: false, error: "Base price is required for shop products." };
+    }
     if (!isValidPrice(rawBasePrice)) {
       return { ok: false, error: "Base price must be a valid non-negative number." };
     }
     resolvedBasePrice = rawBasePrice;
-  } else if (resolvedChannel === "shop") {
-    return { ok: false, error: "Base price is required for shop products." };
+
+    if (
+      compareAtPrice !== undefined &&
+      compareAtPrice !== null &&
+      compareAtPrice !== ""
+    ) {
+      if (!isValidPrice(compareAtPrice)) {
+        return { ok: false, error: "Compare-at price must be a valid non-negative number." };
+      }
+      resolvedCompareAtPrice = compareAtPrice as string;
+    }
   }
 
-  if (
-    compareAtPrice !== undefined &&
-    compareAtPrice !== null &&
-    compareAtPrice !== "" &&
-    !isValidPrice(compareAtPrice)
-  ) {
-    return { ok: false, error: "Compare-at price must be a valid non-negative number." };
-  }
   if (spec !== undefined && spec !== null && !isValidSpec(spec)) {
     return { ok: false, error: "Specifications must be a flat set of key-value pairs." };
   }
@@ -158,7 +163,9 @@ export function validateProductPayload(body: ProductPayload):
         .filter((img) => img.url)
     : [];
 
-  const resolvedHasVariants = Boolean(hasVariants);
+  // Catalog products never have purchasable variants — they're described by
+  // flat specifications instead (see the `spec` field below).
+  const resolvedHasVariants = resolvedChannel === "catalog" ? false : Boolean(hasVariants);
   const resolvedOptions: ProductOptionInput[] = [];
   const resolvedVariants: ProductVariantInput[] = [];
 
@@ -278,9 +285,11 @@ export function validateProductPayload(body: ProductPayload):
   }
 
   const resolvedStockQuantity =
-    typeof stockQuantity === "number" && Number.isFinite(stockQuantity)
-      ? Math.max(0, Math.trunc(stockQuantity))
-      : 0;
+    resolvedChannel === "catalog"
+      ? 0
+      : typeof stockQuantity === "number" && Number.isFinite(stockQuantity)
+        ? Math.max(0, Math.trunc(stockQuantity))
+        : 0;
 
   return {
     ok: true,
@@ -290,7 +299,7 @@ export function validateProductPayload(body: ProductPayload):
       description: typeof description === "string" ? description.trim() || null : null,
       categoryId,
       basePrice: resolvedBasePrice,
-      compareAtPrice: (compareAtPrice as string) || null,
+      compareAtPrice: resolvedCompareAtPrice,
       stockQuantity: resolvedStockQuantity,
       sku: typeof sku === "string" ? sku.trim() || null : null,
       spec: spec && isValidSpec(spec) && Object.keys(spec).length ? spec : null,
