@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -8,9 +8,23 @@ import { Pencil, Trash2 } from "lucide-react";
 
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { getCachedProductList } from "@/lib/product";
 
 export type ProductRow = Awaited<ReturnType<typeof getCachedProductList>>[number];
+
+export interface CategoryOption {
+  id: string;
+  title: string;
+}
+
+const ALL_CATEGORIES = "all";
 
 const STATUS_VARIANT: Record<ProductRow["status"], "secondary" | "default" | "outline"> = {
   draft: "outline",
@@ -22,9 +36,21 @@ function formatPrice(value: number) {
   return new Intl.NumberFormat(undefined, { style: "currency", currency: "PKR" }).format(value);
 }
 
-export function ProductsTable({ data }: { data: ProductRow[] }) {
+export function ProductsTable({
+  data,
+  categoryOptions,
+}: {
+  data: ProductRow[];
+  categoryOptions: CategoryOption[];
+}) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<string>(ALL_CATEGORIES);
+
+  const filteredData = useMemo(() => {
+    if (categoryFilter === ALL_CATEGORIES) return data;
+    return data.filter((row) => row.categoryId === categoryFilter);
+  }, [data, categoryFilter]);
 
   async function handleDelete(product: ProductRow) {
     if (!window.confirm(`Delete "${product.title}"? This can't be undone.`)) return;
@@ -122,11 +148,34 @@ export function ProductsTable({ data }: { data: ProductRow[] }) {
   ];
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      getRowId={(row) => row.id}
-      emptyText="No products yet — create your first one."
-    />
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+          <SelectTrigger className="w-56">
+            <SelectValue placeholder="Filter by category" />
+          </SelectTrigger>
+          <SelectContent className="bg-white">
+            <SelectItem value={ALL_CATEGORIES}>All Categories</SelectItem>
+            {categoryOptions.map((category) => (
+              <SelectItem key={category.id} value={category.id}>
+                {category.title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        {categoryFilter !== ALL_CATEGORIES && (
+          <span className="text-sm text-muted-foreground">
+            {filteredData.length} of {data.length} products
+          </span>
+        )}
+      </div>
+
+      <DataTable
+        data={filteredData}
+        columns={columns}
+        getRowId={(row) => row.id}
+        emptyText="No products yet — create your first one."
+      />
+    </div>
   );
 }

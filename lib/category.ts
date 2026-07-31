@@ -86,7 +86,7 @@ export function getCachedCategoryBySlug(slug: string) {
   )();
 }
 
-/** Direct children of a category — powers the "Subcategories" section on its public page. */
+/** Direct children of a category — powers the hub-view subcategory cards on its public page. */
 export function getCachedChildCategories(categoryId: string) {
   return unstable_cache(
     async () =>
@@ -96,11 +96,15 @@ export function getCachedChildCategories(categoryId: string) {
           title: categories.title,
           slug: categories.slug,
           image_url: categories.image_url,
+          description: categories.description,
+          productCount: count(products.id),
         })
         .from(categories)
-        .where(eq(categories.parentCategoryId, categoryId)),
+        .leftJoin(products, eq(categories.id, products.categoryId))
+        .where(eq(categories.parentCategoryId, categoryId))
+        .groupBy(categories.id),
     ["category-children", categoryId],
-    { tags: ["categories", `category-children:${categoryId}`] },
+    { tags: ["categories", "products", `category-children:${categoryId}`] },
   )();
 }
 

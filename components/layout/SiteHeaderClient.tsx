@@ -1,5 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import {
   Menu,
   Phone,
@@ -21,8 +27,100 @@ import { cn } from "@/lib/utils";
 import type { ProductNavNode } from "@/lib/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-const DROPDOWN_CLOSE_DELAY_MS = 150;
+// DropdownMenu's own classes use the shadcn tokens (bg-popover,
+// text-popover-foreground, focus:bg-accent, ring-foreground/10), which are
+// scoped to the admin panel only (see .admin-theme in app/globals.css) and so
+// resolve to nothing on the storefront. `!` is required on the overrides: some
+// of the component defaults tailwind-merge won't dedupe (the arbitrary
+// `w-(--radix-dropdown-menu-trigger-width)`, the ring), and the rest must win
+// regardless of source order.
+const triggerClass =
+  "group flex cursor-pointer items-center gap-1 rounded-sm px-2 py-1 text-sm font-medium text-charcoal outline-hidden transition-colors hover:text-terracotta data-[state=open]:text-terracotta";
+const contentPanelClass =
+  "!w-auto min-w-56 rounded-md border border-border !bg-white p-1.5 !text-charcoal shadow-lg !ring-0";
+const itemClass =
+  "cursor-pointer rounded-sm px-3 py-2 text-sm text-charcoal focus:!bg-cream focus:!text-terracotta";
+const subTriggerClass =
+  "cursor-pointer rounded-sm px-3 py-2 text-sm text-charcoal focus:!bg-cream focus:!text-terracotta data-[state=open]:!bg-cream data-[state=open]:!text-terracotta";
+const plainLinkClass =
+  "rounded-sm px-2 py-1 text-sm font-medium text-charcoal transition-colors hover:text-terracotta";
+
+/**
+ * DropdownMenu is click-driven by default; a site navbar is expected to open on
+ * hover too, so open state is controlled here. The close is delayed so the
+ * pointer can cross the gap between trigger and panel without it snapping shut.
+ */
+function NavDropdown({
+  label,
+  contentClassName,
+  align = "start",
+  children,
+}: {
+  label: string;
+  contentClassName?: string;
+  align?: "start" | "center" | "end";
+  children: ReactNode;
+}) {
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current) {
+      clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimer.current = setTimeout(() => setOpen(false), 140);
+  }, [cancelClose]);
+
+  useEffect(() => cancelClose, [cancelClose]);
+
+  const openNow = () => {
+    cancelClose();
+    setOpen(true);
+  };
+
+  return (
+    <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
+      <DropdownMenuTrigger
+        className={triggerClass}
+        onPointerEnter={openNow}
+        onPointerLeave={scheduleClose}
+      >
+        {label}
+        <ChevronDown className="h-3.5 w-3.5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        align={align}
+        sideOffset={10}
+        collisionPadding={16}
+        className={cn(contentPanelClass, contentClassName)}
+        // A hover-opened menu shouldn't yank focus back to the trigger when the
+        // pointer simply moves away.
+        onCloseAutoFocus={(event) => event.preventDefault()}
+        onPointerEnter={cancelClose}
+        onPointerLeave={scheduleClose}
+      >
+        {children}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 function flattenNavNode(
   node: ProductNavNode,
@@ -33,9 +131,56 @@ function flattenNavNode(
     entries.push(...flattenNavNode(child, depth + 1));
   }
   for (const product of node.products) {
-    entries.push({ id: product.id, label: product.label, to: product.href, depth: depth + 1 });
+    entries.push({
+      id: product.id,
+      label: product.label,
+      to: product.href,
+      depth: depth + 1,
+    });
   }
   return entries;
+}
+
+/**
+ * One category in the Products menu. A category with subcategories or products
+ * of its own becomes a submenu (whose first entry links to the category page
+ * itself, so the branch is still reachable); a bare category is a plain link.
+ * Recurses, so nesting depth is whatever the DB category tree actually is.
+ */
+function ProductNavMenuNode({ node }: { node: ProductNavNode }) {
+  const hasChildren = node.children.length > 0 || node.products.length > 0;
+
+  if (!hasChildren) {
+    return (
+      <DropdownMenuItem asChild className={itemClass}>
+        <Link href={node.href}>{node.label}</Link>
+      </DropdownMenuItem>
+    );
+  }
+
+  return (
+    <DropdownMenuSub>
+      <DropdownMenuSubTrigger className={subTriggerClass}>
+        {node.label}
+      </DropdownMenuSubTrigger>
+      <DropdownMenuPortal>
+        <DropdownMenuSubContent className={contentPanelClass}>
+          <DropdownMenuItem asChild className={cn(itemClass, "font-medium")}>
+            <Link href={node.href}>All {node.label}</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator className="!bg-border" />
+          {node.children.map((child) => (
+            <ProductNavMenuNode key={child.id} node={child} />
+          ))}
+          {node.products.map((product) => (
+            <DropdownMenuItem key={product.id} asChild className={itemClass}>
+              <Link href={product.href}>{product.label}</Link>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuSubContent>
+      </DropdownMenuPortal>
+    </DropdownMenuSub>
+  );
 }
 
 export function SiteHeaderClient({
@@ -45,32 +190,7 @@ export function SiteHeaderClient({
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
-
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const openMenu = useCallback((label: string) => {
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-    setOpenDropdown(label);
-  }, []);
-
-  const scheduleClose = useCallback(() => {
-    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    closeTimerRef.current = setTimeout(
-      () => setOpenDropdown(null),
-      DROPDOWN_CLOSE_DELAY_MS,
-    );
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
-    };
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
@@ -137,84 +257,55 @@ export function SiteHeaderClient({
             />{" "}
           </Link>
 
-          <nav
-            className="hidden items-center gap-7 lg:flex"
-            aria-label="Primary"
-          >
+          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
             {mainNavigation.map((item) => {
-              const isProducts = item.label === "Products";
+              if (item.label === "Products") {
+                return (
+                  <NavDropdown key={item.label} label="Products">
+                    {productCategories.length ? (
+                      productCategories.map((root) => (
+                        <ProductNavMenuNode key={root.id} node={root} />
+                      ))
+                    ) : (
+                      <p className="px-3 py-2 text-sm text-muted">
+                        Categories will appear here once they&apos;re added.
+                      </p>
+                    )}
+                    <DropdownMenuSeparator className="!bg-border" />
+                    <DropdownMenuItem
+                      asChild
+                      className={cn(itemClass, "font-medium")}
+                    >
+                      <Link href="/products">View All Products</Link>
+                    </DropdownMenuItem>
+                  </NavDropdown>
+                );
+              }
+
+              if (item.dropdown) {
+                return (
+                  <NavDropdown key={item.label} label={item.label}>
+                    {item.dropdown.map((link) => (
+                      <DropdownMenuItem
+                        key={link.to}
+                        asChild
+                        className={itemClass}
+                      >
+                        <Link href={link.to}>{link.label}</Link>
+                      </DropdownMenuItem>
+                    ))}
+                  </NavDropdown>
+                );
+              }
+
               return (
-                <div
+                <Link
                   key={item.label}
-                  className="relative"
-                  onMouseEnter={() =>
-                    (item.dropdown || item.megaMenu || isProducts) &&
-                    openMenu(item.label)
-                  }
-                  onMouseLeave={scheduleClose}
+                  href={item.to ?? "#"}
+                  className={plainLinkClass}
                 >
-                  {item.to && !item.dropdown && !item.megaMenu && !isProducts ? (
-                    <Link
-                      href={item.to}
-                      className="text-sm font-medium text-charcoal transition-colors hover:text-terracotta"
-                    >
-                      {item.label}
-                    </Link>
-                  ) : (
-                    <button
-                      className="flex items-center gap-1 text-sm font-medium text-charcoal transition-colors hover:text-terracotta"
-                      aria-expanded={openDropdown === item.label}
-                    >
-                      {item.to ? (
-                        <Link href={item.to}>{item.label}</Link>
-                      ) : (
-                        item.label
-                      )}
-                      <ChevronDown className="h-3.5 w-3.5" />
-                    </button>
-                  )}
-
-                  {!isProducts && item.dropdown && openDropdown === item.label && (
-                    <div className="absolute left-0 top-full min-w-56 rounded-sm border border-border bg-white py-2 shadow-lg">
-                      {item.dropdown.map((link) => (
-                        <Link
-                          key={link.to}
-                          href={link.to}
-                          className="block px-4 py-2 text-sm text-charcoal hover:bg-cream hover:text-terracotta"
-                        >
-                          {link.label}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-
-                  {!isProducts && item.megaMenu && openDropdown === item.label && (
-                    <div className="absolute left-1/2 top-full grid w-[720px] -translate-x-1/2 grid-cols-3 gap-6 rounded-sm border border-border bg-white p-6 shadow-xl">
-                      {item.megaMenu.map((group) => (
-                        <div key={group.label}>
-                          <Link
-                            href={group.to ?? "#"}
-                            className="mb-2 block text-sm font-semibold text-maroon hover:text-terracotta"
-                          >
-                            {group.label}
-                          </Link>
-                          <ul className="flex flex-col gap-1.5">
-                            {group.links.map((link) => (
-                              <li key={link.to}>
-                                <Link
-                                  href={link.to}
-                                  className="text-sm text-muted hover:text-terracotta"
-                                >
-                                  {link.label}
-                                </Link>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                  {item.label}
+                </Link>
               );
             })}
           </nav>
@@ -262,120 +353,6 @@ export function SiteHeaderClient({
             </button>
           </div>
         </div>
-
-        {/* Full-width Products mega menu — spans the entire page, not just
-            the nav item, per the storefront category tree from the DB. */}
-        {openDropdown === "Products" && (
-          <div
-            onMouseEnter={() => openMenu("Products")}
-            onMouseLeave={scheduleClose}
-            className="absolute inset-x-0 top-full border-t border-border bg-white shadow-2xl"
-          >
-            <div className="mx-auto max-h-[70vh] max-w-7xl overflow-y-auto px-8 py-8">
-              {productCategories.length ? (
-                <div className="grid grid-cols-2 gap-x-8 gap-y-7 sm:grid-cols-3 lg:grid-cols-4">
-                  {productCategories.map((root) => (
-                    <div key={root.id}>
-                      <Link
-                        href={root.href}
-                        className="mb-3 block font-serif text-base text-maroon hover:text-terracotta"
-                      >
-                        {root.label}
-                      </Link>
-                      {root.children.length ? (
-                        <ul className="flex flex-col gap-2">
-                          {root.children.map((child) => (
-                            <li key={child.id}>
-                              <Link
-                                href={child.href}
-                                className="text-sm text-muted hover:text-terracotta"
-                              >
-                                {child.label}
-                              </Link>
-                              {child.children.length ? (
-                                <ul className="mt-1.5 flex flex-col gap-1 border-l border-border pl-3">
-                                  {child.children.map((grandchild) => (
-                                    <li key={grandchild.id}>
-                                      <Link
-                                        href={grandchild.href}
-                                        className="text-xs text-muted/80 hover:text-terracotta"
-                                      >
-                                        {grandchild.label}
-                                      </Link>
-                                      {grandchild.products.length ? (
-                                        <ul className="mt-1 flex flex-col gap-1 border-l border-border/60 pl-3">
-                                          {grandchild.products.map((product) => (
-                                            <li key={product.id}>
-                                              <Link
-                                                href={product.href}
-                                                className="text-xs text-muted/70 hover:text-terracotta"
-                                              >
-                                                {product.label}
-                                              </Link>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      ) : null}
-                                    </li>
-                                  ))}
-                                </ul>
-                              ) : null}
-                              {child.products.length ? (
-                                <ul className="mt-1.5 flex flex-col gap-1 border-l border-border pl-3">
-                                  {child.products.map((product) => (
-                                    <li key={product.id}>
-                                      <Link
-                                        href={product.href}
-                                        className="text-xs text-muted/70 hover:text-terracotta"
-                                      >
-                                        {product.label}
-                                      </Link>
-                                    </li>
-                                  ))}
-                                </ul>
-                              ) : null}
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
-                      {root.products.length ? (
-                        <ul
-                          className={cn(
-                            "flex flex-col gap-1.5",
-                            root.children.length && "mt-2 border-t border-border/60 pt-2",
-                          )}
-                        >
-                          {root.products.map((product) => (
-                            <li key={product.id}>
-                              <Link
-                                href={product.href}
-                                className="text-sm text-muted/80 hover:text-terracotta"
-                              >
-                                {product.label}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : null}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted">
-                  Categories will appear here once they&apos;re added.
-                </p>
-              )}
-              <div className="mt-8 border-t border-border pt-5 text-center">
-                <Link
-                  href="/products"
-                  className="text-xs font-semibold uppercase tracking-wide text-terracotta hover:text-maroon"
-                >
-                  View All Products →
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Mobile drawer */}
@@ -403,16 +380,25 @@ export function SiteHeaderClient({
                 const hasChildren = isProducts
                   ? productCategories.length > 0
                   : Boolean(item.dropdown || item.megaMenu);
-                const flatLinks: { id: string; label: string; to: string; depth: number }[] =
-                  isProducts
-                    ? productCategories.flatMap((root) => flattenNavNode(root, 0))
-                    : (item.dropdown ??
+                const flatLinks: {
+                  id: string;
+                  label: string;
+                  to: string;
+                  depth: number;
+                }[] = isProducts
+                  ? productCategories.flatMap((root) => flattenNavNode(root, 0))
+                  : (
+                      item.dropdown ??
                       item.megaMenu?.flatMap((g) => [
                         { label: g.label, to: g.to ?? "#" },
                         ...g.links,
                       ]) ??
                       []
-                    ).map((link, index) => ({ ...link, id: `${link.to}-${index}`, depth: 0 }));
+                    ).map((link, index) => ({
+                      ...link,
+                      id: `${link.to}-${index}`,
+                      depth: 0,
+                    }));
                 return (
                   <div key={item.label} className="border-b border-border py-2">
                     <button

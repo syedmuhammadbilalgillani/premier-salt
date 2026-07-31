@@ -30,23 +30,21 @@ export async function getProductNavTree(): Promise<ProductNavNode[]> {
     getCatalogNavProducts(),
   ]);
 
+  // href is computed top-down (root -> child -> grandchild) since a nested
+  // category's canonical URL is /{parentSlug}/{slug} — see the
+  // category-hierarchy routing plan. This means the tree/parent links must
+  // be built before hrefs, and hrefs before products (which link to their
+  // owning category's href).
   const nodeById = new Map<string, ProductNavNode>();
   for (const c of categories) {
     nodeById.set(c.id, {
       id: c.id,
       label: c.title,
       slug: c.slug,
-      href: `/${c.slug}`,
+      href: "",
       children: [],
       products: [],
     });
-  }
-
-  for (const p of catalogProducts) {
-    const node = nodeById.get(p.categoryId);
-    if (node) {
-      node.products.push({ id: p.id, label: p.title, href: node.href });
-    }
   }
 
   const roots: ProductNavNode[] = [];
@@ -58,6 +56,23 @@ export async function getProductNavTree(): Promise<ProductNavNode[]> {
       parent.children.push(node);
     } else {
       roots.push(node);
+    }
+  }
+
+  function assignHref(node: ProductNavNode, parentHref: string) {
+    node.href = `${parentHref}/${node.slug}`;
+    for (const child of node.children) {
+      assignHref(child, node.href);
+    }
+  }
+  for (const root of roots) {
+    assignHref(root, "");
+  }
+
+  for (const p of catalogProducts) {
+    const node = nodeById.get(p.categoryId);
+    if (node) {
+      node.products.push({ id: p.id, label: p.title, href: node.href });
     }
   }
 

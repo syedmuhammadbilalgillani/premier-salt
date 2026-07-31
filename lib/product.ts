@@ -55,6 +55,7 @@ async function getProductListData() {
       hasVariants: products.hasVariants,
       status: products.status,
       createdAt: products.createdAt,
+      categoryId: products.categoryId,
       categoryTitle: categories.title,
     })
     .from(products)

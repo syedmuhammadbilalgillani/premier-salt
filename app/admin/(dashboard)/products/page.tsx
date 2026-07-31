@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import { getCachedProductList } from "@/lib/product";
+import { getCachedCategoryOptions } from "@/lib/category";
 import { Button } from "@/components/ui/button";
 import { ProductsTable } from "./_components/ProductsTable";
 
@@ -10,7 +11,10 @@ import { ProductsTable } from "./_components/ProductsTable";
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
-  const data = await getCachedProductList();
+  const [data, categoryOptions] = await Promise.all([
+    getCachedProductList(),
+    getCachedCategoryOptions(),
+  ]);
 
   return (
     <div className="px-6 py-8">
@@ -29,7 +33,7 @@ export default async function ProductsPage() {
         </Button>
       </div>
 
-      <ProductsTable data={data} />
+      <ProductsTable data={data} categoryOptions={categoryOptions} />
     </div>
   );
 }
