@@ -6,7 +6,6 @@ import { FormField, inputClasses } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { company } from "@/data/company";
-import { readStorage, writeStorage, generateReference } from "@/lib/storage";
 
 const departments = [
   "General Enquiry",
@@ -20,29 +19,46 @@ const departments = [
 export default function Contact() {
   const [reference, setReference] = useState<string | null>(null);
   const [honeypot, setHoneypot] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (honeypot) return;
     const form = new FormData(e.currentTarget);
-    const submission = {
-      reference: generateReference("CT"),
-      name: form.get("name"),
-      email: form.get("email"),
-      phone: form.get("phone"),
-      company: form.get("company"),
-      country: form.get("country"),
-      department: form.get("department"),
-      subject: form.get("subject"),
-      message: form.get("message"),
-      submittedAt: new Date().toISOString(),
-    };
-    const existing = readStorage(
-      "premierSalt.contactSubmissions",
-      [] as (typeof submission)[],
-    );
-    writeStorage("premierSalt.contactSubmissions", [...existing, submission]);
-    setReference(submission.reference);
+    const get = (k: string) => (form.get(k) as string)?.trim() ?? "";
+
+    setSubmitError("");
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "contact",
+          fullName: get("name"),
+          email: get("email"),
+          phone: get("phone"),
+          companyName: get("company"),
+          country: get("country"),
+          subject: get("subject"),
+          message: get("message"),
+          details: { department: get("department") },
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setSubmitError(data.error || "Could not send your message. Please try again.");
+        return;
+      }
+
+      setReference(data.data.reference);
+    } catch {
+      setSubmitError("Could not send your message. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -197,7 +213,10 @@ export default function Contact() {
                 <input type="checkbox" required className="mt-0.5" /> I consent
                 to being contacted regarding this enquiry.
               </label>
-              <Button type="submit">Send Message</Button>
+              {submitError && <p className="text-sm text-error">{submitError}</p>}
+              <Button type="submit" disabled={submitting}>
+                {submitting ? "Sending…" : "Send Message"}
+              </Button>
             </form>
           )}
         </div>

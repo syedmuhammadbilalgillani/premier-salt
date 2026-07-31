@@ -4,7 +4,6 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
 import { FormField, inputClasses } from "@/components/ui/FormField";
-import { readStorage, writeStorage, generateReference } from "@/lib/storage";
 import { downloadTextFile } from "@/lib/download";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 
@@ -31,25 +30,17 @@ const packagingOptions = [
 interface PrivateLabelRequest {
   reference: string;
   fullName: string;
-  companyName: string;
   email: string;
-  phone: string;
-  country: string;
-  productCategory: string;
-  quantity: string;
-  packaging: string;
-  targetMarket: string;
-  timeline: string;
-  notes: string;
-  submittedAt: string;
 }
 
 export default function PrivateLabeling() {
   const [submitted, setSubmitted] = useState<PrivateLabelRequest | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [honeypot, setHoneypot] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (honeypot) return;
 
@@ -76,29 +67,50 @@ export default function PrivateLabeling() {
       return;
     }
 
-    const request: PrivateLabelRequest = {
-      reference: generateReference("PL"),
-      fullName: get("fullName"),
-      companyName: get("companyName"),
-      email: get("email"),
-      phone: get("phone"),
-      country: get("country"),
-      productCategory: get("productCategory"),
-      quantity: get("quantity"),
-      packaging: get("packaging"),
-      targetMarket: get("targetMarket"),
-      timeline: get("timeline"),
-      notes: get("notes"),
-      submittedAt: new Date().toISOString(),
-    };
+    setSubmitError("");
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "private_label",
+          fullName: get("fullName"),
+          companyName: get("companyName"),
+          email: get("email"),
+          phone: get("phone"),
+          country: get("country"),
+          message: get("notes"),
+          details: Object.fromEntries(
+            [
+              ["website", get("website")],
+              ["productCategory", get("productCategory")],
+              ["quantity", get("quantity")],
+              ["packaging", get("packaging")],
+              ["targetMarket", get("targetMarket")],
+              ["timeline", get("timeline")],
+            ].filter(([, value]) => value),
+          ),
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
 
-    const existing = readStorage<PrivateLabelRequest[]>(
-      "premierSalt.privateLabelRequests",
-      [],
-    );
-    writeStorage("premierSalt.privateLabelRequests", [...existing, request]);
-    setErrors({});
-    setSubmitted(request);
+      if (!response.ok) {
+        setSubmitError(data.error || "Could not submit your enquiry. Please try again.");
+        return;
+      }
+
+      setErrors({});
+      setSubmitted({
+        reference: data.data.reference,
+        fullName: get("fullName"),
+        email: get("email"),
+      });
+    } catch {
+      setSubmitError("Could not submit your enquiry. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (submitted) {
@@ -115,7 +127,7 @@ export default function PrivateLabeling() {
           {submitted.reference}
         </p>
         <p className="text-sm text-muted">
-          Our team will reach out at {submitted.email} or {submitted.phone}.
+          Our team will reach out at {submitted.email}.
         </p>
         <div className="mt-2 flex gap-4">
           <Button
@@ -370,7 +382,10 @@ export default function PrivateLabeling() {
             {errors.consent && (
               <p className="text-xs text-error">{errors.consent}</p>
             )}
-            <Button type="submit">Submit Enquiry</Button>
+            {submitError && <p className="text-sm text-error">{submitError}</p>}
+            <Button type="submit" disabled={submitting}>
+              {submitting ? "Submitting…" : "Submit Enquiry"}
+            </Button>
           </form>
         </Reveal>
       </div>

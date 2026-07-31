@@ -172,7 +172,7 @@ export default function Home({ categories }: { categories: any[] }) {
                   src={cat?.image_url}
                   width={364}
                   height={273}
-                  alt={cat?.name}
+                  alt={cat?.name || `Category ${cat?.title}`}
                   className="object-cover max-w-91 max-h-72 shadow rounded"
                 />
               ) : (

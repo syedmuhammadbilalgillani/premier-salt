@@ -399,3 +399,59 @@ export const orderLinesRelations = relations(orderLines, ({ one }) => ({
   }),
 }));
 
+// ---------- ENQUIRIES (Request a Quote / Contact / Private Label leads) ----------
+export const enquiryTypeEnum = pgEnum("enquiry_type", [
+  "quote_request",
+  "contact",
+  "private_label",
+]);
+
+export const enquiryStatusEnum = pgEnum("enquiry_status", [
+  "new",
+  "contacted",
+  "closed",
+]);
+
+export const enquiries = pgTable("enquiries", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  // Display reference, e.g. "RFQ-2026-0001" — built from enquirySeq at
+  // insert time, same pattern as orders.orderNumber/orderSeq.
+  reference: varchar("reference", { length: 20 }).notNull().unique(),
+  enquirySeq: serial("enquiry_seq"),
+
+  type: enquiryTypeEnum("type").notNull(),
+  status: enquiryStatusEnum("status").default("new").notNull(),
+
+  fullName: varchar("full_name", { length: 150 }).notNull(),
+  companyName: varchar("company_name", { length: 150 }),
+  email: varchar("email", { length: 255 }).notNull(),
+  phone: varchar("phone", { length: 30 }),
+  country: varchar("country", { length: 100 }),
+
+  subject: varchar("subject", { length: 255 }),
+  message: text("message"),
+
+  // Flat key-value for the fields that differ per enquiry type (buyerType/
+  // productCategory/quantity for quote_request; department for contact;
+  // packaging/targetMarket/timeline for private_label) — same pattern as
+  // categories.spec/products.spec.
+  details: jsonb("details").$type<Record<string, string>>(),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+// ---------- NEWSLETTER ----------
+export const newsletterSubscribers = pgTable("newsletter_subscribers", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  subscribedAt: timestamp("subscribed_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+

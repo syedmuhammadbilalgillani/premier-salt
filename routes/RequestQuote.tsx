@@ -3,9 +3,7 @@ import { useState, type FormEvent } from "react";
 import { PageHero } from "@/components/layout/PageHero";
 import { FormField, inputClasses } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
-import { readStorage, writeStorage, generateReference } from "@/lib/storage";
 import { downloadTextFile } from "@/lib/download";
-import { b2bCategories } from "@/data/b2bCategories";
 
 const buyerTypes = [
   "Importer",
@@ -18,30 +16,75 @@ const buyerTypes = [
   "Other",
 ];
 
-export default function RequestQuote() {
+export default function RequestQuote({
+  categories,
+}: {
+  categories: { id: string; title: string }[];
+}) {
   const [submitted, setSubmitted] = useState<Record<string, string> | null>(
     null,
   );
   const [honeypot, setHoneypot] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (honeypot) return;
     const form = new FormData(e.currentTarget);
-    const record: Record<string, string> = {
-      reference: generateReference("RFQ"),
-    };
+    const record: Record<string, string> = {};
     form.forEach((value, key) => {
       record[key] = String(value);
     });
-    record.submittedAt = new Date().toISOString();
 
-    const existing = readStorage<Record<string, string>[]>(
-      "premierSalt.quoteRequests",
-      [],
-    );
-    writeStorage("premierSalt.quoteRequests", [...existing, record]);
-    setSubmitted(record);
+    setSubmitError("");
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/enquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "quote_request",
+          fullName: record.fullName,
+          companyName: record.companyName,
+          email: record.email,
+          phone: record.phone,
+          country: record.country,
+          message: record.details,
+          details: Object.fromEntries(
+            [
+              ["website", record.website],
+              ["buyerType", record.buyerType],
+              ["productCategory", record.productCategory],
+              ["specificProduct", record.specificProduct],
+              ["quantity", record.quantity],
+              ["unit", record.unit],
+              ["destination", record.destination],
+              ["certification", record.certification],
+              ["timeline", record.timeline],
+              ["packaging", record.packaging],
+              ["privateLabel", form.get("privateLabel") ? "Yes" : "No"],
+            ].filter(([, value]) => value),
+          ),
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setSubmitError(data.error || "Could not submit your request. Please try again.");
+        return;
+      }
+
+      setSubmitted({
+        reference: data.data.reference,
+        fullName: record.fullName,
+        email: record.email,
+      });
+    } catch {
+      setSubmitError("Could not submit your request. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (submitted) {
@@ -86,7 +129,7 @@ export default function RequestQuote() {
         description="Share your requirement and our export sales team will follow up with pricing and availability."
         crumbs={[{ label: "Request a Quote" }]}
       />
-      <div className="mx-auto max-w-2xl px-6 py-16 md:px-8">
+      <div className="mx-auto max-w-2xl w-full px-6 py-16 md:px-8">
         <form
           onSubmit={handleSubmit}
           noValidate
@@ -170,8 +213,8 @@ export default function RequestQuote() {
               <option value="" disabled>
                 Select category
               </option>
-              {b2bCategories.map((c) => (
-                <option key={c.slug}>{c.name}</option>
+              {categories.map((c) => (
+                <option key={c.id}>{c.title}</option>
               ))}
             </select>
           </FormField>
@@ -244,7 +287,10 @@ export default function RequestQuote() {
             <input type="checkbox" required className="mt-0.5" /> I consent to
             being contacted regarding this quote request.
           </label>
-          <Button type="submit">Submit Request</Button>
+          {submitError && <p className="text-sm text-error">{submitError}</p>}
+          <Button type="submit" disabled={submitting}>
+            {submitting ? "Submitting…" : "Submit Request"}
+          </Button>
         </form>
       </div>
     </>

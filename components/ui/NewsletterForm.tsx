@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { readStorage, writeStorage } from "@/lib/storage";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -10,8 +9,9 @@ export function NewsletterForm() {
   const [honeypot, setHoneypot] = useState("");
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (honeypot) return; // silently drop bot submissions
 
@@ -21,23 +21,36 @@ export function NewsletterForm() {
       return;
     }
 
-    const list = readStorage<string[]>("premierSalt.newsletter", []);
-    if (list.includes(email.toLowerCase())) {
-      setError("This email is already subscribed.");
-      setStatus("error");
-      return;
-    }
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json().catch(() => ({}));
 
-    writeStorage("premierSalt.newsletter", [...list, email.toLowerCase()]);
-    setStatus("success");
-    setError(null);
-    setEmail("");
+      if (!response.ok) {
+        setError(data.error || "Could not subscribe. Please try again.");
+        setStatus("error");
+        return;
+      }
+
+      setStatus("success");
+      setError(null);
+      setEmail("");
+    } catch {
+      setError("Could not subscribe. Please check your connection and try again.");
+      setStatus("error");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (status === "success") {
     return (
       <p className="text-sm text-salt-pink">
-        You're subscribed. Thank you for following Premier Salt.
+        You&apos;re subscribed. Thank you for following Premier Salt.
       </p>
     );
   }
@@ -81,9 +94,10 @@ export function NewsletterForm() {
       </div>
       <button
         type="submit"
-        className="rounded-sm bg-terracotta px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-cream hover:bg-salt-pink"
+        disabled={submitting}
+        className="rounded-sm bg-terracotta px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-cream hover:bg-salt-pink disabled:cursor-not-allowed disabled:opacity-60"
       >
-        Subscribe
+        {submitting ? "Subscribing…" : "Subscribe"}
       </button>
     </form>
   );

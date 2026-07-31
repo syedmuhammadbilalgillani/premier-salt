@@ -7,6 +7,8 @@ import {
   ChevronsUpDown,
   FolderOpen,
   LogOut,
+  Mail,
+  MessageSquare,
   Package,
   ShoppingCart,
   Tag,
@@ -41,8 +43,10 @@ import Image from "next/image";
 
 const NAV_ITEMS = [
   { title: "Orders", href: "/admin/orders", icon: ShoppingCart },
+  { title: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
   { title: "Products", href: "/admin/products", icon: Package },
   { title: "Categories", href: "/admin/categories", icon: Tag },
+  { title: "Newsletter", href: "/admin/newsletter", icon: Mail },
   { title: "File Manager", href: "/admin/file-manager", icon: FolderOpen },
 ];
 
@@ -155,7 +159,7 @@ export default function DashboardLayout({
             {activeItem?.title ?? "Admin"}
           </span>
         </header>
-        <div className="flex-1">{children}</div>
+        <div className="flex-1 ">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

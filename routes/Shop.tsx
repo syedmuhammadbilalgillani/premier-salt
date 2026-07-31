@@ -34,7 +34,11 @@ export default function ShopPage() {
   );
 }
 
-function productPrice(product: { basePrice: number | null; hasVariants: boolean; variants: { price: number }[] }) {
+function productPrice(product: {
+  basePrice: number | null;
+  hasVariants: boolean;
+  variants: { price: number }[];
+}) {
   if (product.hasVariants && product.variants.length) {
     return Math.min(...product.variants.map((v) => v.price));
   }
@@ -111,7 +115,7 @@ function ShopContent() {
   }, [products, category, q, sort]);
 
   return (
-    <main className="mx-auto grid max-w-7xl grid-cols-1 gap-10 px-6 py-16 md:grid-cols-[240px_1fr] md:px-8">
+    <main className="mx-auto grid max-w-7xl w-full grid-cols-1 gap-10 px-6 py-16 md:grid-cols-[240px_1fr] md:px-8">
       <aside className="flex flex-col gap-8">
         <div>
           <label
