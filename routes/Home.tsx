@@ -385,7 +385,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 9. Featured shop products */}
-      <section className="mx-auto max-w-7xl px-6 py-24 md:px-8">
+      <section className="mx-auto w-full max-w-7xl px-6 py-24 md:px-8">
         <SectionHeading eyebrow="Retail Shop" title="Featured Products" />
         <Reveal
           stagger

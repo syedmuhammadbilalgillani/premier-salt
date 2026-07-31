@@ -8,8 +8,15 @@ export default function AdminLayout({
 }>) {
   return (
     <SessionProvider>
-      {children}
-      <Toaster />
+      {/* Scopes the shadcn theme CSS variables (see app/globals.css) to the
+          admin panel only, so they never leak into the storefront, which
+          has its own separate color system. `contents` keeps this wrapper
+          out of the box/layout model entirely — CSS custom properties still
+          inherit through it. */}
+      <div className="admin-theme contents">
+        {children}
+        <Toaster />
+      </div>
     </SessionProvider>
   );
 }
