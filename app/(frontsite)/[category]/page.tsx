@@ -13,6 +13,7 @@ import {
   getCachedChildCategories,
 } from "@/lib/category";
 import { getCatalogProductsForCategory, type CatalogProduct } from "@/lib/product";
+import { cn } from "@/lib/utils";
 
 // Category content is admin-managed and cache-tagged (revalidateTag on every
 // category/product mutation) — no need to force-dynamic a public page.
@@ -197,7 +198,6 @@ export default async function CategoryPage({
       <PageHero
         eyebrow={parent ? parent.title : "Products"}
         title={category.title}
-        description={category.description ?? undefined}
         crumbs={[
           { label: "Products", to: "/products" },
           ...(parent ? [{ label: parent.title, to: `/${parent.slug}` }] : []),
@@ -227,6 +227,24 @@ export default async function CategoryPage({
               />
             )}
           </Reveal>
+
+          {category.description ? (
+            <Reveal>
+              <div
+                dangerouslySetInnerHTML={{ __html: category.description }}
+                className={cn(
+                  "text-sm leading-relaxed text-muted",
+                  "[&_p]:my-2 [&_p:first-child]:mt-0 [&_p:last-child]:mb-0",
+                  "[&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5",
+                  "[&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-5",
+                  "[&_blockquote]:my-2 [&_blockquote]:border-l-2 [&_blockquote]:border-border [&_blockquote]:pl-3 [&_blockquote]:italic",
+                  "[&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:font-serif [&_h2]:text-lg [&_h2]:text-maroon",
+                  "[&_h3]:mt-3 [&_h3]:mb-1.5 [&_h3]:font-serif [&_h3]:text-base [&_h3]:text-maroon",
+                  "[&_a]:text-terracotta [&_a]:underline [&_a]:underline-offset-2",
+                )}
+              />
+            </Reveal>
+          ) : null}
 
           {category.spec ? <SpecList spec={category.spec} /> : null}
 

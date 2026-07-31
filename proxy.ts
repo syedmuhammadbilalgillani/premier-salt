@@ -40,5 +40,6 @@ export const config = {
     "/api/file-manager/:path*",
     "/api/category/:path*",
     "/api/product/:path*",
+    "/api/admin/:path*",
   ],
 };

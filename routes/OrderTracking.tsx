@@ -4,27 +4,42 @@ import { useState, type FormEvent } from "react";
 import { PageHero } from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/button";
 import { FormField, inputClasses } from "@/components/ui/FormField";
-import { findOrderByIdAndEmail } from "@/hooks/useOrders";
-import type { Order } from "@/types/order";
-
-const statuses: Order["status"][] = [
-  "Order Received",
-  "Confirmed",
-  "Processing",
-  "Ready for Dispatch",
-  "Dispatched",
-  "Delivered",
-];
+import { ORDER_PROGRESS_STATUSES, ORDER_STATUS_LABELS } from "@/lib/orderStatus";
+import type { OrderDetail } from "@/lib/order";
 
 export default function OrderTracking() {
-  const [order, setOrder] = useState<Order | null | undefined>(undefined);
+  const [order, setOrder] = useState<OrderDetail | null | undefined>(undefined);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
-    const id = (form.get("orderId") as string)?.trim();
+    const orderNumber = (form.get("orderId") as string)?.trim();
     const email = (form.get("email") as string)?.trim();
-    setOrder(findOrderByIdAndEmail(id, email) ?? null);
+
+    setError("");
+    setLoading(true);
+    try {
+      const response = await fetch("/api/order/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderNumber, email }),
+      });
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        setOrder(null);
+        setError(data.error || "No matching order was found.");
+        return;
+      }
+      setOrder(data.data);
+    } catch {
+      setOrder(null);
+      setError("Could not look up your order. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -55,23 +70,29 @@ export default function OrderTracking() {
               required
             />
           </FormField>
-          <Button type="submit">Track Order</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Searching…" : "Track Order"}
+          </Button>
         </form>
 
         {order === null && (
           <p className="mt-6 text-sm text-error">
-            No matching order was found. Check the order number and email, then
-            try again.
+            {error ||
+              "No matching order was found. Check the order number and email, then try again."}
           </p>
         )}
 
         {order && (
           <div className="mt-10">
-            <p className="font-serif text-xl text-maroon">Order {order.id}</p>
+            <p className="font-serif text-xl text-maroon">
+              Order {order.orderNumber}
+            </p>
             <ol className="mt-6 flex flex-col gap-3">
-              {statuses.map((status) => {
+              {ORDER_PROGRESS_STATUSES.map((status) => {
                 const reached =
-                  statuses.indexOf(order.status) >= statuses.indexOf(status);
+                  order.status !== "cancelled" &&
+                  ORDER_PROGRESS_STATUSES.indexOf(order.status) >=
+                    ORDER_PROGRESS_STATUSES.indexOf(status);
                 return (
                   <li key={status} className="flex items-center gap-3">
                     <span
@@ -80,12 +101,17 @@ export default function OrderTracking() {
                     <span
                       className={`text-sm ${reached ? "text-charcoal" : "text-muted"}`}
                     >
-                      {status}
+                      {ORDER_STATUS_LABELS[status]}
                     </span>
                   </li>
                 );
               })}
             </ol>
+            {order.status === "cancelled" && (
+              <p className="mt-4 text-sm text-error">
+                This order has been cancelled.
+              </p>
+            )}
           </div>
         )}
       </div>

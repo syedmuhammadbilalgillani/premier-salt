@@ -12,6 +12,7 @@ import {
   numeric,
   integer,
   uniqueIndex,
+  serial,
 } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -293,6 +294,108 @@ export const categoriesRelations = relations(categories, ({ one, many }) => ({
   }),
   childCategories: many(categories, {
     relationName: "categoryParent",
+  }),
+}));
+
+// ---------- ORDERS ----------
+export const orderStatusEnum = pgEnum("order_status", [
+  "order_received",
+  "confirmed",
+  "processing",
+  "ready_for_dispatch",
+  "dispatched",
+  "delivered",
+  "cancelled",
+]);
+
+export const orders = pgTable("orders", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  // Human-readable display number, e.g. "PS-2026-0001" — built from orderSeq
+  // at insert time. orderSeq (a real DB sequence) is what guarantees
+  // uniqueness; orderNumber is just its formatted, displayed form.
+  orderNumber: varchar("order_number", { length: 20 }).notNull().unique(),
+  orderSeq: serial("order_seq"),
+
+  status: orderStatusEnum("status").default("order_received").notNull(),
+
+  customerFirstName: varchar("customer_first_name", { length: 100 }).notNull(),
+  customerLastName: varchar("customer_last_name", { length: 100 }).notNull(),
+  customerEmail: varchar("customer_email", { length: 255 }).notNull(),
+  customerPhone: varchar("customer_phone", { length: 30 }).notNull(),
+
+  addressLine1: varchar("address_line1", { length: 255 }).notNull(),
+  addressLine2: varchar("address_line2", { length: 255 }),
+  addressCity: varchar("address_city", { length: 100 }).notNull(),
+  addressProvince: varchar("address_province", { length: 100 }).notNull(),
+  addressPostalCode: varchar("address_postal_code", { length: 20 }).notNull(),
+  addressCountry: varchar("address_country", { length: 100 })
+    .default("Pakistan")
+    .notNull(),
+
+  deliveryMethod: varchar("delivery_method", { length: 30 }).notNull(),
+  paymentMethod: varchar("payment_method", { length: 30 }).notNull(),
+  notes: text("notes"),
+
+  subtotal: numeric("subtotal", { precision: 12, scale: 2 }).notNull(),
+  discount: numeric("discount", { precision: 12, scale: 2 })
+    .default("0")
+    .notNull(),
+  shipping: numeric("shipping", { precision: 12, scale: 2 }).notNull(),
+  total: numeric("total", { precision: 12, scale: 2 }).notNull(),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+// ---------- ORDER LINES ----------
+export const orderLines = pgTable("order_lines", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  orderId: uuid("order_id")
+    .references(() => orders.id, { onDelete: "cascade" })
+    .notNull(),
+
+  // Traceability refs, not the source of truth — an order line must survive
+  // the referenced product/variant being deleted later, so these are
+  // nullable and never cascade-delete the order line itself.
+  productId: uuid("product_id").references(() => products.id, {
+    onDelete: "set null",
+  }),
+  variantId: uuid("variant_id").references(() => productVariants.id, {
+    onDelete: "set null",
+  }),
+
+  // Snapshot fields — what actually prints on the order, immune to later
+  // edits on the product/variant.
+  productSlug: varchar("product_slug", { length: 255 }).notNull(),
+  name: varchar("name", { length: 255 }).notNull(),
+  variantLabel: varchar("variant_label", { length: 255 }),
+  sku: varchar("sku", { length: 100 }),
+  price: numeric("price", { precision: 12, scale: 2 }).notNull(),
+  quantity: integer("quantity").notNull(),
+});
+
+export const ordersRelations = relations(orders, ({ many }) => ({
+  lines: many(orderLines),
+}));
+
+export const orderLinesRelations = relations(orderLines, ({ one }) => ({
+  order: one(orders, {
+    fields: [orderLines.orderId],
+    references: [orders.id],
+  }),
+  product: one(products, {
+    fields: [orderLines.productId],
+    references: [products.id],
+  }),
+  variant: one(productVariants, {
+    fields: [orderLines.variantId],
+    references: [productVariants.id],
   }),
 }));
 

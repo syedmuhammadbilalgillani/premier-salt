@@ -5,20 +5,21 @@ import { FormField, inputClasses } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import { calculateShipping, calculateDiscount } from "@/lib/shipping";
-import { generateOrderId, saveOrder } from "@/hooks/useOrders";
-import type { Order } from "@/types/order";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+
+type DeliveryMethod = "Standard Delivery" | "Store/Office Pickup";
+type PaymentMethod = "Cash on Delivery" | "Bank Transfer" | "Card Payment";
 
 export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
   const navigate = useRouter();
-  const [delivery, setDelivery] =
-    useState<Order["deliveryMethod"]>("Standard Delivery");
-  const [payment, setPayment] =
-    useState<Order["paymentMethod"]>("Cash on Delivery");
+  const [delivery, setDelivery] = useState<DeliveryMethod>("Standard Delivery");
+  const [payment, setPayment] = useState<PaymentMethod>("Cash on Delivery");
   const [discountCode, setDiscountCode] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const discount = calculateDiscount(subtotal, discountCode);
   const shipping =
@@ -47,7 +48,7 @@ export default function Checkout() {
     );
   }
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const get = (k: string) => (form.get(k) as string)?.trim() ?? "";
@@ -75,46 +76,51 @@ export default function Checkout() {
       return;
     }
 
-    const orderId = generateOrderId();
-    const order: Order = {
-      id: orderId,
-      createdAt: new Date().toISOString(),
-      status: "Order Received",
-      customer: {
-        firstName: get("firstName"),
-        lastName: get("lastName"),
-        email: get("email"),
-        phone: get("phone"),
-      },
-      address: {
-        line1: get("line1"),
-        line2: get("line2"),
-        city: get("city"),
-        province: get("province"),
-        postalCode: get("postalCode"),
-        country: "Pakistan",
-      },
-      deliveryMethod: delivery,
-      paymentMethod: payment,
-      notes: get("notes"),
-      lines: items.map((i) => ({
-        slug: i.productSlug,
-        name: i.name,
-        price: i.price,
-        quantity: i.quantity,
-        variantId: i.variantId,
-        variantLabel: i.variantLabel,
-        sku: i.sku,
-      })),
-      subtotal,
-      discount,
-      shipping,
-      total,
-    };
+    setSubmitError("");
+    setSubmitting(true);
+    try {
+      const response = await fetch("/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer: {
+            firstName: get("firstName"),
+            lastName: get("lastName"),
+            email: get("email"),
+            phone: get("phone"),
+          },
+          address: {
+            line1: get("line1"),
+            line2: get("line2"),
+            city: get("city"),
+            province: get("province"),
+            postalCode: get("postalCode"),
+          },
+          deliveryMethod: delivery,
+          paymentMethod: payment,
+          notes: get("notes"),
+          discountCode,
+          lines: items.map((i) => ({
+            productSlug: i.productSlug,
+            variantId: i.variantId,
+            quantity: i.quantity,
+          })),
+        }),
+      });
+      const data = await response.json().catch(() => ({}));
 
-    saveOrder(order);
-    clearCart();
-    navigate.push(`/order-confirmation/${orderId}`);
+      if (!response.ok) {
+        setSubmitError(data.error || "Could not place your order. Please try again.");
+        return;
+      }
+
+      clearCart();
+      navigate.push(`/order-confirmation/${data.data.id}`);
+    } catch {
+      setSubmitError("Could not place your order. Please check your connection and try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -379,8 +385,11 @@ export default function Checkout() {
               <dd>PKR {total.toLocaleString()}</dd>
             </div>
           </dl>
-          <Button type="submit" className="mt-5 w-full">
-            Place Order
+          {submitError && (
+            <p className="mt-3 text-sm text-error">{submitError}</p>
+          )}
+          <Button type="submit" className="mt-5 w-full" disabled={submitting}>
+            {submitting ? "Placing Order…" : "Place Order"}
           </Button>
         </div>
       </form>

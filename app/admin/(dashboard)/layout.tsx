@@ -3,7 +3,14 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { ChevronsUpDown, FolderOpen, LogOut, Package, Tag } from "lucide-react";
+import {
+  ChevronsUpDown,
+  FolderOpen,
+  LogOut,
+  Package,
+  ShoppingCart,
+  Tag,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -33,6 +40,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 
 const NAV_ITEMS = [
+  { title: "Orders", href: "/admin/orders", icon: ShoppingCart },
   { title: "Products", href: "/admin/products", icon: Package },
   { title: "Categories", href: "/admin/categories", icon: Tag },
   { title: "File Manager", href: "/admin/file-manager", icon: FolderOpen },
