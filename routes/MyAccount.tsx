@@ -5,6 +5,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { FormField, inputClasses } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
 import { readStorage, writeStorage } from "@/lib/storage";
+import { ArrowRight } from "lucide-react";
 
 interface Profile {
   name: string;
