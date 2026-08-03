@@ -191,6 +191,13 @@ html {
 
 * {
   -webkit-tap-highlight-color: transparent;
+  @apply [&::-webkit-scrollbar]:w-1
+  [&::-webkit-scrollbar]:h-1
+[&::-webkit-scrollbar-track]:bg-secondary
+[&::-webkit-scrollbar-thumb]:bg-primary
+  [&::-webkit-scrollbar-thumb]:cursor-pointer
+dark:[&::-webkit-scrollbar-track]:bg-secondary
+dark:[&::-webkit-scrollbar-thumb]:bg-primary;
 }
 
 body {
@@ -224,18 +231,19 @@ body {
 /* Eyebrow / caption, Elyse-style parenthetical label */
 .eyebrow {
   font-family: var(--font-sans);
-  font-size: 0.8125rem;
+  /* font-size: 0.8125rem; */
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--color-primary);
 }
-.eyebrow::before {
+/* .eyebrow::before {
   content: "( ";
 }
 .eyebrow::after {
   content: " )";
-}
+} */
 
 /* Reveal-on-scroll primitive, animated by GSAP ScrollTrigger */
 [data-reveal] {

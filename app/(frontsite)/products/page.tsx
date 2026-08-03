@@ -68,17 +68,14 @@ export default async function ProductsPage() {
             className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
           >
             {roots.map((cat) => (
-              <div
-                key={cat.id}
-                className="flex flex-col gap-3 border border-border p-5"
-              >
+              <div key={cat.id} className="flex flex-col gap-3 p-5">
                 {cat.image_url ? (
-                  <div className="relative aspect-[4/2.75] w-full overflow-hidden rounded-sm bg-sand/40">
+                  <div className="relative shadow aspect-[4/2.75] w-full overflow-hidden rounded-sm bg-sand/40">
                     <Image
                       src={cat.image_url}
                       alt={cat.title}
                       fill
-                      className="object-cover"
+                      className="object-cover h-full"
                       sizes="(min-width: 1024px) 360px, (min-width: 640px) 45vw, 90vw"
                     />
                   </div>
@@ -104,18 +101,20 @@ export default async function ProductsPage() {
                     Includes: {cat.children.map((c) => c.title).join(", ")}
                   </p>
                 )}
-                <div className="mt-1 flex gap-4">
+                <div className="mt-1 flex gap-4 justify-between">
                   <Link
                     href="/request-a-quote"
-                    className="text-sm font-semibold text-primary hover:text-primary"
+                    className="text-sm font-semibold text-primary hover:text-primary flex items-center gap-1.5"
                   >
-                    Request Quote <ArrowRight />
+                    Request Quote{" "}
+                    <ArrowRight size={15} className="-rotate-45" />
                   </Link>
                   <Link
                     href={`/${cat.slug}`}
-                    className="text-sm font-semibold text-charcoal hover:text-primary"
+                    className="text-sm font-semibold text-charcoal hover:text-primary flex items-center gap-1.5"
                   >
-                    View Category <ArrowRight />
+                    View Category{" "}
+                    <ArrowRight size={15} className="-rotate-45" />
                   </Link>
                 </div>
               </div>
@@ -156,9 +155,9 @@ export default async function ProductsPage() {
             </ul>
             <Link
               href="/shop"
-              className="mt-4 inline-block text-sm font-semibold text-primary hover:text-primary"
+              className="mt-4 flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary"
             >
-              Shop Online <ArrowRight />
+              Shop Online <ArrowRight size={15} />
             </Link>
           </div>
         </Reveal>

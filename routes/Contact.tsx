@@ -73,7 +73,7 @@ export default function Contact() {
         description="Reach our team for export, wholesale, private-label or retail enquiries."
         crumbs={[{ label: "Contact" }]}
       />
-      <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-6 py-16 md:grid-cols-2 md:px-8">
+      <div className="mx-auto grid max-w-7xl w-full grid-cols-1 gap-16 px-6 py-16 md:grid-cols-2 md:px-8">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-4 text-sm">
             <span className="flex items-start gap-3">

@@ -48,8 +48,3 @@ export const company = {
     "FDA Services",
   ],
 } as const;
-
-export const brandsConfig = {
-  brandOne: { name: "[BRAND ONE NAME]", slug: "brand-one" },
-  brandTwo: { name: "[BRAND TWO NAME]", slug: "brand-two" },
-} as const;

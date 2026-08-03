@@ -7,7 +7,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { PageHero } from "@/components/layout/PageHero";
 import { b2bPages } from "@/data/b2bPages";
 import { shopProducts } from "@/data/shopProducts";
-import { blogPosts } from "@/data/blogPosts";
+
+interface SearchBlogPost {
+  title: string;
+  slug: string;
+  excerpt: string;
+}
 
 type ResultType = "B2B Category" | "Shop Product" | "Blog Article";
 type ActiveType = ResultType | "All";
@@ -50,6 +55,20 @@ function SearchContent() {
 
   const [query, setQuery] = useState(queryFromUrl);
   const [activeType, setActiveType] = useState<ActiveType>("All");
+  const [blogPosts, setBlogPosts] = useState<SearchBlogPost[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/blog-posts")
+      .then((res) => res.json())
+      .then((json) => {
+        if (!cancelled && json.success) setBlogPosts(json.data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const normalizedQuery = query.trim().toLowerCase();
   const displayQuery = query.trim();
@@ -131,7 +150,7 @@ function SearchContent() {
       }));
 
     return [...categoryResults, ...productResults, ...blogResults];
-  }, [normalizedQuery]);
+  }, [normalizedQuery, blogPosts]);
 
   const visibleResults = useMemo(() => {
     if (activeType === "All") {

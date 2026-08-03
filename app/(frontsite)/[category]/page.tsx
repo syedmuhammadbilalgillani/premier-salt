@@ -2,7 +2,11 @@ import { notFound, redirect } from "next/navigation";
 
 import { CategoryHubView } from "@/components/storefront/CategoryHubView";
 import { CategoryLeafView } from "@/components/storefront/CategoryLeafView";
-import { getCachedCategory, getCachedCategoryBySlug, getCachedChildCategories } from "@/lib/category";
+import {
+  getCachedCategory,
+  getCachedCategoryBySlug,
+  getCachedChildCategories,
+} from "@/lib/category";
 import { getCatalogProductsForCategory } from "@/lib/product";
 
 // Category content is admin-managed and cache-tagged (revalidateTag on every

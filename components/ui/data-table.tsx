@@ -5,6 +5,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/state";
 import {
   Table,
   TableBody,
@@ -588,12 +589,9 @@ export function DataTable<Row>({
               );
             })
           ) : (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length + (enableRowSelection ? 1 : 0)}
-                className="py-10 text-center text-sm text-muted-foreground"
-              >
-                {emptyText}
+            <TableRow className="hover:bg-transparent">
+              <TableCell colSpan={columns.length + (enableRowSelection ? 1 : 0)} className="p-0">
+                <EmptyState title={emptyText} size="inline" />
               </TableCell>
             </TableRow>
           )}

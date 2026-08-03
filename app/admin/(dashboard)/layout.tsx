@@ -9,6 +9,7 @@ import {
   LogOut,
   Mail,
   MessageSquare,
+  Newspaper,
   Package,
   ShoppingCart,
   Tag,
@@ -46,6 +47,7 @@ const NAV_ITEMS = [
   { title: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
   { title: "Products", href: "/admin/products", icon: Package },
   { title: "Categories", href: "/admin/categories", icon: Tag },
+  { title: "Blog", href: "/admin/blog", icon: Newspaper },
   { title: "Newsletter", href: "/admin/newsletter", icon: Mail },
   { title: "File Manager", href: "/admin/file-manager", icon: FolderOpen },
 ];

@@ -152,7 +152,7 @@ export function CategoryHubView({
                 <Link
                   key={child.id}
                   href={`/${parentSlug}/${child.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-sm border border-border transition-colors hover:border-primary"
+                  className="group flex flex-col overflow-hidden rounded-sm transition-colors "
                 >
                   {child.image_url ? (
                     <div className="relative aspect-[5/3.2] w-full overflow-hidden">

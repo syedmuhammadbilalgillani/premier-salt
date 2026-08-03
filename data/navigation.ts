@@ -73,14 +73,6 @@ export const mainNavigation: NavItem[] = [
     ],
   },
   { label: "Private Label", to: "/private-labeling" },
-  {
-    label: "Our Brands",
-    to: "/brands",
-    dropdown: [
-      { label: "[BRAND ONE NAME]", to: "/brands/brand-one" },
-      { label: "[BRAND TWO NAME]", to: "/brands/brand-two" },
-    ],
-  },
   { label: "Shop", to: "/shop" },
   {
     label: "Resources",

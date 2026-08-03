@@ -9,7 +9,7 @@ export default function NotFound() {
   const navigate = useRouter();
 
   return (
-    <div className="mx-auto flex min-h-[70vh] max-w-xl flex-col items-center justify-center gap-6 px-6 text-center">
+    <div className="fixed z-50 bg-white w-full flex h-dvh   flex-col items-center justify-center gap-6 px-6 text-center">
       <span className="eyebrow">404</span>
       <h1 className="font-serif text-4xl text-primary">Page Not Found</h1>
       <p className="text-muted-foreground">
@@ -21,13 +21,13 @@ export default function NotFound() {
           e.preventDefault();
           navigate.push(`/search?q=${encodeURIComponent(q)}`);
         }}
-        className="flex w-full gap-2"
+        className="flex max-w-xl mx-auto w-full gap-2"
       >
         <input
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search Premier Salt…"
-          className="flex-1 rounded-sm border border-border px-4 py-2.5 text-sm focus-visible:outline-primary"
+          className="flex-1 rounded-sm border border-border  px-4 py-2.5 text-sm focus-visible:outline-primary"
         />
         <Button type="submit">Search</Button>
       </form>

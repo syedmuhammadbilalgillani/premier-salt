@@ -168,15 +168,17 @@ function ProductNavMenuNode({ node }: { node: ProductNavNode }) {
           <DropdownMenuItem asChild className={cn(itemClass, "font-medium")}>
             <Link href={node.href}>All {node.label}</Link>
           </DropdownMenuItem>
-          <DropdownMenuSeparator className="!bg-border" />
+          <DropdownMenuSeparator className="bg-border" />
           {node.children.map((child) => (
             <ProductNavMenuNode key={child.id} node={child} />
           ))}
-          {node.products.map((product) => (
-            <DropdownMenuItem key={product.id} asChild className={itemClass}>
-              <Link href={product.href}>{product.label}</Link>
-            </DropdownMenuItem>
-          ))}
+          <div className="max-h-80 overflow-y-auto">
+            {node.products.map((product) => (
+              <DropdownMenuItem key={product.id} asChild className={itemClass}>
+                <Link href={product.href}>{product.label}</Link>
+              </DropdownMenuItem>
+            ))}
+          </div>
         </DropdownMenuSubContent>
       </DropdownMenuPortal>
     </DropdownMenuSub>

@@ -6,12 +6,11 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ShopProductCard } from "@/components/ui/ShopProductCard";
 import { b2bCategories } from "@/data/b2bCategories";
-import { brandsConfig, company } from "@/data/company";
+import { company } from "@/data/company";
 import { useShopCatalog } from "@/hooks/useShopCatalog";
 import {
   ArrowRight,
   Award,
-  ChevronRight,
   Globe2,
   HeartHandshake,
   Package,
@@ -220,7 +219,8 @@ export default function Home({ categories }: { categories: any[] }) {
               and manufacturing, consistent product quality, and dedicated
               export support. From custom packaging to private labeling, we work
               as an extension of your business.
-              <p className="text-base leading-relaxed text-muted-foreground"></p>
+            </p>
+            <p className="text-base leading-relaxed text-muted-foreground">
               Our team supports buyers at every stage — from first enquiry to
               shipment — with responsive, transparent communication.
             </p>
@@ -333,55 +333,6 @@ export default function Home({ categories }: { categories: any[] }) {
               width={900}
               height={700}
             />
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 8. Brands */}
-      <section className="bg-sand/40 py-24">
-        <div className="mx-auto max-w-7xl px-6 md:px-8">
-          <SectionHeading
-            eyebrow="Our Brands"
-            title="Two Consumer Brands, One Standard of Quality"
-          />
-          <Reveal
-            stagger
-            className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2"
-          >
-            {[brandsConfig.brandOne, brandsConfig.brandTwo].map((brand) => (
-              <div
-                key={brand.slug}
-                className="flex flex-col gap-4 bg-cream p-8"
-              >
-                <ImagePlaceholder
-                  label={`${brand.name} — Brand Logo`}
-                  width={600}
-                  height={300}
-                />
-                <h3 className="font-serif text-2xl text-primary">
-                  {brand.name}
-                </h3>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  A Premier Salt consumer brand bringing authentic Himalayan
-                  salt products to households and retail partners, backed by the
-                  same processing standards as our export range.
-                </p>
-                <div className="flex gap-4">
-                  <Link
-                    href={`/brands/${brand.slug}`}
-                    className="text-sm font-semibold text-primary hover:text-primary"
-                  >
-                    Explore Brand <ChevronRight />
-                  </Link>
-                  <Link
-                    href="/shop"
-                    className="text-sm font-semibold text-primary hover:text-primary"
-                  >
-                    Shop Brand Products <ChevronRight />
-                  </Link>
-                </div>
-              </div>
-            ))}
           </Reveal>
         </div>
       </section>

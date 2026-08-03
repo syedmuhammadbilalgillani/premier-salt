@@ -80,12 +80,9 @@ function ProductsSection({
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
-          <div
-            key={product.id}
-            className="flex flex-col gap-3 rounded-sm border border-border p-4"
-          >
+          <div key={product.id} className="flex flex-col gap-3 rounded-sm  p-4">
             {product.imageUrl ? (
               <div className="relative aspect-square w-full overflow-hidden rounded-sm bg-sand/40">
                 <Image
@@ -103,7 +100,7 @@ function ProductsSection({
                 height={400}
               />
             )}
-            <div>
+            <div className="text-center">
               <p className="font-serif text-base text-primary">
                 {product.title}
               </p>
@@ -112,11 +109,11 @@ function ProductsSection({
                   SKU: {product.sku}
                 </p>
               )}
-              {columns.length ? (
+              {/* {columns.length ? (
                 <p className="mt-1.5 text-xs leading-relaxed text-charcoal">
                   {productSummary(product, columns) || "—"}
                 </p>
-              ) : null}
+              ) : null} */}
             </div>
           </div>
         ))}
@@ -217,29 +214,41 @@ export function CategoryLeafView({
     <>
       <PageHero eyebrow={eyebrow} title={title} crumbs={crumbs} />
 
-      <div className="mx-auto grid max-w-(--container-page) grid-cols-1 gap-16 px-6 py-20 md:grid-cols-[1fr_320px] md:px-8">
+      <div className="max-w-7xl mx-auto">
         <div className="flex flex-col gap-14">
-          <Reveal>
-            {category.image_url ? (
-              <div className="relative aspect-[12/7] w-full overflow-hidden rounded-md">
-                <Image
-                  src={category.image_url}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 768px) 800px, 100vw"
-                  priority
+          <div className="grid grid-cols-3 p-10 gap-10">
+            <Reveal className="col-span-2">
+              {category.image_url ? (
+                <div className="relative aspect-[12/7] w-full overflow-hidden rounded-md">
+                  <Image
+                    src={category.image_url}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 768px) 800px, 100vw"
+                    priority
+                  />
+                </div>
+              ) : (
+                <ImagePlaceholder
+                  label={`${title} — Product Gallery`}
+                  width={1200}
+                  height={700}
                 />
-              </div>
-            ) : (
-              <ImagePlaceholder
-                label={`${title} — Product Gallery`}
-                width={1200}
-                height={700}
-              />
-            )}
-          </Reveal>
-
+              )}
+            </Reveal>
+            <Reveal className="h-fit rounded-sm border border-border bg-sand/40 p-6">
+              <h3 className="font-serif text-lg text-primary">Get a Quote</h3>
+              <p className="mt-3 text-sm text-muted-foreground">
+                Share your requirement for {title.toLowerCase()} and our export
+                sales team will follow up with pricing, MOQ and production
+                schedule.
+              </p>
+              <Link href="/request-a-quote" className="mt-5 block">
+                <Button className="w-full">Request Quote</Button>
+              </Link>
+            </Reveal>
+          </div>
           {category.description ? (
             <Reveal>
               <div
@@ -270,17 +279,6 @@ export function CategoryLeafView({
             <FAQAccordion items={faqs} />
           </Reveal>
         </div>
-
-        <Reveal className="h-fit rounded-sm border border-border bg-sand/40 p-6">
-          <h3 className="font-serif text-lg text-primary">Get a Quote</h3>
-          <p className="mt-3 text-sm text-muted-foreground">
-            Share your requirement for {title.toLowerCase()} and our export
-            sales team will follow up with pricing, MOQ and production schedule.
-          </p>
-          <Link href="/request-a-quote" className="mt-5 block">
-            <Button className="w-full">Request Quote</Button>
-          </Link>
-        </Reveal>
       </div>
     </>
   );

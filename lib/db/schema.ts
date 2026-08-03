@@ -446,6 +446,70 @@ export const enquiries = pgTable("enquiries", {
     .notNull(),
 });
 
+// ---------- BLOG ----------
+export const blogPostStatusEnum = pgEnum("blog_post_status", [
+  "draft",
+  "published",
+]);
+
+// Blog's own taxonomy (e.g. "Edible Salt", "Private Label") — deliberately
+// a separate table from the product `categories`, since blog topics and
+// product categories are different classification schemes.
+export const blogCategories = pgTable("blog_categories", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  title: varchar("title", { length: 100 }).notNull(),
+  slug: varchar("slug", { length: 100 }).notNull().unique(),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const blogPosts = pgTable("blog_posts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  title: varchar("title", { length: 255 }).notNull(),
+  slug: varchar("slug", { length: 255 }).notNull().unique(),
+  categoryId: uuid("category_id")
+    .references(() => blogCategories.id)
+    .notNull(),
+  excerpt: text("excerpt").notNull(),
+  // Rich HTML from the same Tiptap editor used for category/product
+  // descriptions — see components/editor.
+  content: text("content").notNull(),
+  coverImage: text("cover_image"),
+  author: varchar("author", { length: 150 }).default("Premier Salt Team").notNull(),
+
+  status: blogPostStatusEnum("status").default("draft").notNull(),
+  // Only posts with status="published" AND publishedAt <= now() are shown
+  // publicly — lets a post be scheduled ahead by setting a future date.
+  publishedAt: timestamp("published_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+export const blogCategoriesRelations = relations(blogCategories, ({ many }) => ({
+  posts: many(blogPosts),
+}));
+
+export const blogPostsRelations = relations(blogPosts, ({ one }) => ({
+  category: one(blogCategories, {
+    fields: [blogPosts.categoryId],
+    references: [blogCategories.id],
+  }),
+}));
+
 // ---------- NEWSLETTER ----------
 export const newsletterSubscribers = pgTable("newsletter_subscribers", {
   id: uuid("id").defaultRandom().primaryKey(),

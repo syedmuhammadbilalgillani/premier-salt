@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import { Roboto, Source_Sans_3 } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "next-themes";
 
 const sourceSans3 = Source_Sans_3({
   subsets: ["latin"],
@@ -40,14 +39,7 @@ export default function RootLayout({
       suppressContentEditableWarning
     >
       <body suppressContentEditableWarning className="min-h-full flex flex-col">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TooltipProvider>{children}</TooltipProvider>
-        </ThemeProvider>
+        <TooltipProvider>{children}</TooltipProvider>
       </body>
     </html>
   );

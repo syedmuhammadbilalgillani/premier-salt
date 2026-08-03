@@ -1,0 +1,32 @@
+"use client";
+
+import { useEffect } from "react";
+import Link from "next/link";
+
+import { Button } from "@/components/ui/button";
+import { ErrorState } from "@/components/ui/state";
+
+export default function GlobalError({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return (
+    <ErrorState
+      action={
+        <>
+          <Button onClick={reset}>Try Again</Button>
+          <Link href="/">
+            <Button variant="outline">Homepage</Button>
+          </Link>
+        </>
+      }
+    />
+  );
+}
