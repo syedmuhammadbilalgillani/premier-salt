@@ -71,7 +71,9 @@ export default function RequestQuote({
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setSubmitError(data.error || "Could not submit your request. Please try again.");
+        setSubmitError(
+          data.error || "Could not submit your request. Please try again.",
+        );
         return;
       }
 
@@ -81,7 +83,9 @@ export default function RequestQuote({
         email: record.email,
       });
     } catch {
-      setSubmitError("Could not submit your request. Please check your connection and try again.");
+      setSubmitError(
+        "Could not submit your request. Please check your connection and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -91,13 +95,13 @@ export default function RequestQuote({
     return (
       <div className="mx-auto flex max-w-xl flex-col items-center gap-5 px-6 py-32 text-center">
         <span className="eyebrow">Request Received</span>
-        <h1 className="font-serif text-3xl text-maroon">
+        <h1 className="font-serif text-3xl text-primary">
           Thank you, {submitted.fullName}
         </h1>
-        <p className="font-serif text-2xl text-terracotta">
+        <p className="font-serif text-2xl text-primary">
           {submitted.reference}
         </p>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-muted-foreground">
           Our export sales team will follow up at {submitted.email}.
         </p>
         <div className="flex gap-4">
@@ -283,7 +287,7 @@ export default function RequestQuote({
             className="hidden"
             aria-hidden="true"
           />
-          <label className="flex items-start gap-2 text-xs text-muted">
+          <label className="flex items-start gap-2 text-xs text-muted-foreground">
             <input type="checkbox" required className="mt-0.5" /> I consent to
             being contacted regarding this quote request.
           </label>

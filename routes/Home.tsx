@@ -106,7 +106,7 @@ export default function Home({ categories }: { categories: any[] }) {
             tone="dark"
             className="h-full rounded-none border-none"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-charcoal via-charcoal/70 to-charcoal/20" />
+          <div className="absolute inset-0 bg-linear-to-t from-primary/70 via-primary/30 to-primary/0" />
         </div>
         <Reveal className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-20 md:px-8 md:pb-28">
           <span className="eyebrow text-salt-pink">
@@ -147,7 +147,7 @@ export default function Home({ categories }: { categories: any[] }) {
       <Reveal stagger className="border-b border-border bg-cream">
         <div className="mx-auto grid max-w-7xl grid-cols-2 gap-6 px-6 py-10 text-center sm:grid-cols-5 md:px-8">
           {trustStrip.map((item) => (
-            <div key={item} className="text-sm font-medium text-maroon">
+            <div key={item} className="text-sm font-medium text-primary">
               {item}
             </div>
           ))}
@@ -178,7 +178,7 @@ export default function Home({ categories }: { categories: any[] }) {
               ) : (
                 <ImagePlaceholder label={cat?.name} width={640} height={480} />
               )}
-              <h3 className="mt-4 font-serif text-xl text-maroon group-hover:text-terracotta">
+              <h3 className="mt-4 font-serif text-xl text-primary group-hover:text-primary">
                 {cat?.title}
               </h3>
               <div
@@ -186,7 +186,7 @@ export default function Home({ categories }: { categories: any[] }) {
                 className="mt-2 text-sm line-clamp-3"
               />
 
-              <span className="mt-2 flex items-center gap-1 text-xs uppercase tracking-wide text-terracotta">
+              <span className="mt-2 flex items-center gap-1 text-xs uppercase tracking-wide text-primary">
                 {cat?.productCount} product line
                 {cat?.productCount > 1 ? "s" : ""} · Explore{" "}
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -212,16 +212,15 @@ export default function Home({ categories }: { categories: any[] }) {
           </Reveal>
           <Reveal className="flex flex-col justify-center gap-5" delay={0.1}>
             <span className="eyebrow">About</span>
-            <h2 className="font-serif text-3xl text-maroon sm:text-4xl">
+            <h2 className="font-serif text-3xl text-primary sm:text-4xl">
               Your Reliable Himalayan Salt Partner
             </h2>
-            <p className="text-base leading-relaxed text-muted">
+            <p className="text-base leading-relaxed text-muted-foreground">
               Premier Salt Industries brings together professional processing
               and manufacturing, consistent product quality, and dedicated
               export support. From custom packaging to private labeling, we work
               as an extension of your business.
-            </p>
-            <p className="text-base leading-relaxed text-muted">
+              <p className="text-base leading-relaxed text-muted-foreground"></p>
               Our team supports buyers at every stage — from first enquiry to
               shipment — with responsive, transparent communication.
             </p>
@@ -230,7 +229,9 @@ export default function Home({ categories }: { categories: any[] }) {
                 <Button variant="outline">About the Company</Button>
               </Link>
               <Link href="/manufacturing">
-                <Button variant="ghost">View Manufacturing →</Button>
+                <Button variant="ghost">
+                  View Manufacturing <ArrowRight />
+                </Button>
               </Link>
             </div>
           </Reveal>
@@ -254,16 +255,18 @@ export default function Home({ categories }: { categories: any[] }) {
               key={f.title}
               className="flex flex-col gap-3 rounded-sm border border-border bg-cream p-7"
             >
-              <f.icon className="h-6 w-6 text-terracotta" strokeWidth={1.5} />
-              <h3 className="font-serif text-lg text-maroon">{f.title}</h3>
-              <p className="text-sm leading-relaxed text-muted">{f.text}</p>
+              <f.icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
+              <h3 className="font-serif text-lg text-primary">{f.title}</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                {f.text}
+              </p>
             </div>
           ))}
         </Reveal>
       </section>
 
       {/* 6. Export process */}
-      <section className="bg-maroon py-24 text-cream">
+      <section className="bg-primary py-24 text-cream">
         <div className="mx-auto max-w-7xl px-6 md:px-8">
           <SectionHeading
             eyebrow="How Export Works"
@@ -298,10 +301,10 @@ export default function Home({ categories }: { categories: any[] }) {
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:items-center">
           <Reveal className="flex flex-col gap-5">
             <span className="eyebrow">Private Label</span>
-            <h2 className="font-serif text-3xl text-maroon sm:text-4xl">
+            <h2 className="font-serif text-3xl text-primary sm:text-4xl">
               Build Your Himalayan Salt Brand
             </h2>
-            <p className="text-base leading-relaxed text-muted">
+            <p className="text-base leading-relaxed text-muted-foreground">
               We support private-label development across edible salt, salt
               crafts, bath salt and animal salt licks — with custom sizes,
               custom packaging and brand label support built into the process.
@@ -316,8 +319,7 @@ export default function Home({ categories }: { categories: any[] }) {
                 "Custom packaging",
               ].map((i) => (
                 <li key={i} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />{" "}
-                  {i}
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {i}
                 </li>
               ))}
             </ul>
@@ -356,10 +358,10 @@ export default function Home({ categories }: { categories: any[] }) {
                   width={600}
                   height={300}
                 />
-                <h3 className="font-serif text-2xl text-maroon">
+                <h3 className="font-serif text-2xl text-primary">
                   {brand.name}
                 </h3>
-                <p className="text-sm leading-relaxed text-muted">
+                <p className="text-sm leading-relaxed text-muted-foreground">
                   A Premier Salt consumer brand bringing authentic Himalayan
                   salt products to households and retail partners, backed by the
                   same processing standards as our export range.
@@ -367,13 +369,13 @@ export default function Home({ categories }: { categories: any[] }) {
                 <div className="flex gap-4">
                   <Link
                     href={`/brands/${brand.slug}`}
-                    className="text-sm font-semibold text-terracotta hover:text-maroon"
+                    className="text-sm font-semibold text-primary hover:text-primary"
                   >
                     Explore Brand <ChevronRight />
                   </Link>
                   <Link
                     href="/shop"
-                    className="text-sm font-semibold text-terracotta hover:text-maroon"
+                    className="text-sm font-semibold text-primary hover:text-primary"
                   >
                     Shop Brand Products <ChevronRight />
                   </Link>
@@ -478,8 +480,8 @@ export default function Home({ categories }: { categories: any[] }) {
               },
             ].map((edu) => (
               <div key={edu.title}>
-                <h3 className="font-serif text-lg text-maroon">{edu.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
+                <h3 className="font-serif text-lg text-primary">{edu.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {edu.text}
                 </p>
               </div>
@@ -487,29 +489,29 @@ export default function Home({ categories }: { categories: any[] }) {
           </Reveal>
           <Link
             href="/about-himalayan-salt"
-            className="mt-8 inline-block text-sm font-semibold text-terracotta hover:text-maroon"
+            className="mt-8 flex items-center text-sm font-semibold text-primary hover:text-primary"
           >
-            Read more about Himalayan salt →
+            Read more about Himalayan salt <ArrowRight />
           </Link>
         </div>
       </section>
 
       {/* 13. Final CTA */}
-      <section className="relative overflow-hidden bg-terracotta py-24 text-cream">
+      <section className="relative overflow-hidden bg-primary py-24 text-cream">
         <Reveal className="mx-auto max-w-2xl px-6 text-center md:px-8">
           <h2 className="font-serif text-3xl sm:text-4xl">
             Looking for a Reliable Himalayan Salt Supplier?
           </h2>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Link href="/request-a-quote">
-              <Button className="bg-cream text-terracotta hover:bg-maroon hover:text-cream">
+              <Button className="bg-cream text-primary hover:bg-primary hover:text-cream">
                 Request a Quote
               </Button>
             </Link>
             <Link href="/contact">
               <Button
                 variant="outline"
-                className="border-cream text-cream hover:bg-cream hover:text-terracotta"
+                className="border-cream text-cream hover:bg-cream hover:text-primary"
               >
                 Contact Sales
               </Button>

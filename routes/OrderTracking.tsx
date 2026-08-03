@@ -4,7 +4,10 @@ import { useState, type FormEvent } from "react";
 import { PageHero } from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/button";
 import { FormField, inputClasses } from "@/components/ui/FormField";
-import { ORDER_PROGRESS_STATUSES, ORDER_STATUS_LABELS } from "@/lib/orderStatus";
+import {
+  ORDER_PROGRESS_STATUSES,
+  ORDER_STATUS_LABELS,
+} from "@/lib/orderStatus";
 import type { OrderDetail } from "@/lib/order";
 
 export default function OrderTracking() {
@@ -84,7 +87,7 @@ export default function OrderTracking() {
 
         {order && (
           <div className="mt-10">
-            <p className="font-serif text-xl text-maroon">
+            <p className="font-serif text-xl text-primary">
               Order {order.orderNumber}
             </p>
             <ol className="mt-6 flex flex-col gap-3">
@@ -96,10 +99,10 @@ export default function OrderTracking() {
                 return (
                   <li key={status} className="flex items-center gap-3">
                     <span
-                      className={`h-3 w-3 rounded-full ${reached ? "bg-terracotta" : "bg-border"}`}
+                      className={`h-3 w-3 rounded-full ${reached ? "bg-primary" : "bg-border"}`}
                     />
                     <span
-                      className={`text-sm ${reached ? "text-charcoal" : "text-muted"}`}
+                      className={`text-sm ${reached ? "text-charcoal" : "text-muted-foreground"}`}
                     >
                       {ORDER_STATUS_LABELS[status]}
                     </span>

@@ -48,7 +48,7 @@ export default function Wholesale() {
     >
       <Reveal className="border-t border-border pt-10">
         <span className="eyebrow">Process</span>
-        <h2 className="mt-3 mb-5 font-serif text-2xl text-maroon">
+        <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
           Application Process
         </h2>
         <ol className="flex flex-col gap-3 text-sm text-charcoal">
@@ -60,7 +60,7 @@ export default function Wholesale() {
             "Agreement and first order",
           ].map((step, i) => (
             <li key={step} className="flex items-center gap-3">
-              <span className="font-serif text-terracotta">
+              <span className="font-serif text-primary">
                 {String(i + 1).padStart(2, "0")}
               </span>{" "}
               {step}
@@ -73,7 +73,7 @@ export default function Wholesale() {
       </Reveal>
       <div className="border-t border-border pt-10">
         <span className="eyebrow">FAQ</span>
-        <h2 className="mt-3 mb-6 font-serif text-2xl text-maroon">
+        <h2 className="mt-3 mb-6 font-serif text-2xl text-primary">
           Partnership Questions
         </h2>
         <FAQAccordion items={faqs} />

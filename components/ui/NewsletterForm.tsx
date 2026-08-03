@@ -40,7 +40,9 @@ export function NewsletterForm() {
       setError(null);
       setEmail("");
     } catch {
-      setError("Could not subscribe. Please check your connection and try again.");
+      setError(
+        "Could not subscribe. Please check your connection and try again.",
+      );
       setStatus("error");
     } finally {
       setSubmitting(false);
@@ -72,7 +74,7 @@ export function NewsletterForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Your email address"
-          className="w-full rounded-sm border border-white/20 bg-white/5 px-4 py-2.5 text-sm text-cream placeholder:text-cream/40 focus-visible:outline-terracotta"
+          className="w-full rounded-sm border border-white/20 bg-white/5 px-4 py-2.5 text-sm text-cream placeholder:text-cream/40 focus-visible:outline-primary"
           aria-invalid={status === "error"}
           aria-describedby={error ? "newsletter-error" : undefined}
         />
@@ -95,7 +97,7 @@ export function NewsletterForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-sm bg-terracotta px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-cream hover:bg-salt-pink disabled:cursor-not-allowed disabled:opacity-60"
+        className="rounded-sm bg-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-cream hover:bg-salt-pink disabled:cursor-not-allowed disabled:opacity-60"
       >
         {submitting ? "Subscribing…" : "Subscribe"}
       </button>

@@ -19,10 +19,10 @@ export default function PolicyPage() {
       <div className="mx-auto flex max-w-2xl flex-col gap-10 px-6 py-16 md:px-8">
         {policy.sections.map((section) => (
           <Reveal key={section.heading}>
-            <h2 className="mb-3 font-serif text-xl text-maroon">
+            <h2 className="mb-3 font-serif text-xl text-primary">
               {section.heading}
             </h2>
-            <p className="text-base leading-relaxed text-muted">
+            <p className="text-base leading-relaxed text-muted-foreground">
               {section.body}
             </p>
           </Reveal>

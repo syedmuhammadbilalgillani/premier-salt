@@ -92,10 +92,16 @@ export default function MyAccount() {
           profile && (
             <div className="flex flex-col gap-6">
               <div className="rounded-sm border border-border bg-cream p-6">
-                <p className="font-serif text-xl text-maroon">{profile.name}</p>
-                <p className="mt-1 text-sm text-muted">{profile.email}</p>
-                <p className="text-sm text-muted">{profile.phone}</p>
-                <p className="mt-2 text-sm text-muted">{profile.address}</p>
+                <p className="font-serif text-xl text-primary">
+                  {profile.name}
+                </p>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {profile.email}
+                </p>
+                <p className="text-sm text-muted-foreground">{profile.phone}</p>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  {profile.address}
+                </p>
                 <div className="mt-4 flex gap-4">
                   <Button
                     variant="outline"
@@ -109,12 +115,12 @@ export default function MyAccount() {
                   </Button>
                 </div>
               </div>
-              <div className="flex gap-6 text-sm font-semibold text-terracotta">
-                <Link href="/my-account/orders" className="hover:text-maroon">
-                  View Orders →
+              <div className="flex gap-6 text-sm font-semibold text-primary">
+                <Link href="/my-account/orders" className="hover:text-primary">
+                  View Orders <ArrowRight />
                 </Link>
-                <Link href="/wishlist" className="hover:text-maroon">
-                  View Wishlist →
+                <Link href="/wishlist" className="hover:text-primary">
+                  View Wishlist <ArrowRight />
                 </Link>
               </div>
             </div>

@@ -49,13 +49,17 @@ export default function Contact() {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setSubmitError(data.error || "Could not send your message. Please try again.");
+        setSubmitError(
+          data.error || "Could not send your message. Please try again.",
+        );
         return;
       }
 
       setReference(data.data.reference);
     } catch {
-      setSubmitError("Could not send your message. Please check your connection and try again.");
+      setSubmitError(
+        "Could not send your message. Please check your connection and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -73,45 +77,44 @@ export default function Contact() {
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-4 text-sm">
             <span className="flex items-start gap-3">
-              <MapPin className="mt-0.5 h-4 w-4 text-terracotta" />{" "}
+              <MapPin className="mt-0.5 h-4 w-4 text-primary" />{" "}
               <span>
                 <strong className="text-charcoal">Office:</strong>{" "}
-                <span className="text-muted">{company.office}</span>
+                <span className="text-muted-foreground">{company.office}</span>
               </span>
             </span>
             <span className="flex items-start gap-3">
-              <MapPin className="mt-0.5 h-4 w-4 text-terracotta" />{" "}
+              <MapPin className="mt-0.5 h-4 w-4 text-primary" />{" "}
               <span>
                 <strong className="text-charcoal">Processing Plant:</strong>{" "}
-                <span className="text-muted">{company.plant}</span>
+                <span className="text-muted-foreground">{company.plant}</span>
               </span>
             </span>
             <a
               href={`tel:${company.phone.replace(/\s/g, "")}`}
-              className="flex items-center gap-3 hover:text-terracotta"
+              className="flex items-center gap-3 hover:text-primary"
             >
-              <Phone className="h-4 w-4 text-terracotta" /> {company.phone}
+              <Phone className="h-4 w-4 text-primary" /> {company.phone}
             </a>
             <a
               href={`https://wa.me/${company.phone.replace(/[^\d]/g, "")}`}
-              className="flex items-center gap-3 hover:text-terracotta"
+              className="flex items-center gap-3 hover:text-primary"
             >
-              <MessageCircle className="h-4 w-4 text-terracotta" /> WhatsApp Us
+              <MessageCircle className="h-4 w-4 text-primary" /> WhatsApp Us
             </a>
             <a
               href={`mailto:${company.emails.info}`}
-              className="flex items-center gap-3 hover:text-terracotta"
+              className="flex items-center gap-3 hover:text-primary"
             >
-              <Mail className="h-4 w-4 text-terracotta" /> {company.emails.info}
+              <Mail className="h-4 w-4 text-primary" /> {company.emails.info}
             </a>
             <a
               href={`mailto:${company.emails.sales}`}
-              className="flex items-center gap-3 hover:text-terracotta"
+              className="flex items-center gap-3 hover:text-primary"
             >
-              <Mail className="h-4 w-4 text-terracotta" />{" "}
-              {company.emails.sales}
+              <Mail className="h-4 w-4 text-primary" /> {company.emails.sales}
             </a>
-            <p className="text-muted">
+            <p className="text-muted-foreground">
               Business Hours: Monday–Saturday, 9:00 AM – 6:00 PM (PKT)
             </p>
           </div>
@@ -126,10 +129,10 @@ export default function Contact() {
           {reference ? (
             <div className="flex flex-col items-center gap-3 py-10 text-center">
               <span className="eyebrow">Message Sent</span>
-              <p className="font-serif text-2xl text-maroon">
+              <p className="font-serif text-2xl text-primary">
                 Reference: {reference}
               </p>
-              <p className="text-sm text-muted">
+              <p className="text-sm text-muted-foreground">
                 Our team will respond as soon as possible.
               </p>
             </div>
@@ -209,11 +212,13 @@ export default function Contact() {
                 className="hidden"
                 aria-hidden="true"
               />
-              <label className="flex items-start gap-2 text-xs text-muted">
+              <label className="flex items-start gap-2 text-xs text-muted-foreground">
                 <input type="checkbox" required className="mt-0.5" /> I consent
                 to being contacted regarding this enquiry.
               </label>
-              {submitError && <p className="text-sm text-error">{submitError}</p>}
+              {submitError && (
+                <p className="text-sm text-error">{submitError}</p>
+              )}
               <Button type="submit" disabled={submitting}>
                 {submitting ? "Sending…" : "Send Message"}
               </Button>

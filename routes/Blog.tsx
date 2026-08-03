@@ -25,16 +25,16 @@ export default function Blog() {
               className="group flex flex-col gap-3"
             >
               <ImagePlaceholder label={post.title} width={600} height={400} />
-              <span className="text-xs uppercase tracking-wide text-terracotta">
+              <span className="text-xs uppercase tracking-wide text-primary">
                 {post.category}
               </span>
-              <h2 className="font-serif text-lg text-maroon group-hover:text-terracotta">
+              <h2 className="font-serif text-lg text-primary group-hover:text-primary">
                 {post.title}
               </h2>
-              <p className="text-sm leading-relaxed text-muted">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {post.excerpt}
               </p>
-              <span className="text-xs text-muted">
+              <span className="text-xs text-muted-foreground">
                 {new Date(post.publishedDate).toLocaleDateString()} ·{" "}
                 {post.readingTime}
               </span>

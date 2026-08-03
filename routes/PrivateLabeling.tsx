@@ -96,7 +96,9 @@ export default function PrivateLabeling() {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setSubmitError(data.error || "Could not submit your enquiry. Please try again.");
+        setSubmitError(
+          data.error || "Could not submit your enquiry. Please try again.",
+        );
         return;
       }
 
@@ -107,7 +109,9 @@ export default function PrivateLabeling() {
         email: get("email"),
       });
     } catch {
-      setSubmitError("Could not submit your enquiry. Please check your connection and try again.");
+      setSubmitError(
+        "Could not submit your enquiry. Please check your connection and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -117,16 +121,16 @@ export default function PrivateLabeling() {
     return (
       <div className="mx-auto flex max-w-xl flex-col items-center gap-5 px-6 py-32 text-center">
         <span className="eyebrow">Request Received</span>
-        <h1 className="font-serif text-3xl text-maroon">
+        <h1 className="font-serif text-3xl text-primary">
           Thank you, {submitted.fullName}
         </h1>
-        <p className="text-base text-muted">
+        <p className="text-base text-muted-foreground">
           Your private-label enquiry has been recorded. Reference number:
         </p>
-        <p className="font-serif text-2xl text-terracotta">
+        <p className="font-serif text-2xl text-primary">
           {submitted.reference}
         </p>
-        <p className="text-sm text-muted">
+        <p className="text-sm text-muted-foreground">
           Our team will reach out at {submitted.email}.
         </p>
         <div className="mt-2 flex gap-4">
@@ -190,7 +194,7 @@ export default function PrivateLabeling() {
         <Reveal className="flex flex-col gap-10">
           <div>
             <span className="eyebrow">Process</span>
-            <h2 className="mt-3 mb-5 font-serif text-2xl text-maroon">
+            <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
               How It Works
             </h2>
             <ol className="flex flex-col gap-3">
@@ -199,7 +203,7 @@ export default function PrivateLabeling() {
                   key={step}
                   className="flex items-center gap-3 text-sm text-charcoal"
                 >
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-terracotta text-xs font-semibold text-cream">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-cream">
                     {i + 1}
                   </span>
                   {step}
@@ -209,17 +213,17 @@ export default function PrivateLabeling() {
           </div>
           <div>
             <span className="eyebrow">Product Areas</span>
-            <h2 className="mt-3 mb-3 font-serif text-2xl text-maroon">
+            <h2 className="mt-3 mb-3 font-serif text-2xl text-primary">
               What You Can Private Label
             </h2>
-            <p className="text-sm text-muted">
+            <p className="text-sm text-muted-foreground">
               Edible Salt · Salt Crafts &amp; Lamps · Bath Salt · Animal Salt
               Licks
             </p>
           </div>
           <div>
             <span className="eyebrow">Packaging Options</span>
-            <h2 className="mt-3 mb-3 font-serif text-2xl text-maroon">
+            <h2 className="mt-3 mb-3 font-serif text-2xl text-primary">
               Formats We Support
             </h2>
             <div className="flex flex-wrap gap-2">
@@ -241,7 +245,7 @@ export default function PrivateLabeling() {
             noValidate
             className="flex flex-col gap-5 rounded-sm border border-border bg-cream p-8"
           >
-            <h2 className="font-serif text-xl text-maroon">
+            <h2 className="font-serif text-xl text-primary">
               Private Label Enquiry
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -374,7 +378,7 @@ export default function PrivateLabeling() {
               className="hidden"
               aria-hidden="true"
             />
-            <label className="flex items-start gap-2 text-xs text-muted">
+            <label className="flex items-start gap-2 text-xs text-muted-foreground">
               <input type="checkbox" name="consent" className="mt-0.5" />I
               consent to being contacted by Premier Salt Industries regarding
               this enquiry.

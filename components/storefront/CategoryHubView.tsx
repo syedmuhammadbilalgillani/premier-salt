@@ -16,11 +16,14 @@ function SpecList({ spec }: { spec: Record<string, string> }) {
   return (
     <Reveal>
       <span className="eyebrow">Specifications</span>
-      <h2 className="mt-3 mb-4 font-serif text-xl text-maroon">Overview</h2>
+      <h2 className="mt-3 mb-4 font-serif text-xl text-primary">Overview</h2>
       <dl className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
         {entries.map(([key, value]) => (
-          <div key={key} className="flex justify-between gap-4 border-b border-border py-2 text-sm">
-            <dt className="text-muted">{key}</dt>
+          <div
+            key={key}
+            className="flex justify-between gap-4 border-b border-border py-2 text-sm"
+          >
+            <dt className="text-muted-foreground">{key}</dt>
             <dd className="text-right text-charcoal">{value}</dd>
           </div>
         ))}
@@ -104,7 +107,11 @@ export function CategoryHubView({
                 />
               </div>
             ) : (
-              <ImagePlaceholder label={`${title} — Product Gallery`} width={1200} height={700} />
+              <ImagePlaceholder
+                label={`${title} — Product Gallery`}
+                width={1200}
+                height={700}
+              />
             )}
           </Reveal>
 
@@ -113,14 +120,14 @@ export function CategoryHubView({
               <div
                 dangerouslySetInnerHTML={{ __html: category.description }}
                 className={cn(
-                  "text-sm leading-relaxed text-muted",
+                  "text-sm leading-relaxed text-muted-foreground",
                   "[&_p]:my-2 [&_p:first-child]:mt-0 [&_p:last-child]:mb-0",
                   "[&_ul]:my-2 [&_ul]:list-disc [&_ul]:pl-5",
                   "[&_ol]:my-2 [&_ol]:list-decimal [&_ol]:pl-5",
                   "[&_blockquote]:my-2 [&_blockquote]:border-l-2 [&_blockquote]:border-border [&_blockquote]:pl-3 [&_blockquote]:italic",
-                  "[&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:font-serif [&_h2]:text-lg [&_h2]:text-maroon",
-                  "[&_h3]:mt-3 [&_h3]:mb-1.5 [&_h3]:font-serif [&_h3]:text-base [&_h3]:text-maroon",
-                  "[&_a]:text-terracotta [&_a]:underline [&_a]:underline-offset-2",
+                  "[&_h2]:mt-4 [&_h2]:mb-2 [&_h2]:font-serif [&_h2]:text-lg [&_h2]:text-primary",
+                  "[&_h3]:mt-3 [&_h3]:mb-1.5 [&_h3]:font-serif [&_h3]:text-base [&_h3]:text-primary",
+                  "[&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2",
                 )}
               />
             </Reveal>
@@ -131,10 +138,10 @@ export function CategoryHubView({
           <Reveal className="flex flex-col gap-6">
             <div>
               <span className="eyebrow">Explore</span>
-              <h2 className="mt-3 mb-1 font-serif text-2xl text-maroon">
+              <h2 className="mt-3 mb-1 font-serif text-2xl text-primary">
                 {title} Subcategories
               </h2>
-              <p className="text-sm text-muted">
+              <p className="text-sm text-muted-foreground">
                 Choose a subcategory to see its full product range, sizes and
                 packing options.
               </p>
@@ -145,7 +152,7 @@ export function CategoryHubView({
                 <Link
                   key={child.id}
                   href={`/${parentSlug}/${child.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-sm border border-border transition-colors hover:border-terracotta"
+                  className="group flex flex-col overflow-hidden rounded-sm border border-border transition-colors hover:border-primary"
                 >
                   {child.image_url ? (
                     <div className="relative aspect-[5/3.2] w-full overflow-hidden">
@@ -158,24 +165,29 @@ export function CategoryHubView({
                       />
                     </div>
                   ) : (
-                    <ImagePlaceholder label={child.title} width={500} height={320} />
+                    <ImagePlaceholder
+                      label={child.title}
+                      width={500}
+                      height={320}
+                    />
                   )}
                   <div className="flex flex-1 flex-col gap-2 p-4">
                     <div className="flex items-center justify-between gap-3">
-                      <span className="font-serif text-base text-maroon group-hover:text-terracotta">
+                      <span className="font-serif text-base text-primary group-hover:text-primary">
                         {child.title}
                       </span>
                       <span className="shrink-0 rounded-full bg-sand/60 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-charcoal">
-                        {child.productCount} {child.productCount === 1 ? "product" : "products"}
+                        {child.productCount}{" "}
+                        {child.productCount === 1 ? "product" : "products"}
                       </span>
                     </div>
                     {child.description ? (
                       <div
                         dangerouslySetInnerHTML={{ __html: child.description }}
-                        className="line-clamp-2 text-sm text-muted [&_*]:inline"
+                        className="line-clamp-2 text-sm text-muted-foreground-foreground[&_*]:inline"
                       />
                     ) : null}
-                    <span className="mt-auto flex items-center gap-1 pt-1 text-xs font-semibold uppercase tracking-wide text-terracotta">
+                    <span className="mt-auto flex items-center gap-1 pt-1 text-xs font-semibold uppercase tracking-wide text-primary">
                       View Range <ArrowRight className="h-3 w-3" />
                     </span>
                   </div>
@@ -186,16 +198,18 @@ export function CategoryHubView({
 
           <Reveal>
             <span className="eyebrow">FAQ</span>
-            <h2 className="mt-3 mb-5 font-serif text-2xl text-maroon">Common Questions</h2>
+            <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
+              Common Questions
+            </h2>
             <FAQAccordion items={faqs} />
           </Reveal>
         </div>
 
         <Reveal className="h-fit rounded-sm border border-border bg-sand/40 p-6">
-          <h3 className="font-serif text-lg text-maroon">Get a Quote</h3>
-          <p className="mt-3 text-sm text-muted">
-            Share your requirement for {title.toLowerCase()} and our export sales
-            team will follow up with pricing, MOQ and production schedule.
+          <h3 className="font-serif text-lg text-primary">Get a Quote</h3>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Share your requirement for {title.toLowerCase()} and our export
+            sales team will follow up with pricing, MOQ and production schedule.
           </p>
           <Link href="/request-a-quote" className="mt-5 block">
             <Button className="w-full">Request Quote</Button>

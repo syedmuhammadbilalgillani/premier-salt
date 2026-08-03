@@ -22,7 +22,9 @@ export default async function ShopProductPage({
 
   const allProducts = await getShopProducts();
   const related = allProducts
-    .filter((p) => p.categoryId === product.categoryId && p.slug !== product.slug)
+    .filter(
+      (p) => p.categoryId === product.categoryId && p.slug !== product.slug,
+    )
     .slice(0, 4);
 
   return (
@@ -38,7 +40,9 @@ export default async function ShopProductPage({
 
       {related.length > 0 && (
         <div className="mx-auto max-w-7xl px-6 pb-20 md:px-8">
-          <h2 className="mb-6 font-serif text-2xl text-maroon">Related Products</h2>
+          <h2 className="mb-6 font-serif text-2xl text-primary">
+            Related Products
+          </h2>
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
             {related.map((p) => (
               <ShopProductCard key={p.slug} product={p} />

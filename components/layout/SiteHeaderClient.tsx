@@ -47,15 +47,15 @@ import {
 // `w-(--radix-dropdown-menu-trigger-width)`, the ring), and the rest must win
 // regardless of source order.
 const triggerClass =
-  "group flex cursor-pointer items-center gap-1 rounded-sm px-2 py-1 text-sm font-medium text-charcoal outline-hidden transition-colors hover:text-terracotta data-[state=open]:text-terracotta";
+  "group flex cursor-pointer items-center gap-1 rounded-sm px-2 py-1 text-sm font-medium text-charcoal outline-hidden transition-colors hover:text-primary data-[state=open]:text-primary";
 const contentPanelClass =
   "!w-auto min-w-56 rounded-md border border-border !bg-white p-1.5 !text-charcoal shadow-lg !ring-0";
 const itemClass =
-  "cursor-pointer rounded-sm px-3 py-2 text-sm text-charcoal focus:!bg-cream focus:!text-terracotta";
+  "cursor-pointer rounded-sm px-3 py-2 text-sm text-charcoal focus:!bg-cream focus:!text-primary";
 const subTriggerClass =
-  "cursor-pointer rounded-sm px-3 py-2 text-sm text-charcoal focus:!bg-cream focus:!text-terracotta data-[state=open]:!bg-cream data-[state=open]:!text-terracotta";
+  "cursor-pointer rounded-sm px-3 py-2 text-sm text-charcoal focus:!bg-cream focus:!text-primary data-[state=open]:!bg-cream data-[state=open]:!text-primary";
 const plainLinkClass =
-  "rounded-sm px-2 py-1 text-sm font-medium text-charcoal transition-colors hover:text-terracotta";
+  "rounded-sm px-2 py-1 text-sm font-medium text-charcoal transition-colors hover:text-primary";
 
 /**
  * DropdownMenu is click-driven by default; a site navbar is expected to open on
@@ -209,7 +209,7 @@ export function SiteHeaderClient({
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       {/* Top bar */}
-      <div className="hidden bg-maroon text-cream/90 md:block">
+      <div className="hidden bg-primary text-primary-foreground md:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-8 py-2 text-xs">
           <div className="flex items-center gap-5">
             <a
@@ -247,7 +247,7 @@ export function SiteHeaderClient({
         <div className="mx-auto flex  items-center justify-between px-6 py-2 md:px-8">
           <Link
             href="/"
-            className="font-serif text-2xl font-semibold tracking-wide text-maroon"
+            className="font-serif text-2xl font-semibold tracking-wide text-primary"
           >
             <Image
               src={`/premiersalt-logo.png`}
@@ -267,7 +267,7 @@ export function SiteHeaderClient({
                         <ProductNavMenuNode key={root.id} node={root} />
                       ))
                     ) : (
-                      <p className="px-3 py-2 text-sm text-muted">
+                      <p className="px-3 py-2 text-sm text-muted-foreground">
                         Categories will appear here once they&apos;re added.
                       </p>
                     )}
@@ -313,33 +313,33 @@ export function SiteHeaderClient({
           <div className="flex items-center gap-3">
             <Link
               href={headerCtas[0].to}
-              className="hidden rounded-sm border border-terracotta px-4 py-2 text-xs font-semibold uppercase tracking-wide text-terracotta hover:bg-terracotta hover:text-cream md:inline-block"
+              className="hidden rounded-sm border border-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-primary hover:bg-primary hover:text-cream md:inline-block"
             >
               {headerCtas[0].label}
             </Link>
             <Link
               href={headerCtas[1].to}
-              className="hidden rounded-sm bg-terracotta px-4 py-2 text-xs font-semibold uppercase tracking-wide text-cream hover:bg-maroon md:inline-block"
+              className="hidden rounded-sm bg-primary px-4 py-2 text-xs font-semibold uppercase tracking-wide text-cream hover:bg-primary md:inline-block"
             >
               {headerCtas[1].label}
             </Link>
 
             <div className="hidden items-center gap-4 border-l border-border pl-4 lg:flex">
               <Link href={retailNavigation[0].to} aria-label="Search">
-                <Search className="h-4.5 w-4.5 text-charcoal hover:text-terracotta" />
+                <Search className="h-4.5 w-4.5 text-charcoal hover:text-primary" />
               </Link>
               <Link href={retailNavigation[1].to} aria-label="Wishlist">
-                <Heart className="h-4.5 w-4.5 text-charcoal hover:text-terracotta" />
+                <Heart className="h-4.5 w-4.5 text-charcoal hover:text-primary" />
               </Link>
               <Link href={retailNavigation[2].to} aria-label="Account">
-                <User className="h-4.5 w-4.5 text-charcoal hover:text-terracotta" />
+                <User className="h-4.5 w-4.5 text-charcoal hover:text-primary" />
               </Link>
               <Link
                 href={retailNavigation[3].to}
                 aria-label="Cart"
                 className="relative"
               >
-                <ShoppingBag className="h-4.5 w-4.5 text-charcoal hover:text-terracotta" />
+                <ShoppingBag className="h-4.5 w-4.5 text-charcoal hover:text-primary" />
               </Link>
             </div>
 
@@ -364,7 +364,7 @@ export function SiteHeaderClient({
           />
           <div className="absolute right-0 top-0 flex h-full w-[86%] max-w-sm flex-col overflow-y-auto bg-cream p-6">
             <div className="mb-6 flex items-center justify-between">
-              <span className="font-serif text-xl text-maroon">
+              <span className="font-serif text-xl text-primary">
                 Premier Salt
               </span>
               <button
@@ -437,7 +437,7 @@ export function SiteHeaderClient({
                             key={link.id}
                             href={link.to}
                             className={cn(
-                              "py-1.5 text-sm text-muted hover:text-terracotta",
+                              "py-1.5 text-sm text-muted-foregroundhover:text-primary",
                               link.depth > 0 && "text-xs",
                               link.depth === 1 && "pl-3",
                               link.depth === 2 && "pl-6",
@@ -458,14 +458,14 @@ export function SiteHeaderClient({
               <Link
                 href={headerCtas[0].to}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-sm border border-terracotta px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-terracotta"
+                className="rounded-sm border border-primary px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-primary"
               >
                 {headerCtas[0].label}
               </Link>
               <Link
                 href={headerCtas[1].to}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-sm bg-terracotta px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-cream"
+                className="rounded-sm bg-primary px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-cream"
               >
                 {headerCtas[1].label}
               </Link>

@@ -9,10 +9,20 @@ interface FormFieldProps {
   className?: string;
 }
 
-export function FormField({ label, htmlFor, required, error, children, className }: FormFieldProps) {
+export function FormField({
+  label,
+  htmlFor,
+  required,
+  error,
+  children,
+  className,
+}: FormFieldProps) {
   return (
     <div className={className}>
-      <label htmlFor={htmlFor} className="mb-1.5 block text-sm font-medium text-charcoal">
+      <label
+        htmlFor={htmlFor}
+        className="mb-1.5 block text-sm font-medium text-charcoal"
+      >
         {label} {required && <span className="text-error">*</span>}
       </label>
       {children}
@@ -26,4 +36,4 @@ export function FormField({ label, htmlFor, required, error, children, className
 }
 
 export const inputClasses =
-  "w-full rounded-sm border border-border bg-white px-4 py-2.5 text-sm text-charcoal placeholder:text-muted/60 focus-visible:outline-terracotta";
+  "w-full rounded-sm border border-border bg-white px-4 py-2.5 text-sm text-charcoal placeholder:text-muted/60 focus-visible:outline-primary";

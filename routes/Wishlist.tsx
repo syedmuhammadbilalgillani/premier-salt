@@ -22,7 +22,7 @@ export default function Wishlist() {
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-8">
         {items.length === 0 ? (
           <div className="flex flex-col items-center gap-4 py-16 text-center">
-            <p className="text-muted">
+            <p className="text-muted-foreground">
               Your wishlist is empty. Save products you're interested in for
               later.
             </p>

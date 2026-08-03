@@ -198,7 +198,7 @@ function SearchContent() {
         onChange={(event) => setQuery(event.target.value)}
         placeholder="Search products, categories, articles…"
         autoComplete="off"
-        className="w-full rounded-sm border border-border bg-white px-4 py-3 text-sm text-charcoal outline-none transition focus-visible:border-terracotta focus-visible:ring-2 focus-visible:ring-terracotta/20"
+        className="w-full rounded-sm border border-border bg-white px-4 py-3 text-sm text-charcoal outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20"
       />
 
       {hasQuery && (
@@ -257,11 +257,11 @@ function SearchContent() {
               href={result.href}
               className="group flex flex-col gap-1 py-5"
             >
-              <span className="text-xs font-semibold uppercase tracking-wide text-terracotta">
+              <span className="text-xs font-semibold uppercase tracking-wide text-primary">
                 {result.type}
               </span>
 
-              <span className="font-serif text-lg text-charcoal transition-colors group-hover:text-terracotta">
+              <span className="font-serif text-lg text-charcoal transition-colors group-hover:text-primary">
                 {highlightText(result.title)}
               </span>
 
@@ -279,10 +279,10 @@ function SearchContent() {
 function getFilterButtonClass(active: boolean) {
   return [
     "rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta/40",
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40",
     active
-      ? "border-terracotta bg-terracotta text-cream"
-      : "border-border bg-transparent text-charcoal hover:border-terracotta hover:text-terracotta",
+      ? "border-primary bg-primary text-cream"
+      : "border-border bg-transparent text-charcoal hover:border-primary hover:text-primary",
   ].join(" ");
 }
 

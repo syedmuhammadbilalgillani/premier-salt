@@ -46,7 +46,7 @@ export default function FAQ() {
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search questions…"
           aria-label="Search frequently asked questions"
-          className="mb-10 w-full rounded-sm border border-border bg-white px-4 py-3 text-sm focus-visible:outline-terracotta"
+          className="mb-10 w-full rounded-sm border border-border bg-white px-4 py-3 text-sm focus-visible:outline-primary"
         />
 
         {filtered.length === 0 ? (
@@ -57,7 +57,7 @@ export default function FAQ() {
           <div className="flex flex-col gap-12">
             {filtered.map((group) => (
               <section key={group.group}>
-                <h2 className="mb-5 font-serif text-2xl text-maroon">
+                <h2 className="mb-5 font-serif text-2xl text-primary">
                   {group.group}
                 </h2>
 

@@ -19,14 +19,14 @@ function Block({
   return (
     <div>
       <span className="eyebrow">{eyebrow}</span>
-      <h2 className="mt-3 mb-4 font-serif text-xl text-maroon">{title}</h2>
+      <h2 className="mt-3 mb-4 font-serif text-xl text-primary">{title}</h2>
       <ul className="flex flex-col gap-2">
         {items.map((item) => (
           <li
             key={item}
             className="flex items-start gap-2 text-sm text-charcoal"
           >
-            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />{" "}
+            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />{" "}
             {item}
           </li>
         ))}
@@ -113,7 +113,7 @@ export default function CategoryPage() {
 
           <Reveal>
             <span className="eyebrow">FAQ</span>
-            <h2 className="mt-3 mb-5 font-serif text-2xl text-maroon">
+            <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
               Common Questions
             </h2>
             <FAQAccordion items={faqs} />
@@ -122,7 +122,7 @@ export default function CategoryPage() {
           {relatedPages.length > 0 && (
             <Reveal>
               <span className="eyebrow">Related</span>
-              <h2 className="mt-3 mb-5 font-serif text-2xl text-maroon">
+              <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
                 You May Also Need
               </h2>
               <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
@@ -137,7 +137,7 @@ export default function CategoryPage() {
                       width={500}
                       height={360}
                     />
-                    <span className="text-sm font-medium text-charcoal group-hover:text-terracotta">
+                    <span className="text-sm font-medium text-charcoal group-hover:text-primary">
                       {rel.name}
                     </span>
                   </Link>
@@ -148,44 +148,44 @@ export default function CategoryPage() {
         </div>
 
         <Reveal className="h-fit rounded-sm border border-border bg-sand/40 p-6">
-          <h3 className="font-serif text-lg text-maroon">
+          <h3 className="font-serif text-lg text-primary">
             Specification Overview
           </h3>
           <dl className="mt-4 flex flex-col gap-3 text-sm">
             <div className="flex justify-between gap-4">
-              <dt className="text-muted">Product type</dt>
+              <dt className="text-muted-foreground">Product type</dt>
               <dd className="text-right text-charcoal">{page.name}</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="text-muted">Colour options</dt>
+              <dt className="text-muted-foreground">Colour options</dt>
               <dd className="text-right text-charcoal">
                 Multiple, see product options
               </dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="text-muted">Size options</dt>
+              <dt className="text-muted-foreground">Size options</dt>
               <dd className="text-right text-charcoal">Multiple</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="text-muted">Packaging</dt>
+              <dt className="text-muted-foreground">Packaging</dt>
               <dd className="text-right text-charcoal">{page.packaging[0]}</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="text-muted">Private label</dt>
+              <dt className="text-muted-foreground">Private label</dt>
               <dd className="text-right text-charcoal">
                 {page.privateLabelAvailable ? "Available" : "On request"}
               </dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="text-muted">Wholesale</dt>
+              <dt className="text-muted-foreground">Wholesale</dt>
               <dd className="text-right text-charcoal">Available</dd>
             </div>
             <div className="flex justify-between gap-4">
-              <dt className="text-muted">Export</dt>
+              <dt className="text-muted-foreground">Export</dt>
               <dd className="text-right text-charcoal">Available</dd>
             </div>
           </dl>
-          <p className="mt-4 text-xs leading-relaxed text-muted">
+          <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
             Contact sales for current specifications, MOQ and production
             schedule.
           </p>

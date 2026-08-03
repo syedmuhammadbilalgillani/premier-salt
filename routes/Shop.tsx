@@ -120,7 +120,7 @@ function ShopContent() {
         <div>
           <label
             htmlFor="shop-search"
-            className="mb-2 block text-sm font-semibold text-maroon"
+            className="mb-2 block text-sm font-semibold text-primary"
           >
             Search
           </label>
@@ -132,12 +132,12 @@ function ShopContent() {
             onChange={(event) => updateParam("q", event.target.value)}
             placeholder="Search products…"
             autoComplete="off"
-            className="w-full rounded-sm border border-border bg-white px-3 py-2 text-sm text-charcoal outline-none transition focus-visible:border-terracotta focus-visible:ring-2 focus-visible:ring-terracotta/20"
+            className="w-full rounded-sm border border-border bg-white px-3 py-2 text-sm text-charcoal outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20"
           />
         </div>
 
         <div>
-          <span className="mb-2 block text-sm font-semibold text-maroon">
+          <span className="mb-2 block text-sm font-semibold text-primary">
             Category
           </span>
 
@@ -172,7 +172,7 @@ function ShopContent() {
           <button
             type="button"
             onClick={clearFilters}
-            className="w-fit text-sm font-semibold text-terracotta transition-colors hover:text-maroon"
+            className="w-fit text-sm font-semibold text-primary transition-colors hover:text-primary"
           >
             Clear all filters
           </button>
@@ -202,7 +202,7 @@ function ShopContent() {
 
                 updateParam("sort", value === "featured" ? "" : value);
               }}
-              className="rounded-sm border border-border bg-white px-3 py-1.5 text-sm text-charcoal outline-none focus-visible:border-terracotta focus-visible:ring-2 focus-visible:ring-terracotta/20"
+              className="rounded-sm border border-border bg-white px-3 py-1.5 text-sm text-charcoal outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20"
             >
               {sortOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -217,7 +217,7 @@ function ShopContent() {
           <ShopGridLoading />
         ) : filteredProducts.length === 0 ? (
           <div className="flex flex-col items-center gap-3 py-24 text-center">
-            <p className="font-serif text-xl text-maroon">
+            <p className="font-serif text-xl text-primary">
               No products match your filters
             </p>
 
@@ -228,7 +228,7 @@ function ShopContent() {
             <button
               type="button"
               onClick={clearFilters}
-              className="text-sm font-semibold text-terracotta transition-colors hover:text-maroon"
+              className="text-sm font-semibold text-primary transition-colors hover:text-primary"
             >
               Clear filters
             </button>
@@ -255,10 +255,8 @@ function isValidSort(value: string | null): value is SortValue {
 function getCategoryClass(active: boolean) {
   return [
     "text-left text-sm transition-colors",
-    "focus-visible:outline-none focus-visible:text-terracotta",
-    active
-      ? "font-semibold text-terracotta"
-      : "text-charcoal hover:text-terracotta",
+    "focus-visible:outline-none focus-visible:text-primary",
+    active ? "font-semibold text-primary" : "text-charcoal hover:text-primary",
   ].join(" ");
 }
 

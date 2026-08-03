@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ORDER_STATUS_LABELS } from "@/lib/orderStatus";
 import type { OrderDetail } from "@/lib/order";
+import { ArrowRight } from "lucide-react";
 
 export function OrderConfirmationClient({ order }: { order: OrderDetail }) {
   return (
@@ -12,55 +13,67 @@ export function OrderConfirmationClient({ order }: { order: OrderDetail }) {
       <div className="rounded-sm border border-border bg-cream p-8 print:border-none">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border pb-4">
           <div>
-            <p className="text-xs uppercase tracking-wide text-muted">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
               Order Number
             </p>
-            <p className="font-serif text-2xl text-maroon">{order.orderNumber}</p>
+            <p className="font-serif text-2xl text-primary">
+              {order.orderNumber}
+            </p>
           </div>
-          <p className="text-sm text-muted">
+          <p className="text-sm text-muted-foreground">
             {new Date(order.createdAt).toLocaleDateString()}
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 border-b border-border py-5 sm:grid-cols-2">
           <div>
-            <p className="text-xs uppercase tracking-wide text-muted">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
               Customer
             </p>
             <p className="text-sm text-charcoal">
               {order.customerFirstName} {order.customerLastName}
             </p>
-            <p className="text-sm text-muted">{order.customerEmail}</p>
-            <p className="text-sm text-muted">{order.customerPhone}</p>
+            <p className="text-sm text-muted-foreground">
+              {order.customerEmail}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              {order.customerPhone}
+            </p>
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wide text-muted">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
               Delivery Address
             </p>
             <p className="text-sm text-charcoal">
               {order.addressLine1}
               {order.addressLine2 ? `, ${order.addressLine2}` : ""}
             </p>
-            <p className="text-sm text-muted">
+            <p className="text-sm text-muted-foreground">
               {order.addressCity}, {order.addressProvince}{" "}
               {order.addressPostalCode}
             </p>
-            <p className="text-sm text-muted">{order.addressCountry}</p>
+            <p className="text-sm text-muted-foreground">
+              {order.addressCountry}
+            </p>
           </div>
         </div>
 
         <div className="border-b border-border py-5 text-sm">
           <p>
             <span className="font-semibold text-charcoal">Payment: </span>
-            <span className="text-muted">{order.paymentMethod}</span>
+            <span className="text-muted-foreground">{order.paymentMethod}</span>
           </p>
           <p>
             <span className="font-semibold text-charcoal">Delivery: </span>
-            <span className="text-muted">{order.deliveryMethod}</span>
+            <span className="text-muted-foreground">
+              {order.deliveryMethod}
+            </span>
           </p>
           <p>
             <span className="font-semibold text-charcoal">Status: </span>
-            <span className="text-muted">{ORDER_STATUS_LABELS[order.status]}</span>
+            <span className="text-muted-foreground">
+              {ORDER_STATUS_LABELS[order.status]}
+            </span>
           </p>
         </div>
 
@@ -69,9 +82,10 @@ export function OrderConfirmationClient({ order }: { order: OrderDetail }) {
             <li key={line.id} className="flex justify-between">
               <span className="text-charcoal">
                 {line.name}
-                {line.variantLabel ? ` — ${line.variantLabel}` : ""} × {line.quantity}
+                {line.variantLabel ? ` — ${line.variantLabel}` : ""} ×{" "}
+                {line.quantity}
               </span>
-              <span className="text-muted">
+              <span className="text-muted-foreground">
                 PKR {(line.price * line.quantity).toLocaleString()}
               </span>
             </li>
@@ -80,7 +94,7 @@ export function OrderConfirmationClient({ order }: { order: OrderDetail }) {
 
         <dl className="flex flex-col gap-2 pt-5 text-sm">
           <div className="flex justify-between">
-            <dt className="text-muted">Subtotal</dt>
+            <dt className="text-muted-foreground">Subtotal</dt>
             <dd>PKR {order.subtotal.toLocaleString()}</dd>
           </div>
           {order.discount > 0 && (
@@ -90,14 +104,14 @@ export function OrderConfirmationClient({ order }: { order: OrderDetail }) {
             </div>
           )}
           <div className="flex justify-between">
-            <dt className="text-muted">Shipping</dt>
+            <dt className="text-muted-foreground">Shipping</dt>
             <dd>
               {order.shipping === 0
                 ? "Free"
                 : `PKR ${order.shipping.toLocaleString()}`}
             </dd>
           </div>
-          <div className="flex justify-between border-t border-border pt-2 font-serif text-lg text-maroon">
+          <div className="flex justify-between border-t border-border pt-2 font-serif text-lg text-primary">
             <dt>Total</dt>
             <dd>PKR {order.total.toLocaleString()}</dd>
           </div>
@@ -110,7 +124,9 @@ export function OrderConfirmationClient({ order }: { order: OrderDetail }) {
           <Button variant="outline">Continue Shopping</Button>
         </Link>
         <Link href="/order-tracking">
-          <Button variant="ghost">Track Order →</Button>
+          <Button variant="ghost">
+            Track Order <ArrowRight />
+          </Button>
         </Link>
       </div>
     </div>

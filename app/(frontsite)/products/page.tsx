@@ -5,6 +5,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { getCachedCategories } from "@/lib/category";
+import { ArrowRight } from "lucide-react";
 
 // Category content is admin-managed and cache-tagged (revalidateTag on every
 // category mutation) — no need to force-dynamic a public page.
@@ -31,7 +32,9 @@ function buildCategoryTree(
   for (const c of categories) {
     const node = nodeById.get(c.id);
     if (!node) continue;
-    const parent = c.parentCategoryId ? nodeById.get(c.parentCategoryId) : undefined;
+    const parent = c.parentCategoryId
+      ? nodeById.get(c.parentCategoryId)
+      : undefined;
     if (parent) {
       parent.children.push({ id: node.id, title: node.title });
     } else {
@@ -56,7 +59,7 @@ export default async function ProductsPage() {
 
       <div className="mx-auto max-w-7xl px-6 py-16 md:px-8">
         {roots.length === 0 ? (
-          <p className="text-sm text-muted">
+          <p className="text-sm text-muted-foreground">
             Categories will appear here once they&apos;re added.
           </p>
         ) : (
@@ -80,35 +83,39 @@ export default async function ProductsPage() {
                     />
                   </div>
                 ) : (
-                  <ImagePlaceholder label={cat.title} width={640} height={440} />
+                  <ImagePlaceholder
+                    label={cat.title}
+                    width={640}
+                    height={440}
+                  />
                 )}
-                <h3 className="font-serif text-lg text-maroon">{cat.title}</h3>
+                <h3 className="font-serif text-lg text-primary">{cat.title}</h3>
                 {cat.description ? (
                   <div
                     dangerouslySetInnerHTML={{ __html: cat.description }}
-                    className="line-clamp-3 text-sm leading-relaxed text-muted"
+                    className="line-clamp-3 text-sm leading-relaxed text-muted-foreground"
                   />
                 ) : null}
-                <span className="text-xs font-semibold uppercase tracking-wide text-terracotta">
+                <span className="text-xs font-semibold uppercase tracking-wide text-primary">
                   {cat.productCount} product{cat.productCount === 1 ? "" : "s"}
                 </span>
                 {cat.children.length > 0 && (
-                  <p className="text-xs text-muted">
+                  <p className="text-xs text-muted-foreground">
                     Includes: {cat.children.map((c) => c.title).join(", ")}
                   </p>
                 )}
                 <div className="mt-1 flex gap-4">
                   <Link
                     href="/request-a-quote"
-                    className="text-sm font-semibold text-terracotta hover:text-maroon"
+                    className="text-sm font-semibold text-primary hover:text-primary"
                   >
-                    Request Quote →
+                    Request Quote <ArrowRight />
                   </Link>
                   <Link
                     href={`/${cat.slug}`}
-                    className="text-sm font-semibold text-charcoal hover:text-terracotta"
+                    className="text-sm font-semibold text-charcoal hover:text-primary"
                   >
-                    View Category →
+                    View Category <ArrowRight />
                   </Link>
                 </div>
               </div>
@@ -118,7 +125,7 @@ export default async function ProductsPage() {
 
         <Reveal className="mt-20 grid grid-cols-1 gap-8 border-t border-border pt-16 sm:grid-cols-2">
           <div className="rounded-sm bg-sand/40 p-8">
-            <h3 className="font-serif text-xl text-maroon">B2B Catalogue</h3>
+            <h3 className="font-serif text-xl text-primary">B2B Catalogue</h3>
             <ul className="mt-4 flex flex-col gap-2 text-sm text-charcoal">
               {[
                 "Bulk quantities",
@@ -128,14 +135,13 @@ export default async function ProductsPage() {
                 "Price on request",
               ].map((i) => (
                 <li key={i} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />{" "}
-                  {i}
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {i}
                 </li>
               ))}
             </ul>
           </div>
           <div className="rounded-sm border border-border bg-cream p-8">
-            <h3 className="font-serif text-xl text-maroon">Online Shop</h3>
+            <h3 className="font-serif text-xl text-primary">Online Shop</h3>
             <ul className="mt-4 flex flex-col gap-2 text-sm text-charcoal">
               {[
                 "Small quantities",
@@ -144,16 +150,15 @@ export default async function ProductsPage() {
                 "Online checkout",
               ].map((i) => (
                 <li key={i} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />{" "}
-                  {i}
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {i}
                 </li>
               ))}
             </ul>
             <Link
               href="/shop"
-              className="mt-4 inline-block text-sm font-semibold text-terracotta hover:text-maroon"
+              className="mt-4 inline-block text-sm font-semibold text-primary hover:text-primary"
             >
-              Shop Online →
+              Shop Online <ArrowRight />
             </Link>
           </div>
         </Reveal>

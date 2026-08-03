@@ -43,7 +43,7 @@ export default function Cart() {
           crumbs={[{ label: "Cart" }]}
         />
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-20 text-center">
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             Browse our shop to find edible salts, lamps, kitchen products and
             more.
           </p>
@@ -66,25 +66,23 @@ export default function Cart() {
               className="flex gap-4 border-b border-border pb-6"
             >
               <div className="w-24 shrink-0">
-                <ImagePlaceholder
-                  label={item.name}
-                  width={200}
-                  height={200}
-                />
+                <ImagePlaceholder label={item.name} width={200} height={200} />
               </div>
               <div className="flex flex-1 flex-col justify-between">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <Link
                       href={`/shop/product/${item.productSlug}`}
-                      className="font-medium text-charcoal hover:text-terracotta"
+                      className="font-medium text-charcoal hover:text-primary"
                     >
                       {item.product.title}
                     </Link>
                     {item.variantLabel && (
-                      <p className="text-xs text-muted">{item.variantLabel}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {item.variantLabel}
+                      </p>
                     )}
-                    <p className="text-xs text-muted">
+                    <p className="text-xs text-muted-foreground">
                       PKR {item.price.toLocaleString()} each
                     </p>
                   </div>
@@ -92,7 +90,7 @@ export default function Cart() {
                     aria-label="Remove item"
                     onClick={() => removeItem(item.productSlug, item.variantId)}
                   >
-                    <X className="h-4 w-4 text-muted hover:text-error" />
+                    <X className="h-4 w-4 text-muted-foregroundhover:text-error" />
                   </button>
                 </div>
                 <div className="flex items-center justify-between">
@@ -100,7 +98,11 @@ export default function Cart() {
                     <button
                       className="px-2.5 py-1"
                       onClick={() =>
-                        updateQuantity(item.productSlug, item.variantId, item.quantity - 1)
+                        updateQuantity(
+                          item.productSlug,
+                          item.variantId,
+                          item.quantity - 1,
+                        )
                       }
                       aria-label="Decrease quantity"
                     >
@@ -126,14 +128,18 @@ export default function Cart() {
                     <button
                       className="px-2.5 py-1"
                       onClick={() =>
-                        updateQuantity(item.productSlug, item.variantId, item.quantity + 1)
+                        updateQuantity(
+                          item.productSlug,
+                          item.variantId,
+                          item.quantity + 1,
+                        )
                       }
                       aria-label="Increase quantity"
                     >
                       +
                     </button>
                   </div>
-                  <span className="font-serif text-lg text-maroon">
+                  <span className="font-serif text-lg text-primary">
                     PKR {(item.price * item.quantity).toLocaleString()}
                   </span>
                 </div>
@@ -142,14 +148,14 @@ export default function Cart() {
           ))}
           <Link
             href="/shop"
-            className="text-sm font-semibold text-terracotta hover:text-maroon"
+            className="text-sm font-semibold text-primary hover:text-primary"
           >
             ← Continue Shopping
           </Link>
         </div>
 
         <div className="h-fit rounded-sm border border-border bg-sand/40 p-6">
-          <h2 className="font-serif text-xl text-maroon">Order Summary</h2>
+          <h2 className="font-serif text-xl text-primary">Order Summary</h2>
           <div className="mt-4 flex gap-2">
             <input
               value={code}
@@ -172,7 +178,7 @@ export default function Cart() {
 
           <dl className="mt-5 flex flex-col gap-2.5 border-t border-border pt-5 text-sm">
             <div className="flex justify-between">
-              <dt className="text-muted">Subtotal</dt>
+              <dt className="text-muted-foreground">Subtotal</dt>
               <dd>PKR {subtotal.toLocaleString()}</dd>
             </div>
             {discount > 0 && (
@@ -182,18 +188,18 @@ export default function Cart() {
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-muted">Shipping</dt>
+              <dt className="text-muted-foreground">Shipping</dt>
               <dd>
                 {shipping === 0 ? "Free" : `PKR ${shipping.toLocaleString()}`}
               </dd>
             </div>
-            <div className="flex justify-between border-t border-border pt-2.5 font-serif text-lg text-maroon">
+            <div className="flex justify-between border-t border-border pt-2.5 font-serif text-lg text-primary">
               <dt>Total</dt>
               <dd>PKR {total.toLocaleString()}</dd>
             </div>
           </dl>
           {subtotal < FREE_SHIPPING_THRESHOLD && (
-            <p className="mt-2 text-xs text-muted">
+            <p className="mt-2 text-xs text-muted-foreground">
               Add PKR {(FREE_SHIPPING_THRESHOLD - subtotal).toLocaleString()}{" "}
               more for free shipping.
             </p>

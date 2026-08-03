@@ -43,7 +43,7 @@ export function SiteFooter() {
                   <li key={link.to}>
                     <Link
                       href={link.to}
-                      className="text-sm text-cream/60 hover:text-terracotta"
+                      className="text-sm text-cream/60 hover:text-primary"
                     >
                       {link.label}
                     </Link>
@@ -67,13 +67,13 @@ export function SiteFooter() {
             Limited. All rights reserved.
           </span>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
-            <Link href="/privacy-policy" className="hover:text-terracotta">
+            <Link href="/privacy-policy" className="hover:text-primary">
               Privacy Policy
             </Link>
-            <Link href="/terms-conditions" className="hover:text-terracotta">
+            <Link href="/terms-conditions" className="hover:text-primary">
               Terms &amp; Conditions
             </Link>
-            <Link href="/cookie-policy" className="hover:text-terracotta">
+            <Link href="/cookie-policy" className="hover:text-primary">
               Cookie Policy
             </Link>
           </div>

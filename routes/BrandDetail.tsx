@@ -43,10 +43,10 @@ export default function BrandDetail() {
         <Reveal className="grid grid-cols-1 gap-10 md:grid-cols-2">
           <div>
             <span className="eyebrow">Positioning</span>
-            <h2 className="mt-3 font-serif text-2xl text-maroon">
+            <h2 className="mt-3 font-serif text-2xl text-primary">
               A Trusted Name for Everyday Himalayan Salt
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-muted">
+            <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
               {brand?.name} brings Premier Salt's processing standards to
               households and retail shelves, with a focus on consistent quality
               and accessible packaging.
@@ -54,7 +54,7 @@ export default function BrandDetail() {
           </div>
           <div>
             <span className="eyebrow">Values</span>
-            <h2 className="mt-3 font-serif text-2xl text-maroon">
+            <h2 className="mt-3 font-serif text-2xl text-primary">
               What the Brand Stands For
             </h2>
             <ul className="mt-4 flex flex-col gap-2 text-sm text-charcoal">
@@ -64,8 +64,7 @@ export default function BrandDetail() {
                 "Accessible everyday quality",
               ].map((v) => (
                 <li key={v} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />{" "}
-                  {v}
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {v}
                 </li>
               ))}
             </ul>
@@ -73,7 +72,7 @@ export default function BrandDetail() {
         </Reveal>
 
         <Reveal>
-          <h2 className="mb-6 font-serif text-2xl text-maroon">
+          <h2 className="mb-6 font-serif text-2xl text-primary">
             Featured Products
           </h2>
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">

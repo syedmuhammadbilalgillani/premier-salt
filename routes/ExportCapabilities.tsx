@@ -32,7 +32,14 @@ export default function ExportCapabilities() {
           eyebrow: "Who We Support",
           title: "Buyer Types We Work With",
           paragraphs: [],
-          bullets: ["Importers", "Wholesalers", "Distributors", "Retail Chains", "Institutional Buyers", "Private-label Brands"],
+          bullets: [
+            "Importers",
+            "Wholesalers",
+            "Distributors",
+            "Retail Chains",
+            "Institutional Buyers",
+            "Private-label Brands",
+          ],
         },
         {
           eyebrow: "Support We Provide",
@@ -46,11 +53,15 @@ export default function ExportCapabilities() {
       <Reveal className="grid grid-cols-1 gap-10 border-t border-border pt-10 md:grid-cols-2">
         <div>
           <span className="eyebrow">Export Journey</span>
-          <h2 className="mt-3 mb-5 font-serif text-2xl text-maroon">Six Steps</h2>
+          <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
+            Six Steps
+          </h2>
           <ol className="flex flex-col gap-4">
             {journey.map((step, i) => (
               <li key={step} className="flex items-start gap-3">
-                <span className="font-serif text-lg text-terracotta">{String(i + 1).padStart(2, "0")}</span>
+                <span className="font-serif text-lg text-primary">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
                 <span className="text-sm text-charcoal">{step}</span>
               </li>
             ))}
@@ -58,11 +69,16 @@ export default function ExportCapabilities() {
         </div>
         <div>
           <span className="eyebrow">Typical Enquiry Information</span>
-          <h2 className="mt-3 mb-5 font-serif text-2xl text-maroon">What to Include</h2>
+          <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
+            What to Include
+          </h2>
           <ul className="flex flex-col gap-2.5">
             {checklist.map((item) => (
-              <li key={item} className="flex items-center gap-2 text-sm text-charcoal">
-                <span className="h-1.5 w-1.5 rounded-full bg-terracotta" /> {item}
+              <li
+                key={item}
+                className="flex items-center gap-2 text-sm text-charcoal"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" /> {item}
               </li>
             ))}
           </ul>

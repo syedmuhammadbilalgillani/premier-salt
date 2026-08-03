@@ -30,7 +30,9 @@ export function SectionHeading({
         {title}
       </h2>
       {description && (
-        <p className="text-base leading-relaxed text-muted sm:text-lg">{description}</p>
+        <p className="text-base leading-relaxed text-muted-foregroundsm:text-lg">
+          {description}
+        </p>
       )}
     </Reveal>
   );

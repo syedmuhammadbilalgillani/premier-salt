@@ -27,13 +27,13 @@ export function FAQAccordion({ items }: { items: FAQItem[] }) {
               </span>
               <ChevronDown
                 className={cn(
-                  "h-4 w-4 shrink-0 text-terracotta transition-transform",
+                  "h-4 w-4 shrink-0 text-primary transition-transform",
                   open && "rotate-180",
                 )}
               />
             </button>
             {open && (
-              <p className="pb-5 text-sm leading-relaxed text-muted">
+              <p className="pb-5 text-sm leading-relaxed text-muted-foreground">
                 {item.answer}
               </p>
             )}

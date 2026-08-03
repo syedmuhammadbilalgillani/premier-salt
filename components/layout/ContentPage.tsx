@@ -53,13 +53,16 @@ export function ContentPage({
           >
             <div>
               <span className="eyebrow">{section.eyebrow}</span>
-              <h2 className="mt-3 font-serif text-2xl text-maroon">
+              <h2 className="mt-3 font-serif text-2xl text-primary">
                 {section.title}
               </h2>
             </div>
             <div className="flex flex-col gap-4">
               {section.paragraphs.map((p, i) => (
-                <p key={i} className="text-base leading-relaxed text-muted">
+                <p
+                  key={i}
+                  className="text-base leading-relaxed text-muted-foreground"
+                >
                   {p}
                 </p>
               ))}
@@ -70,7 +73,7 @@ export function ContentPage({
                       key={b}
                       className="flex items-start gap-2 text-sm text-charcoal"
                     >
-                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />{" "}
+                      <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />{" "}
                       {b}
                     </li>
                   ))}
@@ -83,10 +86,10 @@ export function ContentPage({
       </div>
       <section className="bg-sand/40 py-16">
         <Reveal className="mx-auto flex max-w-7xl flex-col items-start gap-4 px-6 md:px-8">
-          <h2 className="font-serif text-2xl text-maroon sm:text-3xl">
+          <h2 className="font-serif text-2xl text-primary sm:text-3xl">
             {ctaTitle}
           </h2>
-          <p className="max-w-xl text-base text-muted">{ctaText}</p>
+          <p className="max-w-xl text-base text-muted-foreground">{ctaText}</p>
           <Link href={ctaTo}>
             <Button>{ctaLabel}</Button>
           </Link>

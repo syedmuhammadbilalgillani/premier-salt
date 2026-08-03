@@ -77,11 +77,11 @@ export default function Downloads() {
               key={d.title}
               className="flex flex-col gap-3 border border-border p-6"
             >
-              <h3 className="font-serif text-lg text-maroon">{d.title}</h3>
-              <p className="text-sm leading-relaxed text-muted">
+              <h3 className="font-serif text-lg text-primary">{d.title}</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {d.description}
               </p>
-              <span className="text-xs uppercase tracking-wide text-muted">
+              <span className="text-xs uppercase tracking-wide text-muted-foreground">
                 Preview document
               </span>
               <Button

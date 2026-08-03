@@ -37,7 +37,7 @@ export default function Checkout() {
           crumbs={[{ label: "Checkout" }]}
         />
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-6 py-20 text-center">
-          <p className="text-muted">
+          <p className="text-muted-foreground">
             Your cart is empty — add products before checking out.
           </p>
           <Link href="/shop">
@@ -110,14 +110,18 @@ export default function Checkout() {
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        setSubmitError(data.error || "Could not place your order. Please try again.");
+        setSubmitError(
+          data.error || "Could not place your order. Please try again.",
+        );
         return;
       }
 
       clearCart();
       navigate.push(`/order-confirmation/${data.data.id}`);
     } catch {
-      setSubmitError("Could not place your order. Please check your connection and try again.");
+      setSubmitError(
+        "Could not place your order. Please check your connection and try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -137,7 +141,7 @@ export default function Checkout() {
       >
         <div className="flex flex-col gap-12">
           <section>
-            <h2 className="mb-5 font-serif text-xl text-maroon">
+            <h2 className="mb-5 font-serif text-xl text-primary">
               Customer Details
             </h2>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -191,7 +195,7 @@ export default function Checkout() {
           </section>
 
           <section>
-            <h2 className="mb-5 font-serif text-xl text-maroon">
+            <h2 className="mb-5 font-serif text-xl text-primary">
               Shipping Address
             </h2>
             <div className="grid grid-cols-1 gap-4">
@@ -252,7 +256,7 @@ export default function Checkout() {
           </section>
 
           <section>
-            <h2 className="mb-5 font-serif text-xl text-maroon">
+            <h2 className="mb-5 font-serif text-xl text-primary">
               Delivery Method
             </h2>
             <div className="flex flex-col gap-2">
@@ -276,7 +280,7 @@ export default function Checkout() {
           </section>
 
           <section>
-            <h2 className="mb-5 font-serif text-xl text-maroon">
+            <h2 className="mb-5 font-serif text-xl text-primary">
               Payment Method
             </h2>
             <div className="flex flex-col gap-2">
@@ -297,7 +301,7 @@ export default function Checkout() {
                     {option}
                   </span>
                   {option === "Card Payment" && (
-                    <span className="pl-6 text-xs text-muted">
+                    <span className="pl-6 text-xs text-muted-foreground">
                       Card payment integration will be enabled in the production
                       backend.
                     </span>
@@ -322,7 +326,7 @@ export default function Checkout() {
               the{" "}
               <Link
                 href="/terms-conditions"
-                className="text-terracotta hover:underline"
+                className="text-primary hover:underline"
               >
                 Terms &amp; Conditions
               </Link>
@@ -339,7 +343,7 @@ export default function Checkout() {
         </div>
 
         <div className="h-fit rounded-sm border border-border bg-sand/40 p-6">
-          <h2 className="font-serif text-xl text-maroon">Order Summary</h2>
+          <h2 className="font-serif text-xl text-primary">Order Summary</h2>
           <ul className="mt-4 flex flex-col gap-2 border-b border-border pb-4 text-sm">
             {items.map((i) => (
               <li
@@ -349,7 +353,7 @@ export default function Checkout() {
                 <span className="text-charcoal">
                   {i.name} × {i.quantity}
                 </span>
-                <span className="text-muted">
+                <span className="text-muted-foreground">
                   PKR {(i.price * i.quantity).toLocaleString()}
                 </span>
               </li>
@@ -365,7 +369,7 @@ export default function Checkout() {
           </div>
           <dl className="flex flex-col gap-2.5 text-sm">
             <div className="flex justify-between">
-              <dt className="text-muted">Subtotal</dt>
+              <dt className="text-muted-foreground">Subtotal</dt>
               <dd>PKR {subtotal.toLocaleString()}</dd>
             </div>
             {discount > 0 && (
@@ -375,12 +379,12 @@ export default function Checkout() {
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-muted">Shipping</dt>
+              <dt className="text-muted-foreground">Shipping</dt>
               <dd>
                 {shipping === 0 ? "Free" : `PKR ${shipping.toLocaleString()}`}
               </dd>
             </div>
-            <div className="flex justify-between border-t border-border pt-2.5 font-serif text-lg text-maroon">
+            <div className="flex justify-between border-t border-border pt-2.5 font-serif text-lg text-primary">
               <dt>Total</dt>
               <dd>PKR {total.toLocaleString()}</dd>
             </div>

@@ -25,11 +25,16 @@ const CHANNELS = ["catalog", "shop"] as const;
 
 export async function GET(request: NextRequest) {
   try {
-    const search = request.nextUrl.searchParams.get("search")?.trim().toLowerCase();
+    const search = request.nextUrl.searchParams
+      .get("search")
+      ?.trim()
+      .toLowerCase();
 
     const rows = await getCachedProductList();
     const data = search
-      ? rows.filter((r) => r.title.toLowerCase().includes(search))
+      ? rows.filter((r: { title: string }) =>
+          r?.title?.toLowerCase().includes(search),
+        )
       : rows;
 
     return NextResponse.json({ success: true, data });
@@ -107,7 +112,8 @@ export function validateProductPayload(body: ProductPayload):
   if (typeof slug !== "string" || !isValidSlug(slug)) {
     return {
       ok: false,
-      error: "Slug is required and must be lowercase letters, numbers and hyphens only.",
+      error:
+        "Slug is required and must be lowercase letters, numbers and hyphens only.",
     };
   }
   if (typeof categoryId !== "string" || !isValidUuid(categoryId)) {
@@ -129,7 +135,10 @@ export function validateProductPayload(body: ProductPayload):
       return { ok: false, error: "Base price is required for shop products." };
     }
     if (!isValidPrice(rawBasePrice)) {
-      return { ok: false, error: "Base price must be a valid non-negative number." };
+      return {
+        ok: false,
+        error: "Base price must be a valid non-negative number.",
+      };
     }
     resolvedBasePrice = rawBasePrice;
 
@@ -139,14 +148,20 @@ export function validateProductPayload(body: ProductPayload):
       compareAtPrice !== ""
     ) {
       if (!isValidPrice(compareAtPrice)) {
-        return { ok: false, error: "Compare-at price must be a valid non-negative number." };
+        return {
+          ok: false,
+          error: "Compare-at price must be a valid non-negative number.",
+        };
       }
       resolvedCompareAtPrice = compareAtPrice as string;
     }
   }
 
   if (spec !== undefined && spec !== null && !isValidSpec(spec)) {
-    return { ok: false, error: "Specifications must be a flat set of key-value pairs." };
+    return {
+      ok: false,
+      error: "Specifications must be a flat set of key-value pairs.",
+    };
   }
   if (typeof status !== "string" || !STATUSES.includes(status as never)) {
     return { ok: false, error: "Status must be draft, active or archived." };
@@ -154,7 +169,10 @@ export function validateProductPayload(body: ProductPayload):
 
   const resolvedImages: ProductImageInput[] = Array.isArray(images)
     ? images
-        .filter((img): img is Record<string, unknown> => typeof img === "object" && img !== null)
+        .filter(
+          (img): img is Record<string, unknown> =>
+            typeof img === "object" && img !== null,
+        )
         .map((img) => ({
           url: String(img.url ?? ""),
           altText: typeof img.altText === "string" ? img.altText : null,
@@ -165,7 +183,8 @@ export function validateProductPayload(body: ProductPayload):
 
   // Catalog products never have purchasable variants — they're described by
   // flat specifications instead (see the `spec` field below).
-  const resolvedHasVariants = resolvedChannel === "catalog" ? false : Boolean(hasVariants);
+  const resolvedHasVariants =
+    resolvedChannel === "catalog" ? false : Boolean(hasVariants);
   const resolvedOptions: ProductOptionInput[] = [];
   const resolvedVariants: ProductVariantInput[] = [];
 
@@ -173,7 +192,8 @@ export function validateProductPayload(body: ProductPayload):
     if (!Array.isArray(options) || options.length === 0) {
       return {
         ok: false,
-        error: "At least one option (e.g. Color) is required for a product with variants.",
+        error:
+          "At least one option (e.g. Color) is required for a product with variants.",
       };
     }
     for (const rawOption of options) {
@@ -186,7 +206,10 @@ export function validateProductPayload(body: ProductPayload):
         return { ok: false, error: "Every option needs a name." };
       }
       if (!Array.isArray(values) || values.length === 0) {
-        return { ok: false, error: `Option "${name}" needs at least one value.` };
+        return {
+          ok: false,
+          error: `Option "${name}" needs at least one value.`,
+        };
       }
       const resolvedValues: ProductOptionInput["values"] = [];
       for (const rawValue of values) {
@@ -194,7 +217,8 @@ export function validateProductPayload(body: ProductPayload):
           return { ok: false, error: "Invalid option value." };
         }
         const value = (rawValue as Record<string, unknown>).value;
-        const priceModifier = (rawValue as Record<string, unknown>).priceModifier;
+        const priceModifier = (rawValue as Record<string, unknown>)
+          .priceModifier;
         if (typeof value !== "string" || !value.trim()) {
           return { ok: false, error: `Option "${name}" has an empty value.` };
         }
@@ -208,7 +232,8 @@ export function validateProductPayload(body: ProductPayload):
         }
         resolvedValues.push({
           value: value.trim(),
-          priceModifier: typeof priceModifier === "string" ? priceModifier : "0",
+          priceModifier:
+            typeof priceModifier === "string" ? priceModifier : "0",
         });
       }
       resolvedOptions.push({ name: name.trim(), values: resolvedValues });
@@ -226,9 +251,14 @@ export function validateProductPayload(body: ProductPayload):
       const v = rawVariant as Record<string, unknown>;
       const combination = v.combination;
       if (typeof combination !== "object" || combination === null) {
-        return { ok: false, error: "Every variant needs an option combination." };
+        return {
+          ok: false,
+          error: "Every variant needs an option combination.",
+        };
       }
-      const comboEntries = Object.entries(combination as Record<string, unknown>);
+      const comboEntries = Object.entries(
+        combination as Record<string, unknown>,
+      );
       if (comboEntries.length !== optionNames.length) {
         return {
           ok: false,
@@ -239,7 +269,10 @@ export function validateProductPayload(body: ProductPayload):
       for (const name of optionNames) {
         const val = (combination as Record<string, unknown>)[name];
         if (typeof val !== "string" || !val.trim()) {
-          return { ok: false, error: `Variant is missing a value for "${name}".` };
+          return {
+            ok: false,
+            error: `Variant is missing a value for "${name}".`,
+          };
         }
         cleanCombo[name] = val;
       }
@@ -296,7 +329,8 @@ export function validateProductPayload(body: ProductPayload):
     value: {
       title: title.trim(),
       slug,
-      description: typeof description === "string" ? description.trim() || null : null,
+      description:
+        typeof description === "string" ? description.trim() || null : null,
       categoryId,
       basePrice: resolvedBasePrice,
       compareAtPrice: resolvedCompareAtPrice,
@@ -315,14 +349,22 @@ export function validateProductPayload(body: ProductPayload):
 
 export async function POST(request: NextRequest) {
   try {
-    const body = (await request.json().catch(() => null)) as ProductPayload | null;
+    const body = (await request
+      .json()
+      .catch(() => null)) as ProductPayload | null;
     if (!body) {
-      return NextResponse.json({ success: false, error: "Invalid request body." }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Invalid request body." },
+        { status: 400 },
+      );
     }
 
     const result = validateProductPayload(body);
     if (!result.ok) {
-      return NextResponse.json({ success: false, error: result.error }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: result.error },
+        { status: 400 },
+      );
     }
     const value = result.value;
 
@@ -332,7 +374,10 @@ export async function POST(request: NextRequest) {
       .where(eq(categories.id, value.categoryId))
       .limit(1);
     if (!category) {
-      return NextResponse.json({ success: false, error: "Category not found." }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "Category not found." },
+        { status: 400 },
+      );
     }
 
     const [slugTaken] = await db
@@ -376,6 +421,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, data: created }, { status: 201 });
   } catch (error) {
     console.error("Error creating product", error);
-    return NextResponse.json({ success: false, error: "Failed to create product." }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: "Failed to create product." },
+      { status: 500 },
+    );
   }
 }

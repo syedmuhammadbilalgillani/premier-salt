@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Heart } from "lucide-react";
+import { ArrowRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,7 +14,9 @@ import { readStorage, writeStorage } from "@/lib/storage";
 import type { ShopProduct } from "@/lib/product";
 
 function variantLabel(variant: ShopProduct["variants"][number]) {
-  return Object.values(variant.combination).join(" / ") || variant.sku || "Option";
+  return (
+    Object.values(variant.combination).join(" / ") || variant.sku || "Option"
+  );
 }
 
 export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
@@ -29,13 +31,21 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
 
   const selectedVariant = useMemo(
     () =>
-      selectedVariantId ? (product.variants.find((v) => v.id === selectedVariantId) ?? null) : null,
+      selectedVariantId
+        ? (product.variants.find((v) => v.id === selectedVariantId) ?? null)
+        : null,
     [product.variants, selectedVariantId],
   );
 
-  const price = selectedVariant ? selectedVariant.price : (product.basePrice ?? 0);
-  const compareAtPrice = selectedVariant ? selectedVariant.compareAtPrice : product.compareAtPrice;
-  const stock = selectedVariant ? selectedVariant.stockQuantity : product.stockQuantity;
+  const price = selectedVariant
+    ? selectedVariant.price
+    : (product.basePrice ?? 0);
+  const compareAtPrice = selectedVariant
+    ? selectedVariant.compareAtPrice
+    : product.compareAtPrice;
+  const stock = selectedVariant
+    ? selectedVariant.stockQuantity
+    : product.stockQuantity;
   const sku = selectedVariant ? selectedVariant.sku : product.sku;
   const inStock = stock > 0;
   const activeImage =
@@ -44,11 +54,16 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
     product.images.at(0)?.url ??
     null;
 
-  const canAddToCart = product.hasVariants ? Boolean(selectedVariant) && inStock : inStock;
+  const canAddToCart = product.hasVariants
+    ? Boolean(selectedVariant) && inStock
+    : inStock;
 
   function handleNotify() {
     if (!notifyEmail) return;
-    const list = readStorage<Record<string, string[]>>("premierSalt.recentlyViewed", {});
+    const list = readStorage<Record<string, string[]>>(
+      "premierSalt.recentlyViewed",
+      {},
+    );
     writeStorage("premierSalt.recentlyViewed", {
       ...list,
       [product.slug]: [...(list[product.slug] ?? []), notifyEmail],
@@ -70,16 +85,26 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
             />
           </div>
         ) : (
-          <ImagePlaceholder label={`${product.title} — Gallery`} width={800} height={800} />
+          <ImagePlaceholder
+            label={`${product.title} — Gallery`}
+            width={800}
+            height={800}
+          />
         )}
       </Reveal>
 
       <Reveal delay={0.1} className="flex flex-col gap-5">
-        {sku && <span className="text-xs uppercase tracking-wide text-muted">SKU {sku}</span>}
+        {sku && (
+          <span className="text-xs uppercase tracking-wide text-muted-foreground">
+            SKU {sku}
+          </span>
+        )}
         <div className="flex items-baseline gap-3">
-          <span className="font-serif text-3xl text-maroon">PKR {price.toLocaleString()}</span>
+          <span className="font-serif text-3xl text-primary">
+            PKR {price.toLocaleString()}
+          </span>
           {compareAtPrice && (
-            <span className="text-sm text-muted line-through">
+            <span className="text-sm text-muted-foregroundline-through">
               PKR {compareAtPrice.toLocaleString()}
             </span>
           )}
@@ -90,7 +115,9 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
           {inStock ? `In Stock (${stock} available)` : "Out of Stock"}
         </span>
         {product.description && (
-          <p className="text-sm leading-relaxed text-muted">{product.description}</p>
+          <p className="text-sm leading-relaxed text-muted-foreground">
+            {product.description}
+          </p>
         )}
 
         {product.hasVariants && (
@@ -108,10 +135,14 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
                 setSelectedVariantId(e.target.value || null);
                 setQuantity(1);
               }}
-              className="w-full rounded-sm border border-border bg-white px-3 py-2 text-sm text-charcoal outline-none focus-visible:border-terracotta focus-visible:ring-2 focus-visible:ring-terracotta/20"
+              className="w-full rounded-sm border border-border bg-white px-3 py-2 text-sm text-charcoal outline-none focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20"
             >
               {product.variants.map((variant) => (
-                <option key={variant.id} value={variant.id} disabled={variant.stockQuantity <= 0}>
+                <option
+                  key={variant.id}
+                  value={variant.id}
+                  disabled={variant.stockQuantity <= 0}
+                >
                   {variantLabel(variant)} — PKR {variant.price.toLocaleString()}
                   {variant.stockQuantity <= 0 ? " (Out of Stock)" : ""}
                 </option>
@@ -146,12 +177,14 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
               Add to Cart
             </Button>
             <button
-              aria-label={has(product.slug) ? "Remove from wishlist" : "Add to wishlist"}
+              aria-label={
+                has(product.slug) ? "Remove from wishlist" : "Add to wishlist"
+              }
               onClick={() => toggle(product.slug)}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-border"
             >
               <Heart
-                className={`h-4.5 w-4.5 ${has(product.slug) ? "fill-terracotta text-terracotta" : "text-charcoal"}`}
+                className={`h-4.5 w-4.5 ${has(product.slug) ? "fill-primary text-primary" : "text-charcoal"}`}
               />
             </button>
           </div>
@@ -177,32 +210,35 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
             Object.entries(product.spec).map(([key, value]) => (
               <div key={key}>
                 <span className="font-semibold text-charcoal">{key}: </span>
-                <span className="text-muted">{value}</span>
+                <span className="text-muted-foreground">{value}</span>
               </div>
             ))}
           <div>
             <span className="font-semibold text-charcoal">Shipping: </span>
-            <span className="text-muted">
+            <span className="text-muted-foreground">
               Flat PKR 250, free on orders over PKR 5,000.
             </span>
           </div>
           <div>
             <span className="font-semibold text-charcoal">Returns: </span>
-            <span className="text-muted">
+            <span className="text-muted-foreground">
               See our{" "}
-              <Link href="/returns-refunds" className="text-terracotta hover:underline">
+              <Link
+                href="/returns-refunds"
+                className="text-primary hover:underline"
+              >
                 Returns &amp; Refunds policy
               </Link>
               .
             </span>
           </div>
         </div>
-        <p className="text-sm text-muted">No reviews yet.</p>
+        <p className="text-sm text-muted-foreground">No reviews yet.</p>
         <Link
           href="/request-a-quote"
-          className="text-sm font-semibold text-terracotta hover:text-maroon"
+          className="text-sm font-semibold text-primary hover:text-primary"
         >
-          Looking for bulk quantity? Request a B2B quote →
+          Looking for bulk quantity? Request a B2B quote <ArrowRight />
         </Link>
       </Reveal>
     </div>

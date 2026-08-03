@@ -23,7 +23,7 @@ export default function BlogPost() {
         crumbs={[{ label: "Blog", to: "/blog" }, { label: post.title }]}
       />
       <article className="mx-auto max-w-2xl px-6 py-16 md:px-8">
-        <div className="mb-8 flex items-center gap-3 text-xs text-muted">
+        <div className="mb-8 flex items-center gap-3 text-xs text-muted-foreground">
           <span>By Premier Salt Team</span> ·{" "}
           <span>{new Date(post.publishedDate).toLocaleDateString()}</span> ·{" "}
           <span>{post.readingTime}</span>
@@ -44,7 +44,7 @@ export default function BlogPost() {
         </div>
       </article>
       <div className="mx-auto max-w-7xl px-6 pb-20 md:px-8">
-        <h2 className="mb-6 font-serif text-2xl text-maroon">
+        <h2 className="mb-6 font-serif text-2xl text-primary">
           Related Articles
         </h2>
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
@@ -55,7 +55,7 @@ export default function BlogPost() {
               className="group flex flex-col gap-2"
             >
               <ImagePlaceholder label={r.title} width={500} height={340} />
-              <span className="text-sm font-medium text-charcoal group-hover:text-terracotta">
+              <span className="text-sm font-medium text-charcoal group-hover:text-primary">
                 {r.title}
               </span>
             </Link>

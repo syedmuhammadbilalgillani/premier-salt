@@ -60,11 +60,19 @@ export default function About() {
         </div>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <div className="w-40 shrink-0">
-            <ImagePlaceholder label="CEO Portrait — Asad Zahoor" width={600} height={750} />
+            <ImagePlaceholder
+              label="CEO Portrait — Asad Zahoor"
+              width={600}
+              height={750}
+            />
           </div>
           <div>
-            <p className="font-serif text-lg text-maroon">{company.ceo.name}</p>
-            <p className="text-sm text-muted">{company.ceo.title}</p>
+            <p className="font-serif text-lg text-primary">
+              {company.ceo.name}
+            </p>
+            <p className="text-sm text-text-muted-foreground">
+              {company.ceo.title}
+            </p>
           </div>
         </div>
       </Reveal>

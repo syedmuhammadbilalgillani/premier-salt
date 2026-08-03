@@ -23,11 +23,11 @@ export function PageHero({
         <Breadcrumbs items={crumbs} />
         <Reveal className="mt-5 flex max-w-2xl flex-col gap-4">
           <span className="eyebrow">{eyebrow}</span>
-          <h1 className="font-serif text-4xl leading-[1.1] text-maroon sm:text-5xl">
+          <h1 className="font-serif text-4xl leading-[1.1] text-primary sm:text-5xl">
             {title}
           </h1>
           {description && (
-            <p className="text-base leading-relaxed text-muted sm:text-lg">
+            <p className="text-base leading-relaxed text-muted-foreground sm:text-lg">
               {description}
             </p>
           )}

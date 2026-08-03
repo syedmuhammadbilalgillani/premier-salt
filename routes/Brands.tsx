@@ -3,6 +3,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { brandsConfig } from "@/data/company";
+import { ArrowRight } from "lucide-react";
 
 export default function Brands() {
   const brands = [brandsConfig.brandOne, brandsConfig.brandTwo];
@@ -27,15 +28,15 @@ export default function Brands() {
                 width={600}
                 height={300}
               />
-              <h2 className="font-serif text-2xl text-maroon group-hover:text-terracotta">
+              <h2 className="font-serif text-2xl text-primary group-hover:text-primary">
                 {brand.name}
               </h2>
-              <p className="text-sm leading-relaxed text-muted">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 A Premier Salt consumer brand, built on the same processing
                 standards as our export range.
               </p>
-              <span className="text-sm font-semibold text-terracotta">
-                Explore Brand →
+              <span className="text-sm font-semibold text-primary">
+                Explore Brand <ArrowRight />
               </span>
             </Link>
           ))}
