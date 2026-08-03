@@ -9,7 +9,12 @@ import { getCachedPublishedBlogPosts } from "@/lib/blog";
 export async function GET() {
   try {
     const posts = await getCachedPublishedBlogPosts();
-    const data = posts.map((p) => ({ title: p.title, slug: p.slug, excerpt: p.excerpt }));
+    const data = posts.map((p) => ({
+      title: p.title,
+      slug: p.slug,
+      excerpt: p.excerpt,
+      categorySlug: p.categorySlug,
+    }));
     return NextResponse.json({ success: true, data });
   } catch (error) {
     console.error("Error listing published blog posts", error);

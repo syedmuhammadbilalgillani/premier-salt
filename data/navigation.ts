@@ -81,7 +81,6 @@ export const mainNavigation: NavItem[] = [
       { label: "Frequently Asked Questions", to: "/faq" },
       { label: "Blog", to: "/blog" },
       { label: "Downloads", to: "/downloads" },
-      { label: "News & Events", to: "/news-events" },
     ],
   },
   { label: "Contact", to: "/contact" },
@@ -139,7 +138,6 @@ export const footerNavigation: NavGroup[] = [
       { label: "FAQ", to: "/faq" },
       { label: "Blog", to: "/blog" },
       { label: "Downloads", to: "/downloads" },
-      { label: "News & Events", to: "/news-events" },
     ],
   },
   {

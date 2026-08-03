@@ -12,6 +12,7 @@ interface SearchBlogPost {
   title: string;
   slug: string;
   excerpt: string;
+  categorySlug: string;
 }
 
 type ResultType = "B2B Category" | "Shop Product" | "Blog Article";
@@ -145,7 +146,7 @@ function SearchContent() {
       .map((post) => ({
         type: "Blog Article",
         title: post.title,
-        href: `/blog/${post.slug}`,
+        href: `/blog/${post.categorySlug}/${post.slug}`,
         snippet: post.excerpt,
       }));
 

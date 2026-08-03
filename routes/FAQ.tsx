@@ -39,7 +39,7 @@ export default function FAQ() {
         crumbs={[{ label: "FAQ" }]}
       />
 
-      <div className="mx-auto max-w-3xl px-6 py-16 md:px-8">
+      <div className="mx-auto max-w-3xl w-full px-6 py-16 md:px-8">
         <input
           type="search"
           value={query}

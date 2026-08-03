@@ -195,6 +195,21 @@ export function getCachedBlogCategory(id: string) {
   )();
 }
 
+export function getCachedBlogCategoryBySlug(slug: string) {
+  return unstable_cache(
+    async () => {
+      const [category] = await db
+        .select()
+        .from(blogCategories)
+        .where(eq(blogCategories.slug, slug))
+        .limit(1);
+      return category ?? null;
+    },
+    ["blog-category-slug", slug],
+    { tags: ["blog-categories", `blog-category-slug:${slug}`] },
+  )();
+}
+
 /** True if any blog post currently uses this category — blocks deletion. */
 export async function hasBlogPostsInCategory(
   categoryId: string,
