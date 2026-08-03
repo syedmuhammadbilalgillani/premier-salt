@@ -127,7 +127,7 @@ export default function Home({ categories }: { categories: any[] }) {
             <Link href="/shop" className="inline-flex">
               <Button
                 variant="outline"
-                className="border-cream text-cream hover:bg-cream hover:text-charcoal"
+                className="border-cream  hover:bg-cream text-muted-foreground hover:text-charcoal"
               >
                 Shop Online
               </Button>
@@ -203,10 +203,10 @@ export default function Home({ categories }: { categories: any[] }) {
               label="Manufacturing Facility — interior processing area"
               /> */}
             <Image
-              src={`https://seasalt.com/cdn/shop/files/Salt-Types-2.jpg?v=1758077674&width=400`}
+              src={`/about-sec.webp`}
               alt="About us banner"
-              width={800}
-              height={1000}
+              width={555}
+              height={994}
             />
           </Reveal>
           <Reveal className="flex flex-col justify-center gap-5" delay={0.1}>
@@ -440,9 +440,9 @@ export default function Home({ categories }: { categories: any[] }) {
           </Reveal>
           <Link
             href="/about-himalayan-salt"
-            className="mt-8 flex items-center text-sm font-semibold text-primary hover:text-primary"
+            className="mt-8 flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary"
           >
-            Read more about Himalayan salt <ArrowRight />
+            Read more about Himalayan salt <ArrowRight size={15} />
           </Link>
         </div>
       </section>
@@ -459,19 +459,19 @@ export default function Home({ categories }: { categories: any[] }) {
                 Request a Quote
               </Button>
             </Link>
-            <Link href="/contact">
-              <Button
-                variant="outline"
-                className="border-cream text-cream hover:bg-cream hover:text-primary"
-              >
-                Contact Sales
-              </Button>
-            </Link>
             <Link
               href="/downloads"
               className="text-sm font-medium underline underline-offset-4 hover:text-cream/80"
             >
               Download Company Profile
+            </Link>
+            <Link href="/contact">
+              <Button
+                variant="outline"
+                className="border-cream text-muted-foreground hover:bg-cream hover:text-primary"
+              >
+                Contact Sales
+              </Button>
             </Link>
           </div>
         </Reveal>
