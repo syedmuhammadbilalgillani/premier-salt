@@ -96,7 +96,7 @@ export default function Home({ categories }: { categories: any[] }) {
   return (
     <>
       {/* 1. Hero */}
-      <section className="relative flex min-h-screen items-end overflow-hidden bg-charcoal pt-32">
+      <section className="relative flex lg:h-dvh h-[80dvh] items-end overflow-hidden bg-charcoal pt-32">
         <div className="absolute inset-0">
           <ImagePlaceholder
             label="Hero Image — Himalayan salt processing at Premier Salt"

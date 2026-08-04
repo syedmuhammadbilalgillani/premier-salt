@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FormField, inputClasses } from "@/components/ui/FormField";
 import { downloadTextFile } from "@/lib/download";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import Image from "next/image";
 
 const process = [
   "Share Your Requirement",
@@ -162,19 +163,19 @@ export default function PrivateLabeling() {
         description="Develop customized Himalayan salt products and packaging under your own brand."
         crumbs={[{ label: "Private Labeling" }]}
       /> */}
-      <div
-        className="relative isolate h-[87dvh] bg-center bg-no-repeat"
-        style={{
-          backgroundImage: "url('/privatelabelbanner.jpeg')",
-          backgroundSize: "contain",
-          backgroundAttachment: "fixed",
-        }}
-      >
+      <div className="relative h-full  ">
+        <Image
+          src="/privatelabelbanner.jpeg"
+          alt="Private Labeling"
+          height={758}
+          width={2229}
+          className="w-full  object-contain"
+        />
         {/* Background overlay */}
         <div className="pointer-events-none absolute inset-0 z-0 bg-linear-to-br from-transparent to-black/80" />
 
         {/* Page content */}
-        <div className="relative z-20 mx-auto w-full max-w-8xl flex flex-col justify-center h-full px-4 py-12 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 z-20 mx-auto w-full max-w-8xl flex flex-col justify-center h-full px-4 py-12 sm:px-6 lg:px-8">
           <Breadcrumbs
             items={[{ label: "Private Labeling" }]}
             className="text-white"

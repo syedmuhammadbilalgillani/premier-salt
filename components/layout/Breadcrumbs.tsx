@@ -35,7 +35,7 @@ export function Breadcrumbs({
                 {item.label}
               </Link>
             ) : (
-              <span aria-current="page" className="text-charcoal">
+              <span aria-current="page" className="">
                 {item.label}
               </span>
             )}
