@@ -8,7 +8,7 @@ interface HomePageProps {
 const HomePage = async ({ firstLevelCategory }: HomePageProps = {}) => {
   const categories = await getCachedCategories({
     limit: 6,
-    firstLevelOnly: firstLevelCategory,
+    firstLevelOnly: true,
   });
 
   // console.log(categories, "categories");
