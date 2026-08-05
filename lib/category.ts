@@ -1,4 +1,4 @@
-import { desc, eq, count } from "drizzle-orm";
+import { desc, eq, count, isNull } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 
 import { db } from "@/lib/db";
@@ -10,44 +10,56 @@ import { isValidUuid } from "@/lib/validators";
 // reads, so a create/update/delete only needs to call revalidateTag with the
 // tags it actually affects (see app/api/category/**/route.ts).
 
-export const getCachedCategories = unstable_cache(
-  async ({ limit }: { limit?: number }) => {
-    const query = db
-      .select({
-        id: categories.id,
-        title: categories.title,
-        slug: categories.slug,
-        description: categories.description,
-        image_url: categories.image_url,
-        parentCategoryId: categories.parentCategoryId,
-        spec: categories.spec,
-        createdAt: categories.createdAt,
-        updatedAt: categories.updatedAt,
-        productCount: count(products.id),
-      })
-      .from(categories)
-      .leftJoin(products, eq(categories.id, products.categoryId))
-      .groupBy(categories.id)
-      .orderBy(desc(categories.createdAt));
+export function getCachedCategories({
+  limit,
+  firstLevelOnly,
+}: {
+  limit?: number;
+  firstLevelOnly?: boolean;
+} = {}) {
+  return unstable_cache(
+    async () => {
+      const query = db
+        .select({
+          id: categories.id,
+          title: categories.title,
+          slug: categories.slug,
+          description: categories.description,
+          image_url: categories.image_url,
+          parentCategoryId: categories.parentCategoryId,
+          spec: categories.spec,
+          createdAt: categories.createdAt,
+          updatedAt: categories.updatedAt,
+          productCount: count(products.id),
+        })
+        .from(categories)
+        .leftJoin(products, eq(categories.id, products.categoryId))
+        .groupBy(categories.id)
+        .orderBy(desc(categories.createdAt));
 
-    if (limit) {
-      query.limit(limit);
-    }
+      if (firstLevelOnly) {
+        query.where(isNull(categories.parentCategoryId));
+      }
 
-    const rows = await query;
+      if (limit) {
+        query.limit(limit);
+      }
 
-    console.log(rows, "rows in getcachedcategories");
+      const rows = await query;
 
-    // Dates aren't JSON-safe across a cache round-trip — normalize at the source.
-    return rows.map((c) => ({
-      ...c,
-      createdAt: c.createdAt.toISOString(),
-      updatedAt: c.updatedAt.toISOString(),
-    }));
-  },
-  ["categories-list"],
-  { tags: ["categories"] },
-);
+      console.log(rows, "rows in getcachedcategories");
+
+      // Dates aren't JSON-safe across a cache round-trip — normalize at the source.
+      return rows.map((c) => ({
+        ...c,
+        createdAt: c.createdAt.toISOString(),
+        updatedAt: c.updatedAt.toISOString(),
+      }));
+    },
+    ["categories-list", String(limit || ""), String(firstLevelOnly || "")],
+    { tags: ["categories"] }
+  )();
+}
 
 export const getCachedCategoryOptions = unstable_cache(
   async () =>

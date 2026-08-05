@@ -1,8 +1,15 @@
 import { getCachedCategories } from "@/lib/category";
 import Home from "@/routes/Home";
 
-const HomePage = async () => {
-  const categories = await getCachedCategories({ limit: 6 });
+interface HomePageProps {
+  firstLevelCategory?: boolean;
+}
+
+const HomePage = async ({ firstLevelCategory }: HomePageProps = {}) => {
+  const categories = await getCachedCategories({
+    limit: 6,
+    firstLevelOnly: firstLevelCategory,
+  });
 
   // console.log(categories, "categories");
 
