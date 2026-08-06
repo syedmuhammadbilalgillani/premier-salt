@@ -172,7 +172,7 @@ export default function Home({ categories }: { categories: any[] }) {
                   width={364}
                   height={273}
                   alt={cat?.name || `Category ${cat?.title}`}
-                  className="object-cover max-w-91 max-h-72 shadow rounded"
+                  className="object-cover object-center max-w-91 max-h-72 shadow rounded"
                 />
               ) : (
                 <ImagePlaceholder label={cat?.name} width={640} height={480} />

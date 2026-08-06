@@ -219,12 +219,12 @@ export function CategoryLeafView({
           <div className="grid grid-cols-3 p-10 gap-10">
             <Reveal className="col-span-2">
               {category.image_url ? (
-                <div className="relative aspect-[12/7] w-full overflow-hidden rounded-md">
+                <div className="relative aspect-[16/9] w-full overflow-hidden rounded-md bg-sand/40">
                   <Image
                     src={category.image_url}
                     alt={title}
                     fill
-                    className="object-cover"
+                    className="object-contain"
                     sizes="(min-width: 768px) 800px, 100vw"
                     priority
                   />

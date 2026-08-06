@@ -86,8 +86,16 @@ export function CategoryForm({
       type: "image",
       name: "image_url",
       label: "Category Image",
+      helperText:
+        "Cropped to 16:9 — the same ratio as the category's detail page hero, so the full image shows there without unexpected cropping.",
       colSpan: 12,
-      cropAspect: 1,
+      // Matches the hero aspect ratio used on both CategoryHubView and
+      // CategoryLeafView (app/(frontsite)/[category]/...) so an image
+      // cropped here displays in full on the detail page. The homepage's
+      // category grid crops to a different (4:3) card ratio and shows the
+      // image's center there via object-cover + object-center.
+      cropAspect: 16 / 9,
+      previewAspect: "aspect-[16/9]",
       cardPreview: "category",
       uploadFolder: "categories",
     },
