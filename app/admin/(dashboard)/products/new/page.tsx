@@ -11,7 +11,7 @@ export default async function NewProductPage() {
   const categoryOptions = await getCachedCategoryOptions();
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-8 bg-white">
+    <div className="px-6 py-8 bg-white">
       <div className="mb-6 flex flex-col gap-1">
         <Link
           href="/admin/products"

@@ -23,7 +23,7 @@ export default async function EditCategoryPage({
   const categoryOptions = await getCachedCategoryOptions();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="px-6 py-8">
       <div className="mb-6 flex flex-col gap-1">
         <Link
           href="/admin/categories"

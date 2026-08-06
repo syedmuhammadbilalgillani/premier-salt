@@ -28,7 +28,7 @@ export default async function EnquiryDetailPage({
   const details = Object.entries(enquiry.details ?? {});
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="px-6 py-8">
       <div className="mb-6 flex flex-col gap-1">
         <Link
           href="/admin/enquiries"
@@ -47,25 +47,40 @@ export default async function EnquiryDetailPage({
       </div>
 
       <div className="mb-8 rounded-lg border p-4">
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">Status</h2>
-        <EnquiryStatusForm enquiryId={enquiry.id} currentStatus={enquiry.status} />
+        <h2 className="mb-3 text-sm font-medium text-muted-foreground">
+          Status
+        </h2>
+        <EnquiryStatusForm
+          enquiryId={enquiry.id}
+          currentStatus={enquiry.status}
+        />
       </div>
 
       <div className="mb-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div className="rounded-lg border p-4">
-          <h2 className="mb-2 text-sm font-medium text-muted-foreground">Contact</h2>
+          <h2 className="mb-2 text-sm font-medium text-muted-foreground">
+            Contact
+          </h2>
           <p className="text-sm">{enquiry.fullName}</p>
           {enquiry.companyName && (
-            <p className="text-sm text-muted-foreground">{enquiry.companyName}</p>
+            <p className="text-sm text-muted-foreground">
+              {enquiry.companyName}
+            </p>
           )}
           <p className="text-sm text-muted-foreground">{enquiry.email}</p>
-          {enquiry.phone && <p className="text-sm text-muted-foreground">{enquiry.phone}</p>}
-          {enquiry.country && <p className="text-sm text-muted-foreground">{enquiry.country}</p>}
+          {enquiry.phone && (
+            <p className="text-sm text-muted-foreground">{enquiry.phone}</p>
+          )}
+          {enquiry.country && (
+            <p className="text-sm text-muted-foreground">{enquiry.country}</p>
+          )}
         </div>
 
         {details.length > 0 && (
           <div className="rounded-lg border p-4">
-            <h2 className="mb-2 text-sm font-medium text-muted-foreground">Details</h2>
+            <h2 className="mb-2 text-sm font-medium text-muted-foreground">
+              Details
+            </h2>
             <dl className="flex flex-col gap-1.5">
               {details.map(([key, value]) => (
                 <div key={key} className="flex justify-between gap-4 text-sm">
@@ -85,7 +100,9 @@ export default async function EnquiryDetailPage({
               {enquiry.subject}
             </h2>
           )}
-          {enquiry.message && <p className="text-sm whitespace-pre-wrap">{enquiry.message}</p>}
+          {enquiry.message && (
+            <p className="text-sm whitespace-pre-wrap">{enquiry.message}</p>
+          )}
         </div>
       )}
     </div>

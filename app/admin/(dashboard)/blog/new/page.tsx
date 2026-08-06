@@ -11,7 +11,7 @@ export default async function NewBlogPostPage() {
   const categoryOptions = await getCachedBlogCategoryOptions();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-8">
+    <div className="px-6 py-8">
       <div className="mb-6 flex flex-col gap-1">
         <Link
           href="/admin/blog"
