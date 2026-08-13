@@ -12,6 +12,7 @@ import {
   numeric,
   integer,
   uniqueIndex,
+  index,
   serial,
 } from "drizzle-orm/pg-core";
 
@@ -518,4 +519,50 @@ export const newsletterSubscribers = pgTable("newsletter_subscribers", {
     .defaultNow()
     .notNull(),
 });
+
+// ---------- ANALYTICS (self-hosted tracking pixel) ----------
+export const analyticsEventTypeEnum = pgEnum("analytics_event_type", [
+  "view",
+  "click",
+  "purchase",
+]);
+
+export const analyticsEvents = pgTable(
+  "analytics_events",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    eventType: analyticsEventTypeEnum("event_type").notNull(),
+    // What was viewed/clicked/purchased, e.g. entityType="product", entityId=<product id>.
+    // Nullable — plain page views have no entity.
+    entityType: varchar("entity_type", { length: 40 }),
+    entityId: uuid("entity_id"),
+    // "click" events additionally carry a free-form label, e.g. "add_to_cart".
+    label: varchar("label", { length: 100 }),
+
+    pageUrl: text("page_url").notNull(),
+    referrer: text("referrer"),
+    utmSource: varchar("utm_source", { length: 100 }),
+    utmMedium: varchar("utm_medium", { length: 100 }),
+    utmCampaign: varchar("utm_campaign", { length: 100 }),
+
+    // Anonymous cookie-based id — no personal data. Distinct from sessionId,
+    // which resets per browser session and lets us dedupe within a visit.
+    visitorId: uuid("visitor_id").notNull(),
+    sessionId: uuid("session_id").notNull(),
+
+    // Purchase amount for "purchase" events (order total). Null otherwise.
+    value: numeric("value", { precision: 12, scale: 2 }),
+    metadata: jsonb("metadata").$type<Record<string, unknown>>(),
+
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("analytics_events_created_at_idx").on(table.createdAt),
+    index("analytics_events_event_type_idx").on(table.eventType),
+    index("analytics_events_entity_idx").on(table.entityType, table.entityId),
+    index("analytics_events_visitor_idx").on(table.visitorId),
+  ],
+);
 

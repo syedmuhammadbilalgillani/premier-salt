@@ -1,13 +1,25 @@
 "use client";
 
+import { useEffect } from "react";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { ORDER_STATUS_LABELS } from "@/lib/orderStatus";
 import type { OrderDetail } from "@/lib/order";
+import { trackPurchase } from "@/lib/track";
 import { ArrowRight } from "lucide-react";
 
 export function OrderConfirmationClient({ order }: { order: OrderDetail }) {
+  useEffect(() => {
+    // Dedupe: this page can be revisited/refreshed for the same order, but a
+    // purchase should only be counted once.
+    const key = `psalt_purchase_tracked_${order.id}`;
+    if (sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key, "1");
+    trackPurchase({ entityType: "order", entityId: order.id, value: order.total });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [order.id]);
+
   return (
     <div className="mx-auto max-w-2xl px-6 py-16 md:px-8">
       <div className="rounded-sm border border-border bg-cream p-8 print:border-none">

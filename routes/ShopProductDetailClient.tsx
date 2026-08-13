@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, Heart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
 import { readStorage, writeStorage } from "@/lib/storage";
+import { track, trackClick } from "@/lib/track";
 import type { ShopProduct } from "@/lib/product";
 
 function variantLabel(variant: ShopProduct["variants"][number]) {
@@ -28,6 +29,11 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
   const [quantity, setQuantity] = useState(1);
   const [notifyEmail, setNotifyEmail] = useState("");
   const [notifySent, setNotifySent] = useState(false);
+
+  useEffect(() => {
+    track("view", { entityType: "product", entityId: product.id });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.id]);
 
   const selectedVariant = useMemo(
     () =>
@@ -171,7 +177,10 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
               </button>
             </div>
             <Button
-              onClick={() => addItem(product.slug, selectedVariantId, quantity)}
+              onClick={() => {
+                trackClick({ entityType: "product", entityId: product.id, label: "add_to_cart" });
+                addItem(product.slug, selectedVariantId, quantity);
+              }}
               className="flex-1"
             >
               Add to Cart

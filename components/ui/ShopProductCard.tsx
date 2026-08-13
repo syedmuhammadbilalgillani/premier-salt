@@ -7,6 +7,7 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
 import Link from "next/link";
+import { trackClick } from "@/lib/track";
 
 function priceRange(product: ShopProduct) {
   if (!product.hasVariants || product.variants.length === 0) {
@@ -35,7 +36,12 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
   return (
     <div className="group flex flex-col">
       <div className="relative">
-        <Link href={`/shop/product/${product.slug}`}>
+        <Link
+          href={`/shop/product/${product.slug}`}
+          onClick={() =>
+            trackClick({ entityType: "product", entityId: product.id, label: "product_card" })
+          }
+        >
           {primaryImage ? (
             <div className="relative aspect-square w-full overflow-hidden rounded-sm bg-sand/40">
               <Image
@@ -100,7 +106,10 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
       ) : (
         <button
           disabled={!inStock}
-          onClick={() => addItem(product.slug, null, 1)}
+          onClick={() => {
+            trackClick({ entityType: "product", entityId: product.id, label: "add_to_cart" });
+            addItem(product.slug, null, 1);
+          }}
           className="mt-3 rounded-sm border border-primary py-2 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary hover:text-cream disabled:cursor-not-allowed disabled:border-border disabled:text-muted-foregrounddisabled:hover:bg-transparent"
         >
           {inStock ? "Add to Cart" : "Out of Stock"}

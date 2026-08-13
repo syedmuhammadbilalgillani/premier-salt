@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
+  BarChart3,
   ChevronsUpDown,
   FolderOpen,
   LogOut,
@@ -43,6 +44,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 
 const NAV_ITEMS = [
+  { title: "Analytics", href: "/admin/analytics", icon: BarChart3 },
   { title: "Orders", href: "/admin/orders", icon: ShoppingCart },
   { title: "Enquiries", href: "/admin/enquiries", icon: MessageSquare },
   { title: "Products", href: "/admin/products", icon: Package },
