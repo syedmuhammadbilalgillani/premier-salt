@@ -155,12 +155,12 @@ export function CategoryHubView({
                   className="group flex flex-col overflow-hidden rounded-sm transition-colors "
                 >
                   {child.image_url ? (
-                    <div className="relative aspect-[5/3.2] w-full overflow-hidden">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden">
                       <Image
                         src={child.image_url}
                         alt={child.title}
                         fill
-                        className="object-cover transition-transform group-hover:scale-105"
+                        className="object-cover object-center transition-transform group-hover:scale-105"
                         sizes="(min-width: 640px) 400px, 90vw"
                       />
                     </div>

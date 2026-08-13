@@ -121,7 +121,7 @@ function ProductsSection({
 
       {columns.length ? (
         <div className="overflow-x-auto rounded-sm border border-border">
-          <table className="w-full min-w-[560px] text-left text-sm">
+          <table className="w-full min-w-xs text-left text-sm">
             <thead>
               <tr className="border-b border-border bg-sand/40 text-xs uppercase tracking-wide text-muted-foreground">
                 <th className="px-4 py-3 font-medium">Sr#</th>
@@ -214,10 +214,10 @@ export function CategoryLeafView({
     <>
       <PageHero eyebrow={eyebrow} title={title} crumbs={crumbs} />
 
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl px-6 py-14 md:px-8">
         <div className="flex flex-col gap-14">
-          <div className="grid grid-cols-3 p-10 gap-10">
-            <Reveal className="col-span-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-10">
+            <Reveal className="md:col-span-2">
               {category.image_url ? (
                 <div className="relative aspect-[16/9] w-full overflow-hidden rounded-md bg-sand/40">
                   <Image

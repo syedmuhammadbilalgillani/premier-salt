@@ -41,26 +41,30 @@ export default async function CategoryPage({
 
   if (subcategories.length > 0) {
     return (
-      <CategoryHubView
-        eyebrow="Products"
-        title={category.title}
-        crumbs={crumbs}
-        category={category}
-        parentSlug={category.slug}
-        subcategories={subcategories}
-      />
+      <>
+        <CategoryHubView
+          eyebrow="Products"
+          title={category.title}
+          crumbs={crumbs}
+          category={category}
+          parentSlug={category.slug}
+          subcategories={subcategories}
+        />
+      </>
     );
   }
 
   const products = await getCatalogProductsForCategory(category.id);
 
   return (
-    <CategoryLeafView
-      eyebrow="Products"
-      title={category.title}
-      crumbs={crumbs}
-      category={category}
-      products={products}
-    />
+    <>
+      <CategoryLeafView
+        eyebrow="Products"
+        title={category.title}
+        crumbs={crumbs}
+        category={category}
+        products={products}
+      />
+    </>
   );
 }
