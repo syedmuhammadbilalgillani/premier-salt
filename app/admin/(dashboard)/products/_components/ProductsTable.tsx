@@ -8,6 +8,7 @@ import { Pencil, Trash2 } from "lucide-react";
 
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -46,11 +47,23 @@ export function ProductsTable({
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>(ALL_CATEGORIES);
+  const [search, setSearch] = useState("");
 
   const filteredData = useMemo(() => {
-    if (categoryFilter === ALL_CATEGORIES) return data;
-    return data.filter((row) => row.categoryId === categoryFilter);
-  }, [data, categoryFilter]);
+    let result = data;
+    if (categoryFilter !== ALL_CATEGORIES) {
+      result = result.filter((row) => row.categoryId === categoryFilter);
+    }
+    const query = search.trim().toLowerCase();
+    if (query) {
+      result = result.filter(
+        (row) =>
+          row.title.toLowerCase().includes(query) ||
+          row.categoryTitle?.toLowerCase().includes(query),
+      );
+    }
+    return result;
+  }, [data, categoryFilter, search]);
 
   async function handleDelete(product: ProductRow) {
     if (!window.confirm(`Delete "${product.title}"? This can't be undone.`)) return;
@@ -150,6 +163,12 @@ export function ProductsTable({
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
+        <Input
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search products..."
+          className="w-64"
+        />
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
           <SelectTrigger className="w-56">
             <SelectValue placeholder="Filter by category" />
@@ -163,7 +182,7 @@ export function ProductsTable({
             ))}
           </SelectContent>
         </Select>
-        {categoryFilter !== ALL_CATEGORIES && (
+        {(categoryFilter !== ALL_CATEGORIES || search.trim()) && (
           <span className="text-sm text-muted-foreground">
             {filteredData.length} of {data.length} products
           </span>

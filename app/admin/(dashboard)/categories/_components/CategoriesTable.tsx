@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -9,6 +9,7 @@ import { Pencil, Trash2 } from "lucide-react";
 import { DataTable, type DataTableColumn } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import type { getCachedCategories } from "@/lib/category";
 
 type Category = Awaited<ReturnType<typeof getCachedCategories>>[number] & {
@@ -18,6 +19,18 @@ type Category = Awaited<ReturnType<typeof getCachedCategories>>[number] & {
 export function CategoriesTable({ data }: { data: Category[] }) {
   const router = useRouter();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [search, setSearch] = useState("");
+
+  const filteredData = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return data;
+    return data.filter(
+      (row) =>
+        row.title.toLowerCase().includes(query) ||
+        row.slug.toLowerCase().includes(query) ||
+        row.parentTitle?.toLowerCase().includes(query),
+    );
+  }, [data, search]);
 
   async function handleDelete(category: Category) {
     if (!window.confirm(`Delete "${category.title}"? This can't be undone.`)) {
@@ -120,11 +133,27 @@ export function CategoriesTable({ data }: { data: Category[] }) {
   ];
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      getRowId={(row) => row.id}
-      emptyText="No categories yet — create your first one."
-    />
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <Input
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Search categories..."
+          className="w-64"
+        />
+        {search.trim() && (
+          <span className="text-sm text-muted-foreground">
+            {filteredData.length} of {data.length} categories
+          </span>
+        )}
+      </div>
+
+      <DataTable
+        data={filteredData}
+        columns={columns}
+        getRowId={(row) => row.id}
+        emptyText="No categories yet — create your first one."
+      />
+    </div>
   );
 }
