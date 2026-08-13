@@ -181,6 +181,13 @@ type ImageGalleryField<TFieldValues extends FieldValues> =
     accept?: string;
     /** Folder under the file manager's storage root. Defaults to "uploads". */
     uploadFolder?: string;
+    /**
+     * Enables the crop / pan / zoom "Adjust" editor and locks its frame to
+     * this ratio (width ÷ height) — e.g. `1` to match the square storefront
+     * product card. When set, images are added one at a time (each goes
+     * through the crop editor before upload) instead of in bulk.
+     */
+    cropAspect?: number;
   };
 
 type CheckboxGroupField<TFieldValues extends FieldValues> =
@@ -772,6 +779,7 @@ function DynamicFieldRenderer<TFieldValues extends FieldValues>({
                 }
                 maxBytes={field.maxBytes ?? 5 * 1024 * 1024}
                 uploadFolder={field.uploadFolder ?? "uploads"}
+                cropAspect={field.cropAspect}
               />
             )}
           />
@@ -1137,6 +1145,7 @@ function ImageGalleryEditor({
   accept,
   maxBytes,
   uploadFolder,
+  cropAspect,
 }: {
   value: GalleryImage[];
   onChange: (next: GalleryImage[]) => void;
@@ -1144,11 +1153,88 @@ function ImageGalleryEditor({
   accept: string;
   maxBytes: number;
   uploadFolder: string;
+  cropAspect?: number;
 }) {
   const inputRef = React.useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = React.useState(false);
   const [urlMode, setUrlMode] = React.useState(false);
   const [urlInput, setUrlInput] = React.useState("");
+
+  // Crop / adjust editor state
+  const [editor, setEditor] = React.useState<{
+    src: string;
+    fileName: string;
+    crossOrigin: boolean;
+    index?: number;
+  } | null>(null);
+  const [adjustQueue, setAdjustQueue] = React.useState<File[]>([]);
+
+  const openAdjust = (index: number) => {
+    if (disabled || uploading) return;
+    const img = value[index];
+    if (!img) return;
+    setEditor({
+      src: img.url,
+      fileName: "image",
+      crossOrigin: true,
+      index,
+    });
+  };
+
+  const closeEditor = () => {
+    if (editor && editor.src.startsWith("blob:")) {
+      URL.revokeObjectURL(editor.src);
+    }
+    setEditor(null);
+    setAdjustQueue([]);
+    if (inputRef.current) inputRef.current.value = "";
+  };
+
+  const handleEditorConfirm = async (adjustedFile: File) => {
+    const isNewUpload = !editor || !editor.src.startsWith("http");
+    const editingIndex = editor?.index;
+
+    closeEditor();
+    setUploading(true);
+    try {
+      const { url } = await uploadToFileManager(adjustedFile, uploadFolder);
+
+      if (isNewUpload) {
+        const next = [...value, { url, altText: "", isPrimary: false }];
+        if (!next.some((img) => img.isPrimary)) next[0].isPrimary = true;
+        onChange(next);
+
+        if (adjustQueue.length > 0) {
+          const [nextFile, ...restQueue] = adjustQueue;
+          setAdjustQueue(restQueue);
+          setTimeout(() => {
+            setEditor({
+              src: URL.createObjectURL(nextFile),
+              fileName: nextFile.name,
+              crossOrigin: false,
+            });
+          }, 100);
+        }
+      } else if (editingIndex !== undefined) {
+        const previous = value[editingIndex];
+        const next = [...value];
+        next[editingIndex] = { ...previous, url };
+        onChange(next);
+
+        const previousPath = storageUrlToPath(previous.url);
+        if (previousPath) {
+          deleteFromFileManager(previousPath).catch((err) =>
+            console.warn("Could not delete previous image:", err),
+          );
+        }
+        toast.success("Image updated");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const isValidImage = (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -1170,29 +1256,40 @@ function ImageGalleryEditor({
       if (inputRef.current) inputRef.current.value = "";
       return;
     }
-    setUploading(true);
-    try {
-      const uploaded: GalleryImage[] = [];
-      for (const file of valid) {
-        try {
-          const { url } = await uploadToFileManager(file, uploadFolder);
-          uploaded.push({ url, altText: "", isPrimary: false });
-        } catch (err) {
-          toast.error(
-            err instanceof Error
-              ? err.message
-              : `Could not upload ${file.name}`,
-          );
+
+    if (cropAspect) {
+      const [first, ...rest] = valid;
+      setAdjustQueue(rest);
+      setEditor({
+        src: URL.createObjectURL(first),
+        fileName: first.name,
+        crossOrigin: false,
+      });
+    } else {
+      setUploading(true);
+      try {
+        const uploaded: GalleryImage[] = [];
+        for (const file of valid) {
+          try {
+            const { url } = await uploadToFileManager(file, uploadFolder);
+            uploaded.push({ url, altText: "", isPrimary: false });
+          } catch (err) {
+            toast.error(
+              err instanceof Error
+                ? err.message
+                : `Could not upload ${file.name}`,
+            );
+          }
         }
+        if (uploaded.length) {
+          const next = [...value, ...uploaded];
+          if (!next.some((img) => img.isPrimary)) next[0].isPrimary = true;
+          onChange(next);
+        }
+      } finally {
+        setUploading(false);
+        if (inputRef.current) inputRef.current.value = "";
       }
-      if (uploaded.length) {
-        const next = [...value, ...uploaded];
-        if (!next.some((img) => img.isPrimary)) next[0].isPrimary = true;
-        onChange(next);
-      }
-    } finally {
-      setUploading(false);
-      if (inputRef.current) inputRef.current.value = "";
     }
   };
 
@@ -1304,6 +1401,18 @@ function ImageGalleryEditor({
                   </button>
                 </div>
                 <div className="flex gap-1">
+                  {cropAspect ? (
+                    <button
+                      type="button"
+                      onClick={() => openAdjust(index)}
+                      disabled={disabled || uploading}
+                      className="rounded p-1 text-muted-foreground hover:text-foreground"
+                      aria-label="Adjust image"
+                      title="Adjust image"
+                    >
+                      <Crop className="h-3.5 w-3.5" />
+                    </button>
+                  ) : null}
                   {!img.isPrimary ? (
                     <button
                       type="button"
@@ -1370,6 +1479,16 @@ function ImageGalleryEditor({
           </Button>
         </div>
       )}
+      {editor && cropAspect ? (
+        <ImageAdjustModal
+          src={editor.src}
+          aspect={cropAspect}
+          fileName={editor.fileName}
+          crossOrigin={editor.crossOrigin}
+          onCancel={closeEditor}
+          onConfirm={handleEditorConfirm}
+        />
+      ) : null}
     </div>
   );
 }

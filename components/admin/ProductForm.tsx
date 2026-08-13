@@ -206,6 +206,7 @@ export function ProductForm({
       label: "Product Images",
       colSpan: 12,
       uploadFolder: "products",
+      cropAspect: 1,
     },
     {
       type: "keyvalue",

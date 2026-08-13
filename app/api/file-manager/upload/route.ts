@@ -102,7 +102,23 @@ export async function POST(request: NextRequest) {
       let convertedToWebp = false;
       if (CONVERTIBLE_IMAGE_EXTENSIONS.has(ext)) {
         try {
-          buffer = await sharp(buffer).webp({ quality: 100 }).toBuffer();
+          let pipeline = sharp(buffer).rotate();
+
+          // For product images, apply "insta-fill" (pad to square with white background)
+          if (folderPath === "products") {
+            const metadata = await pipeline.metadata();
+            const width = metadata.width || 0;
+            const height = metadata.height || 0;
+            const size = Math.max(width, height);
+            if (size > 0) {
+              pipeline = pipeline.resize(size, size, {
+                fit: "contain",
+                background: { r: 255, g: 255, b: 255, alpha: 1 },
+              });
+            }
+          }
+
+          buffer = await pipeline.webp({ quality: 100 }).toBuffer();
           convertedToWebp = true;
         } catch (error) {
           console.warn("Failed to convert image to WebP, storing as-is", {
