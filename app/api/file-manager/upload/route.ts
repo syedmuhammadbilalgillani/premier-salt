@@ -2,9 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
+import sharp from "sharp";
 import { revalidateTag } from "next/cache";
 
 import { getStorageUrl, resolveStoragePathWithRelative } from "@/lib/storage-path";
+
+// Raster formats we transcode to WebP on upload. SVG is left untouched (it's
+// already a small, resolution-independent vector format).
+const CONVERTIBLE_IMAGE_EXTENSIONS = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".gif",
+  ".bmp",
+  ".tiff",
+  ".tif",
+  ".avif",
+  ".webp",
+]);
 
 // Max size per uploaded file (50 MB)
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
@@ -76,8 +91,32 @@ export async function POST(request: NextRequest) {
         .join("/");
       if (!cleanRelativePath) continue;
 
+      // Convert file to buffer
+      const bytes = await file.arrayBuffer();
+      let buffer = Buffer.from(bytes);
+
+      // Every uploaded raster image is transcoded to WebP (quality 100) —
+      // whatever format it arrives in — so the file extension on disk may
+      // differ from what was uploaded. If conversion fails, fall back to
+      // storing the original bytes under the original extension.
+      let convertedToWebp = false;
+      if (CONVERTIBLE_IMAGE_EXTENSIONS.has(ext)) {
+        try {
+          buffer = await sharp(buffer).webp({ quality: 100 }).toBuffer();
+          convertedToWebp = true;
+        } catch (error) {
+          console.warn("Failed to convert image to WebP, storing as-is", {
+            fileName: file.name,
+            error: error instanceof Error ? error.message : "Unknown error",
+          });
+        }
+      }
+      const finalRelativePath = convertedToWebp
+        ? cleanRelativePath.slice(0, -ext.length) + ".webp"
+        : cleanRelativePath;
+
       // Build full file path
-      const fullFilePath = path.resolve(targetDir, cleanRelativePath);
+      const fullFilePath = path.resolve(targetDir, finalRelativePath);
 
       // Ensure the path is within the target directory
       if (!fullFilePath.startsWith(targetDir + path.sep)) {
@@ -94,15 +133,11 @@ export async function POST(request: NextRequest) {
         await mkdir(fileDir, { recursive: true });
       }
 
-      // Convert file to buffer
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-
       // Write file
       await writeFile(fullFilePath, buffer);
 
       const storedPath = path
-        .join(normalizedPath, cleanRelativePath)
+        .join(normalizedPath, finalRelativePath)
         .replace(/\\/g, "/");
 
       uploadedFiles.push({
