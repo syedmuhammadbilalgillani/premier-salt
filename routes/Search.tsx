@@ -5,14 +5,19 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { PageHero } from "@/components/layout/PageHero";
-import { b2bPages } from "@/data/b2bPages";
-import { shopProducts } from "@/data/shopProducts";
+import { useShopCatalog } from "@/hooks/useShopCatalog";
 
 interface SearchBlogPost {
   title: string;
   slug: string;
   excerpt: string;
   categorySlug: string;
+}
+
+interface SearchCategory {
+  title: string;
+  slug: string;
+  description: string;
 }
 
 type ResultType = "B2B Category" | "Shop Product" | "Blog Article";
@@ -57,6 +62,8 @@ function SearchContent() {
   const [query, setQuery] = useState(queryFromUrl);
   const [activeType, setActiveType] = useState<ActiveType>("All");
   const [blogPosts, setBlogPosts] = useState<SearchBlogPost[]>([]);
+  const [categories, setCategories] = useState<SearchCategory[]>([]);
+  const { products } = useShopCatalog();
 
   useEffect(() => {
     let cancelled = false;
@@ -64,6 +71,12 @@ function SearchContent() {
       .then((res) => res.json())
       .then((json) => {
         if (!cancelled && json.success) setBlogPosts(json.data);
+      })
+      .catch(() => {});
+    fetch("/api/site-categories")
+      .then((res) => res.json())
+      .then((json) => {
+        if (!cancelled && json.success) setCategories(json.data);
       })
       .catch(() => {});
     return () => {
@@ -111,30 +124,30 @@ function SearchContent() {
       return [];
     }
 
-    const categoryResults: SearchResult[] = b2bPages
+    const categoryResults: SearchResult[] = categories
       .filter(
-        (page) =>
-          page.name.toLowerCase().includes(normalizedQuery) ||
-          page.description.toLowerCase().includes(normalizedQuery),
+        (category) =>
+          category.title.toLowerCase().includes(normalizedQuery) ||
+          category.description.toLowerCase().includes(normalizedQuery),
       )
-      .map((page) => ({
+      .map((category) => ({
         type: "B2B Category",
-        title: page.name,
-        href: `/${page.slug}`,
-        snippet: page.description,
+        title: category.title,
+        href: `/${category.slug}`,
+        snippet: category.description,
       }));
 
-    const productResults: SearchResult[] = shopProducts
+    const productResults: SearchResult[] = products
       .filter(
         (product) =>
-          product.name.toLowerCase().includes(normalizedQuery) ||
-          product.shortDescription.toLowerCase().includes(normalizedQuery),
+          product.title.toLowerCase().includes(normalizedQuery) ||
+          (product.description ?? "").toLowerCase().includes(normalizedQuery),
       )
       .map((product) => ({
         type: "Shop Product",
-        title: product.name,
+        title: product.title,
         href: `/shop/product/${product.slug}`,
-        snippet: product.shortDescription,
+        snippet: product.description ?? "",
       }));
 
     const blogResults: SearchResult[] = blogPosts
@@ -151,7 +164,7 @@ function SearchContent() {
       }));
 
     return [...categoryResults, ...productResults, ...blogResults];
-  }, [normalizedQuery, blogPosts]);
+  }, [normalizedQuery, blogPosts, categories, products]);
 
   const visibleResults = useMemo(() => {
     if (activeType === "All") {

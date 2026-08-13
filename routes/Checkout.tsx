@@ -4,6 +4,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { FormField, inputClasses } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
+import { useMyOrders } from "@/hooks/useMyOrders";
 import { calculateShipping, calculateDiscount } from "@/lib/shipping";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -13,6 +14,7 @@ type PaymentMethod = "Cash on Delivery" | "Bank Transfer" | "Card Payment";
 
 export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
+  const { addOrder } = useMyOrders();
   const navigate = useRouter();
   const [delivery, setDelivery] = useState<DeliveryMethod>("Standard Delivery");
   const [payment, setPayment] = useState<PaymentMethod>("Cash on Delivery");
@@ -117,6 +119,7 @@ export default function Checkout() {
       }
 
       clearCart();
+      addOrder(data.data.id);
       navigate.push(`/order-confirmation/${data.data.id}`);
     } catch {
       setSubmitError(
