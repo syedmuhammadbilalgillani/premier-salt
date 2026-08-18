@@ -23,6 +23,8 @@ interface ContentPageProps {
   ctaTo?: string;
   ctaLabel?: string;
   children?: ReactNode;
+  /** Optional hero background image — see PageHero. */
+  image?: string;
 }
 
 export function ContentPage({
@@ -36,6 +38,7 @@ export function ContentPage({
   ctaTo = "/request-a-quote",
   ctaLabel = "Request a Quote",
   children,
+  image,
 }: ContentPageProps) {
   return (
     <>
@@ -44,16 +47,17 @@ export function ContentPage({
         title={title}
         description={description}
         crumbs={crumbs}
+        image={image}
       />
-      <div className="mx-auto flex max-w-7xl flex-col gap-16 px-6 py-20 md:px-8">
+      <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-12 sm:gap-12 sm:py-16 md:gap-16 md:px-8 md:py-20">
         {sections.map((section) => (
           <Reveal
             key={section.title}
-            className="grid grid-cols-1 gap-6 border-t border-border pt-10 md:grid-cols-[240px_1fr]"
+            className="grid grid-cols-1 gap-4 border-t border-border pt-8 sm:gap-6 md:grid-cols-[240px_1fr] md:pt-10"
           >
             <div>
               <span className="eyebrow">{section.eyebrow}</span>
-              <h2 className="mt-3 font-serif text-2xl text-primary">
+              <h2 className="mt-3 font-serif text-xl text-primary sm:text-2xl">
                 {section.title}
               </h2>
             </div>
@@ -61,7 +65,7 @@ export function ContentPage({
               {section.paragraphs.map((p, i) => (
                 <p
                   key={i}
-                  className="text-base leading-relaxed text-muted-foreground"
+                  className="text-sm leading-relaxed text-muted-foreground sm:text-base"
                 >
                   {p}
                 </p>
@@ -84,14 +88,16 @@ export function ContentPage({
         ))}
         {children}
       </div>
-      <section className="bg-sand/40 py-16">
+      <section className="bg-sand/40 py-12 md:py-16">
         <Reveal className="mx-auto flex max-w-7xl flex-col items-start gap-4 px-6 md:px-8">
-          <h2 className="font-serif text-2xl text-primary sm:text-3xl">
+          <h2 className="font-serif text-xl text-primary sm:text-3xl">
             {ctaTitle}
           </h2>
-          <p className="max-w-xl text-base text-muted-foreground">{ctaText}</p>
-          <Link href={ctaTo}>
-            <Button>{ctaLabel}</Button>
+          <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
+            {ctaText}
+          </p>
+          <Link href={ctaTo} className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto">{ctaLabel}</Button>
           </Link>
         </Reveal>
       </section>

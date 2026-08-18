@@ -27,6 +27,7 @@ export default function AboutHimalayanSalt() {
       title="About Himalayan Salt"
       description="A general introduction to Himalayan salt, its natural variation, and how it's used across food, décor, spa and architectural products."
       crumbs={[{ label: "About Himalayan Salt" }]}
+      image="/assets/About-Himaliya-salt-Hero-Pic.webp"
       sections={[
         {
           eyebrow: "Origin",

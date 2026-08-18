@@ -10,6 +10,7 @@ export default function About() {
       title="About Premier Salt Industries"
       description={company.summary}
       crumbs={[{ label: "About Us" }]}
+      image="/assets/about-us-hero-pic.webp"
       sections={[
         {
           eyebrow: "Who We Are",
@@ -54,12 +55,12 @@ export default function About() {
         },
       ]}
     >
-      <Reveal className="grid grid-cols-1 items-center gap-8 border-t border-border pt-10 md:grid-cols-[240px_1fr]">
+      <Reveal className="grid grid-cols-1 items-center gap-6 border-t border-border pt-8 sm:gap-8 md:grid-cols-[240px_1fr] md:pt-10">
         <div>
           <span className="eyebrow">Leadership</span>
         </div>
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-          <div className="w-40 shrink-0">
+          <div className="w-28 shrink-0 sm:w-40">
             <ImagePlaceholder
               label="CEO Portrait — Asad Zahoor"
               width={600}

@@ -6,7 +6,10 @@ import { Reveal } from "@/components/motion/Reveal";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { EmptyState } from "@/components/ui/state";
 import { cn } from "@/lib/utils";
-import { estimateReadingTime, type getCachedPublishedBlogPosts } from "@/lib/blog";
+import {
+  estimateReadingTime,
+  type getCachedPublishedBlogPosts,
+} from "@/lib/blog";
 
 type BlogPost = Awaited<ReturnType<typeof getCachedPublishedBlogPosts>>[number];
 
@@ -29,7 +32,12 @@ export function BlogListingView({
   // rather than the full blog_categories table, so a category with only
   // draft posts never shows an empty, dead-end filter.
   const categories = Array.from(
-    new Map(allPosts.map((p) => [p.categorySlug, { slug: p.categorySlug, title: p.categoryTitle }])).values(),
+    new Map(
+      allPosts.map((p) => [
+        p.categorySlug,
+        { slug: p.categorySlug, title: p.categoryTitle },
+      ]),
+    ).values(),
   );
 
   const posts = activeCategorySlug
@@ -42,6 +50,7 @@ export function BlogListingView({
         eyebrow="Resources"
         title={activeCategoryTitle ?? "Blog"}
         description="Practical guidance on Himalayan salt products, private labeling, and export sourcing."
+        image="/assets/Blog-Hero-Pic.webp"
         crumbs={
           activeCategoryTitle
             ? [{ label: "Blog", to: "/blog" }, { label: activeCategoryTitle }]
@@ -50,7 +59,10 @@ export function BlogListingView({
       />
       <div className="mx-auto max-w-7xl w-full px-6 py-16 md:px-8">
         {categories.length > 0 && (
-          <div className="mb-10 flex flex-wrap gap-2" aria-label="Filter articles by category">
+          <div
+            className="mb-10 flex flex-wrap gap-2"
+            aria-label="Filter articles by category"
+          >
             <Link
               href="/blog"
               className={cn(
@@ -102,7 +114,11 @@ export function BlogListingView({
                     />
                   </div>
                 ) : (
-                  <ImagePlaceholder label={post.title} width={600} height={400} />
+                  <ImagePlaceholder
+                    label={post.title}
+                    width={600}
+                    height={400}
+                  />
                 )}
                 <span className="text-xs uppercase tracking-wide text-primary">
                   {post.categoryTitle}
@@ -110,7 +126,9 @@ export function BlogListingView({
                 <h2 className="font-serif text-lg text-primary group-hover:text-primary">
                   {post.title}
                 </h2>
-                <p className="text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  {post.excerpt}
+                </p>
                 <span className="text-xs text-muted-foreground">
                   {new Date(post.publishedAt).toLocaleDateString()} ·{" "}
                   {estimateReadingTime(post.content)}

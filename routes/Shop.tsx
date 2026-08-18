@@ -25,6 +25,7 @@ export default function ShopPage() {
         title="Shop Himalayan Salt Products"
         description="Retail-quantity Himalayan salt, salt lamps, kitchen products, spa items and gifts, delivered across Pakistan."
         crumbs={[{ label: "Shop" }]}
+        image="/assets/Shop-Hero-Pic.webp"
       />
 
       <Suspense fallback={<ShopLoading />}>

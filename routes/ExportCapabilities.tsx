@@ -27,6 +27,7 @@ export default function ExportCapabilities() {
       title="Export Capabilities"
       description="We support importers, wholesalers, distributors and private-label buyers with coordinated export from Pakistan, start to finish."
       crumbs={[{ label: "Export Capabilities" }]}
+      image="/assets/Export-Capabilities-Hero-Pic.webp"
       sections={[
         {
           eyebrow: "Who We Support",

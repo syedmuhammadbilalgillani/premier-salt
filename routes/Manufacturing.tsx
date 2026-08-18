@@ -1,12 +1,13 @@
 import { ContentPage } from "@/components/layout/ContentPage";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { Reveal } from "@/components/motion/Reveal";
+import Image from "next/image";
 
 const gallery = [
-  "Raw material intake area",
-  "Crushing and sizing line",
-  "Cleaning and processing station",
-  "Packaging line",
+  "/assets/Raw_material_intake_area.webp",
+  "/assets/Crushing_and_sizing_line.webp",
+  "/assets/Cleaning_and_processing_station.webp",
+  "/assets/Packaging_line.webp",
 ];
 
 export default function Manufacturing() {
@@ -39,10 +40,20 @@ export default function Manufacturing() {
           ],
         },
       ]}
+      image="/assets/Manufacturing-Facility_Hero_Img.webp"
     >
-      <Reveal stagger className="grid grid-cols-1 gap-6 border-t border-border pt-10 sm:grid-cols-2 lg:grid-cols-4">
-        {gallery.map((label) => (
-          <ImagePlaceholder key={label} label={label} width={600} height={450} />
+      <Reveal
+        stagger
+        className="grid grid-cols-1 gap-6 border-t border-border pt-10 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {gallery.map((src, index) => (
+          <Image
+            key={`${index}-image`}
+            src={src}
+            alt={`${src}-image`}
+            width={600}
+            height={450}
+          />
         ))}
       </Reveal>
     </ContentPage>

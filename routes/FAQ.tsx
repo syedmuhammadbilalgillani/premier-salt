@@ -37,6 +37,7 @@ export default function FAQ() {
         title="Frequently Asked Questions"
         description="Answers to common questions about our company, products, wholesale, export, and retail orders."
         crumbs={[{ label: "FAQ" }]}
+        image="/assets/FAQ-Hero-Pic.webp"
       />
 
       <div className="mx-auto max-w-3xl w-full px-6 py-16 md:px-8">

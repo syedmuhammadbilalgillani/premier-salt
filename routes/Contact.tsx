@@ -72,6 +72,7 @@ export default function Contact() {
         title="Get in Touch"
         description="Reach our team for export, wholesale, private-label or retail enquiries."
         crumbs={[{ label: "Contact" }]}
+        image="/assets/Contact-Hero-Pic.webp"
       />
       <div className="mx-auto grid max-w-7xl w-full grid-cols-1 gap-16 px-6 py-16 md:grid-cols-2 md:px-8">
         <div className="flex flex-col gap-8">

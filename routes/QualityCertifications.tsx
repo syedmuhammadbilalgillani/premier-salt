@@ -29,6 +29,7 @@ export default function QualityCertifications() {
       title="Quality & Certifications"
       description="Our quality approach runs from incoming material inspection through to pre-shipment checks, supported by recognized certifications."
       crumbs={[{ label: "Quality & Certifications" }]}
+      image="/assets/Quality-Certification-Hero-Pic.webp"
       sections={[
         {
           eyebrow: "Our Commitment",

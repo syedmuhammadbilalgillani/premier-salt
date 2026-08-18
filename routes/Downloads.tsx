@@ -64,6 +64,7 @@ export default function Downloads() {
       <PageHero
         eyebrow="Resources"
         title="Downloads"
+        image="/assets/Downloads-Hero-Pic.webp"
         description="Company and product documents for buyers, distributors and partners."
         crumbs={[{ label: "Downloads" }]}
       />

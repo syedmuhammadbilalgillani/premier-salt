@@ -5,8 +5,6 @@ import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
 import { FormField, inputClasses } from "@/components/ui/FormField";
 import { downloadTextFile } from "@/lib/download";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
-import Image from "next/image";
 
 const process = [
   "Share Your Requirement",
@@ -157,40 +155,13 @@ export default function PrivateLabeling() {
 
   return (
     <>
-      {/* <PageHero
+      <PageHero
         eyebrow="Private Label"
         title="Private Label Himalayan Salt Products"
         description="Develop customized Himalayan salt products and packaging under your own brand."
         crumbs={[{ label: "Private Labeling" }]}
-      /> */}
-      <div className="relative h-full  ">
-        <Image
-          src="/privatelabelbanner.jpeg"
-          alt="Private Labeling"
-          height={758}
-          width={2229}
-          className="w-full  object-contain"
-        />
-        {/* Background overlay */}
-        <div className="pointer-events-none absolute inset-0 z-0 bg-linear-to-br from-transparent to-black/80" />
-
-        {/* Page content */}
-        <div className="absolute inset-0 z-20 mx-auto w-full max-w-8xl flex flex-col justify-center h-full px-4 py-12 sm:px-6 lg:px-8">
-          <Breadcrumbs
-            items={[{ label: "Private Labeling" }]}
-            className="text-white"
-          />
-
-          <h1 className="mt-6 font-serif text-4xl leading-[1.1] text-white sm:text-5xl">
-            Private Label Himalayan Salt Products
-          </h1>
-
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white sm:text-lg">
-            Develop customized Himalayan salt products and packaging under your
-            own brand.
-          </p>
-        </div>
-      </div>
+        image="/privatelabelbanner.jpeg"
+      />
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-16 px-6 py-20 md:grid-cols-2 md:px-8">
         <Reveal className="flex flex-col gap-10">
           <div>

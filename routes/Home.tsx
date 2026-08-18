@@ -96,48 +96,60 @@ export default function Home({ categories }: { categories: any[] }) {
   return (
     <>
       {/* 1. Hero */}
-      <section className="relative flex lg:h-dvh h-[80dvh] items-end overflow-hidden bg-charcoal pt-32">
+      <section className="relative flex min-h-[420px] items-center overflow-hidden bg-charcoal pt-36 pb-14 sm:min-h-[480px] md:min-h-[560px] md:pt-44 md:pb-16">
+        {/* Background */}
         <div className="absolute inset-0">
-          <ImagePlaceholder
-            label="Hero Image — Himalayan salt processing at Premier Salt"
-            width={1600}
-            height={900}
-            tone="dark"
-            className="h-full rounded-none border-none"
+          <Image
+            src="/assets/home-page-hero-pic.webp"
+            alt="Premium Himalayan salt products"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[60%_center] sm:object-center"
           />
-          <div className="absolute inset-0 bg-linear-to-t from-primary/70 via-primary/30 to-primary/0" />
+
+          <div className="absolute inset-0 bg-linear-to-t from-primary/85 via-primary/45 to-primary/5" />
         </div>
-        <Reveal className="relative z-10 mx-auto w-full max-w-7xl px-6 pb-20 md:px-8 md:pb-28">
-          <span className="eyebrow text-salt-pink">
-            Authentic Himalayan Salt from Pakistan
-          </span>
-          <h1 className="mt-5 max-w-3xl font-serif text-4xl leading-[1.08] text-cream sm:text-5xl md:text-6xl">
-            Premium Himalayan Salt, Crafted for Global Markets
-          </h1>
-          <p className="mt-6 max-w-xl text-base leading-relaxed text-cream/70 sm:text-lg">
-            Premier Salt Industries processes, manufactures and exports a
-            comprehensive range of authentic Himalayan salt products for
-            importers, wholesalers, retailers, private-label brands and
-            individual customers.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link href="/request-a-quote" className="inline-flex">
-              <Button>Request a Quote</Button>
-            </Link>
-            <Link href="/shop" className="inline-flex">
-              <Button
-                variant="outline"
-                className="border-cream  hover:bg-cream text-muted-foreground hover:text-charcoal"
+
+        {/* Content */}
+        <Reveal className="relative z-10 mx-auto w-full max-w-7xl px-5 sm:px-6 md:px-8">
+          <div className="max-w-3xl">
+            <span className="eyebrow text-xs text-salt-pink sm:text-sm">
+              Authentic Himalayan Salt from Pakistan
+            </span>
+
+            <h1 className="mt-3 max-w-3xl font-serif text-[2.5rem] leading-[1.05] text-cream sm:mt-4 sm:text-5xl md:text-6xl lg:text-7xl">
+              Premium Himalayan Salt, Crafted for Global Markets
+            </h1>
+
+            <p className="mt-4 max-w-xl text-sm leading-6 text-cream/75 sm:mt-5 sm:text-base sm:leading-relaxed md:text-lg">
+              Premier Salt Industries processes, manufactures and exports a
+              comprehensive range of authentic Himalayan salt products for
+              importers, wholesalers, retailers, private-label brands and
+              individual customers.
+            </p>
+
+            <div className="mt-6 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+              <Link href="/request-a-quote" className="w-full sm:w-auto">
+                <Button className="w-full sm:w-auto">Request a Quote</Button>
+              </Link>
+
+              <Link href="/shop" className="w-full sm:w-auto">
+                <Button
+                  variant="outline"
+                  className="w-full border-cream text-cream hover:bg-cream hover:text-charcoal sm:w-auto"
+                >
+                  Shop Online
+                </Button>
+              </Link>
+
+              <Link
+                href="/products"
+                className="mt-1 text-center text-sm font-medium text-cream/80 underline underline-offset-4 hover:text-salt-pink sm:mt-0 sm:text-left"
               >
-                Shop Online
-              </Button>
-            </Link>
-            <Link
-              href="/products"
-              className="text-sm font-medium text-cream/80 underline underline-offset-4 hover:text-salt-pink"
-            >
-              Explore Our Products
-            </Link>
+                Explore Our Products
+              </Link>
+            </div>
           </div>
         </Reveal>
       </section>
@@ -154,7 +166,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </Reveal>
 
       {/* 3. Product categories */}
-      <section className="mx-auto max-w-7xl px-6 py-24 md:px-8">
+      <section className="mx-auto max-w-7xl px-6 py-14 sm:py-16 md:py-24 md:px-8">
         <SectionHeading eyebrow="Our Range" title="Product Categories" />
         <Reveal
           stagger
@@ -196,18 +208,18 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 4. About */}
-      <section className="bg-sand/40 py-24">
+      <section className="bg-sand/40 py-14 sm:py-16 md:py-24">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 md:grid-cols-2 md:px-8">
           <Reveal>
-            {/* <ImagePlaceholder
-              label="Manufacturing Facility — interior processing area"
-              /> */}
-            <Image
-              src={`/about-sec.webp`}
-              alt="About us banner"
-              width={555}
-              height={994}
-            />
+            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-md bg-sand/40 md:aspect-[555/994]">
+              <Image
+                src={`/assets/homepage-about-section.webp`}
+                alt="About us banner"
+                fill
+                className="object-cover"
+                sizes="(min-width: 768px) 45vw, 100vw"
+              />
+            </div>
           </Reveal>
           <Reveal className="flex flex-col justify-center gap-5" delay={0.1}>
             <span className="eyebrow">About</span>
@@ -239,7 +251,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 5. Why choose us */}
-      <section className="mx-auto max-w-7xl px-6 py-24 md:px-8">
+      <section className="mx-auto max-w-7xl px-6 py-14 sm:py-16 md:py-24 md:px-8">
         <SectionHeading
           eyebrow="Why Premier Salt"
           title="Built Around What Buyers Need"
@@ -266,7 +278,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 6. Export process */}
-      <section className="bg-primary py-24 text-cream">
+      <section className="bg-primary py-14 sm:py-16 md:py-24 text-cream">
         <div className="mx-auto max-w-7xl px-6 md:px-8">
           <SectionHeading
             eyebrow="How Export Works"
@@ -297,7 +309,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 7. Private label */}
-      <section className="mx-auto max-w-7xl px-6 py-24 md:px-8">
+      <section className="mx-auto max-w-7xl px-6 py-14 sm:py-16 md:py-24 md:px-8">
         <div className="grid grid-cols-1 gap-12 md:grid-cols-2 md:items-center">
           <Reveal className="flex flex-col gap-5">
             <span className="eyebrow">Private Label</span>
@@ -328,17 +340,21 @@ export default function Home({ categories }: { categories: any[] }) {
             </Link>
           </Reveal>
           <Reveal delay={0.1}>
-            <ImagePlaceholder
-              label="Private-label packaging examples"
-              width={900}
-              height={700}
-            />
+            <div className="relative aspect-[900/700] w-full overflow-hidden rounded-md bg-sand/40">
+              <Image
+                alt="Private-label packaging"
+                src={"/assets/private-label.webp"}
+                fill
+                className="object-cover"
+                sizes="(min-width: 768px) 45vw, 100vw"
+              />
+            </div>
           </Reveal>
         </div>
       </section>
 
       {/* 9. Featured shop products */}
-      <section className="mx-auto w-full max-w-7xl px-6 py-24 md:px-8">
+      <section className="mx-auto w-full max-w-7xl px-6 py-14 sm:py-16 md:py-24 md:px-8">
         <SectionHeading eyebrow="Retail Shop" title="Featured Products" />
         <Reveal
           stagger
@@ -351,7 +367,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 10. Certifications */}
-      <section className="bg-charcoal py-24 text-cream">
+      <section className="bg-charcoal py-14 sm:py-16 md:py-24 text-cream">
         <div className="mx-auto max-w-7xl px-6 md:px-8">
           <SectionHeading
             eyebrow="Quality & Certifications"
@@ -382,7 +398,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 11. Buyer segments */}
-      <section className="mx-auto max-w-7xl px-6 py-24 md:px-8">
+      <section className="mx-auto max-w-7xl px-6 py-14 sm:py-16 md:py-24 md:px-8">
         <SectionHeading
           eyebrow="Who We Serve"
           title="Built for Every Kind of Buyer"
@@ -402,7 +418,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 12. Educational */}
-      <section className="bg-sand/40 py-24">
+      <section className="bg-sand/40 py-14 sm:py-16 md:py-24">
         <div className="mx-auto max-w-7xl px-6 md:px-8">
           <SectionHeading
             eyebrow="Learn"
@@ -448,7 +464,7 @@ export default function Home({ categories }: { categories: any[] }) {
       </section>
 
       {/* 13. Final CTA */}
-      <section className="relative overflow-hidden bg-primary py-24 text-cream">
+      <section className="relative overflow-hidden bg-primary py-14 sm:py-16 md:py-24 text-cream">
         <Reveal className="mx-auto max-w-2xl px-6 text-center md:px-8">
           <h2 className="font-serif text-3xl sm:text-4xl">
             Looking for a Reliable Himalayan Salt Supplier?

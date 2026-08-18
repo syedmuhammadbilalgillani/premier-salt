@@ -6,6 +6,7 @@ export default function Sustainability() {
       eyebrow="Company"
       title="Sustainability"
       description="Responsible practices guide how we source, process and package Himalayan salt products."
+      image="/assets/Sustainability-Hero-Pic.webp"
       crumbs={[{ label: "Sustainability" }]}
       sections={[
         {
