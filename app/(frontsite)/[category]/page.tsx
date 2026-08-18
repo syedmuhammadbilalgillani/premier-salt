@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
 import { CategoryHubView } from "@/components/storefront/CategoryHubView";
@@ -8,9 +9,29 @@ import {
   getCachedChildCategories,
 } from "@/lib/category";
 import { getCatalogProductsForCategory } from "@/lib/product";
+import { buildMetadata, toPlainDescription } from "@/lib/seo";
 
 // Category content is admin-managed and cache-tagged (revalidateTag on every
 // category/product mutation) — no need to force-dynamic a public page.
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ category: string }>;
+}): Promise<Metadata> {
+  const { category: slug } = await params;
+  const category = await getCachedCategoryBySlug(slug);
+  if (!category) return buildMetadata({ title: "Category", description: "", path: `/${slug}`, noindex: true });
+
+  return buildMetadata({
+    title: category.title,
+    description:
+      toPlainDescription(category.description) ||
+      `Explore our range of ${category.title} — wholesale, export and private-label enquiries welcome.`,
+    path: `/${slug}`,
+    image: category.image_url ?? undefined,
+  });
+}
 
 export default async function CategoryPage({
   params,

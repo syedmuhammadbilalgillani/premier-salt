@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
@@ -10,9 +11,35 @@ import {
   getCachedPublishedBlogPostBySlug,
   getCachedRelatedBlogPosts,
 } from "@/lib/blog";
+import { buildMetadata } from "@/lib/seo";
 
 // Blog content is admin-managed and cache-tagged (revalidateTag on every
 // blog-post mutation) — no need to force-dynamic a public page.
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ categorySlug: string; postSlug: string }>;
+}): Promise<Metadata> {
+  const { categorySlug, postSlug } = await params;
+  const post = await getCachedPublishedBlogPostBySlug(postSlug);
+  if (!post) {
+    return buildMetadata({
+      title: "Blog Post",
+      description: "",
+      path: `/blog/${categorySlug}/${postSlug}`,
+      noindex: true,
+    });
+  }
+
+  return buildMetadata({
+    title: post.title,
+    description: post.excerpt,
+    path: `/blog/${post.categorySlug}/${post.slug}`,
+    image: post.coverImage ?? undefined,
+    type: "article",
+  });
+}
 
 export default async function BlogPostPage({
   params,

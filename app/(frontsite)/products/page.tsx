@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -5,7 +6,15 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { getCachedCategories } from "@/lib/category";
+import { buildMetadata } from "@/lib/seo";
 import { ArrowRight } from "lucide-react";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Himalayan Salt Product Range",
+  description:
+    "Browse our wholesale, export, distributor and private-label Himalayan salt product range — edible salt, decor, kitchenware, spa and industrial categories.",
+  path: "/products",
+});
 
 // Category content is admin-managed and cache-tagged (revalidateTag on every
 // category mutation) — no need to force-dynamic a public page.

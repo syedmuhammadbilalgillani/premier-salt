@@ -1,12 +1,43 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { PageHero } from "@/components/layout/PageHero";
 import { ShopProductCard } from "@/components/ui/ShopProductCard";
 import { getShopProductBySlug, getShopProducts } from "@/lib/product";
+import { buildMetadata, toPlainDescription } from "@/lib/seo";
 import { ShopProductDetailClient } from "@/routes/ShopProductDetailClient";
 
 // Shop content is admin-managed and cache-tagged (revalidateTag on every
 // product mutation) — no need to force-dynamic a public page.
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ productSlug: string }>;
+}): Promise<Metadata> {
+  const { productSlug } = await params;
+  const product = await getShopProductBySlug(productSlug);
+  if (!product) {
+    return buildMetadata({
+      title: "Product",
+      description: "",
+      path: `/shop/product/${productSlug}`,
+      noindex: true,
+    });
+  }
+
+  const primaryImage =
+    product.images.find((img) => img.isPrimary)?.url ?? product.images[0]?.url;
+
+  return buildMetadata({
+    title: product.title,
+    description:
+      toPlainDescription(product.description) ||
+      `Buy ${product.title} online from Premier Salt — authentic Himalayan salt products with Pakistan-wide delivery.`,
+    path: `/shop/product/${productSlug}`,
+    image: primaryImage,
+  });
+}
 
 export default async function ShopProductPage({
   params,
