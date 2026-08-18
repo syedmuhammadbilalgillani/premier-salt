@@ -92,7 +92,7 @@ export default function Home({ categories }: { categories: any[] }) {
   const { products } = useShopCatalog();
   const featuredProducts = products.slice(0, 8);
 
-  console.log(categories, "categories in home ");
+  // console.log(categories, "categories in home ");
   return (
     <>
       {/* 1. Hero */}
@@ -137,7 +137,7 @@ export default function Home({ categories }: { categories: any[] }) {
               <Link href="/shop" className="w-full sm:w-auto">
                 <Button
                   variant="outline"
-                  className="w-full border-cream text-cream hover:bg-cream hover:text-charcoal sm:w-auto"
+                  className="w-full border-cream text hover:bg-cream text-charcoal sm:w-auto"
                 >
                   Shop Online
                 </Button>
