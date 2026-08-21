@@ -7,6 +7,7 @@ import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
 import { ShopProductCard } from "@/components/ui/ShopProductCard";
 import { useShopCatalog } from "@/hooks/useShopCatalog";
+import type { ShopProduct } from "@/lib/product";
 
 const sortOptions = [
   { value: "featured", label: "Featured" },
@@ -17,7 +18,11 @@ const sortOptions = [
 
 type SortValue = (typeof sortOptions)[number]["value"];
 
-export default function ShopPage() {
+export default function ShopPage({
+  initialProducts = [],
+}: {
+  initialProducts?: ShopProduct[];
+}) {
   return (
     <>
       <PageHero
@@ -29,7 +34,7 @@ export default function ShopPage() {
       />
 
       <Suspense fallback={<ShopLoading />}>
-        <ShopContent />
+        <ShopContent initialProducts={initialProducts} />
       </Suspense>
     </>
   );
@@ -46,11 +51,19 @@ function productPrice(product: {
   return product.basePrice ?? 0;
 }
 
-function ShopContent() {
+function ShopContent({
+  initialProducts = [],
+}: {
+  initialProducts?: ShopProduct[];
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { products, loading } = useShopCatalog();
+  const { products: clientProducts, loading: clientLoading } = useShopCatalog();
+  const products =
+    clientProducts.length > 0 ? clientProducts : initialProducts;
+  const loading =
+    clientProducts.length === 0 && initialProducts.length === 0 && clientLoading;
 
   const category = searchParams.get("category") ?? "";
   const q = searchParams.get("q") ?? "";

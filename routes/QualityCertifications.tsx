@@ -1,8 +1,8 @@
 import { ContentPage } from "@/components/layout/ContentPage";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { Reveal } from "@/components/motion/Reveal";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { company } from "@/data/company";
+import Image from "next/image";
 
 const faqs = [
   {
@@ -57,15 +57,27 @@ export default function QualityCertifications() {
         className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6"
       >
         {company.certifications.map((cert) => (
-          <div key={cert} className="flex flex-col gap-3">
-            <ImagePlaceholder
-              label={`${cert} — Certificate Preview`}
-              width={300}
-              height={400}
-            />
-            <span className="text-xs font-medium leading-snug text-charcoal">
-              {cert}
-            </span>
+          <div
+            key={cert.name}
+            className="group flex flex-col items-center gap-3 text-center"
+          >
+            <div className="relative aspect-square w-full rounded-2xl bg-white border border-border p-4 shadow-sm flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
+              <Image
+                src={cert.image}
+                alt={cert.name}
+                fill
+                className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xs font-semibold leading-snug text-charcoal">
+                {cert.name}
+              </span>
+              <span className="text-[11px] leading-tight text-muted-foreground mt-0.5">
+                {cert.subtitle}
+              </span>
+            </div>
           </div>
         ))}
       </Reveal>

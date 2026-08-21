@@ -16,19 +16,19 @@ export function SiteFooter() {
             </p>
             <div className="flex flex-col gap-2 pt-2 text-sm text-cream/70">
               <span className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0" /> {company.office}
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-salt-pink" /> {company.office}
               </span>
               <a
                 href={`tel:${company.phone.replace(/\s/g, "")}`}
-                className="flex items-center gap-2 hover:text-cream"
+                className="flex items-center gap-2 transition-colors hover:text-salt-pink"
               >
-                <Phone className="h-4 w-4" /> {company.phone}
+                <Phone className="h-4 w-4 text-salt-pink" /> {company.phone}
               </a>
               <a
                 href={`mailto:${company.emails.info}`}
-                className="flex items-center gap-2 hover:text-cream"
+                className="flex items-center gap-2 transition-colors hover:text-salt-pink"
               >
-                <Mail className="h-4 w-4" /> {company.emails.info}
+                <Mail className="h-4 w-4 text-salt-pink" /> {company.emails.info}
               </a>
             </div>
           </div>
@@ -43,7 +43,7 @@ export function SiteFooter() {
                   <li key={link.to}>
                     <Link
                       href={link.to}
-                      className="text-sm text-cream/60 hover:text-primary"
+                      className="text-sm text-cream/60 transition-colors hover:text-salt-pink"
                     >
                       {link.label}
                     </Link>
@@ -67,13 +67,16 @@ export function SiteFooter() {
             Limited. All rights reserved.
           </span>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
-            <Link href="/privacy-policy" className="hover:text-primary">
+            <Link href="/privacy-policy" className="transition-colors hover:text-salt-pink">
               Privacy Policy
             </Link>
-            <Link href="/terms-conditions" className="hover:text-primary">
+            <Link href="/terms-conditions" className="transition-colors hover:text-salt-pink">
               Terms &amp; Conditions
             </Link>
-            <Link href="/cookie-policy" className="hover:text-primary">
+            <Link href="/payment-policy" className="transition-colors hover:text-salt-pink">
+              Payment Policy
+            </Link>
+            <Link href="/cookie-policy" className="transition-colors hover:text-salt-pink">
               Cookie Policy
             </Link>
           </div>
@@ -82,3 +85,4 @@ export function SiteFooter() {
     </footer>
   );
 }
+

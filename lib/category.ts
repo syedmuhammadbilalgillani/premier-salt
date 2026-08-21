@@ -57,7 +57,7 @@ export function getCachedCategories({
       }));
     },
     ["categories-list", String(limit || ""), String(firstLevelOnly || "")],
-    { tags: ["categories"] }
+    { tags: ["categories"] },
   )();
 }
 

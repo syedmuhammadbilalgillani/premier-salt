@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Shop from "@/routes/Shop";
+import { getShopProducts } from "@/lib/product";
 import { buildMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildMetadata({
@@ -9,8 +10,10 @@ export const metadata: Metadata = buildMetadata({
   path: "/shop",
 });
 
-const page = () => {
-  return <Shop />;
+const page = async () => {
+  const products = await getShopProducts();
+  return <Shop initialProducts={products} />;
 };
 
 export default page;
+

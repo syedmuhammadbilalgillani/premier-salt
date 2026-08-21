@@ -8,6 +8,7 @@ import { ShopProductCard } from "@/components/ui/ShopProductCard";
 import { b2bCategories } from "@/data/b2bCategories";
 import { company } from "@/data/company";
 import { useShopCatalog } from "@/hooks/useShopCatalog";
+import type { ShopProduct } from "@/lib/product";
 import {
   ArrowRight,
   Award,
@@ -88,8 +89,16 @@ const exportSteps = [
   },
 ];
 
-export default function Home({ categories }: { categories: any[] }) {
-  const { products } = useShopCatalog();
+export default function Home({
+  categories,
+  initialProducts = [],
+}: {
+  categories: any[];
+  initialProducts?: ShopProduct[];
+}) {
+  const { products: clientProducts } = useShopCatalog();
+  const products =
+    clientProducts.length > 0 ? clientProducts : initialProducts;
   const featuredProducts = products.slice(0, 8);
 
   // console.log(categories, "categories in home ");
@@ -282,12 +291,8 @@ export default function Home({ categories }: { categories: any[] }) {
         <div className="mx-auto max-w-7xl px-6 md:px-8">
           <SectionHeading
             eyebrow="How Export Works"
-            title={
-              <span className="text-cream">
-                A Clear Path From Enquiry to Shipment
-              </span>
-            }
-            className="[&_.eyebrow]:text-salt-pink"
+            title="A Clear Path From Enquiry to Shipment"
+            tone="dark"
           />
           <Reveal
             stagger
@@ -371,26 +376,35 @@ export default function Home({ categories }: { categories: any[] }) {
         <div className="mx-auto max-w-7xl px-6 md:px-8">
           <SectionHeading
             eyebrow="Quality & Certifications"
-            title={
-              <span className="text-cream">Standards We Hold Ourselves To</span>
-            }
-            className="[&_.eyebrow]:text-salt-pink"
+            title="Standards We Hold Ourselves To"
+            tone="dark"
           />
           <Reveal
             stagger
             className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6"
           >
             {company.certifications.map((cert) => (
-              <div key={cert} className="flex flex-col gap-3">
-                <ImagePlaceholder
-                  label={`${cert} — Certificate Preview`}
-                  width={300}
-                  height={400}
-                  tone="dark"
-                />
-                <span className="text-xs font-medium leading-snug text-cream/80">
-                  {cert}
-                </span>
+              <div
+                key={cert.name}
+                className="group flex flex-col items-center gap-3 text-center"
+              >
+                <div className="relative aspect-square w-full rounded-2xl bg-white p-4 shadow-sm flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
+                  <Image
+                    src={cert.image}
+                    alt={cert.name}
+                    fill
+                    className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs font-semibold leading-snug text-cream">
+                    {cert.name}
+                  </span>
+                  <span className="text-[11px] leading-tight text-cream/70 mt-0.5">
+                    {cert.subtitle}
+                  </span>
+                </div>
               </div>
             ))}
           </Reveal>
@@ -484,7 +498,7 @@ export default function Home({ categories }: { categories: any[] }) {
             <Link href="/contact">
               <Button
                 variant="outline"
-                className="border-cream text-muted-foreground hover:bg-cream hover:text-primary"
+                className="border-cream text-cream hover:bg-cream hover:text-primary"
               >
                 Contact Sales
               </Button>

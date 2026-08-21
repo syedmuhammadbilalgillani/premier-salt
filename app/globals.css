@@ -238,12 +238,12 @@ body {
   text-transform: uppercase;
   color: var(--color-primary);
 }
-/* .eyebrow::before {
-  content: "( ";
+
+.bg-charcoal .eyebrow,
+.bg-primary .eyebrow,
+[data-tone="dark"] .eyebrow {
+  color: var(--color-salt-pink);
 }
-.eyebrow::after {
-  content: " )";
-} */
 
 /* Reveal-on-scroll primitive, animated by GSAP ScrollTrigger */
 [data-reveal] {

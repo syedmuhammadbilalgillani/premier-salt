@@ -252,11 +252,11 @@ export function SiteHeaderClient({
             className="font-serif text-2xl font-semibold tracking-wide text-primary"
           >
             <Image
-              src={`/premiersalt-logo.png`}
-              alt=""
+              src={`/premiersalt-logo.webp`}
+              alt="Premier Salt Logo"
               width={100}
               height={100}
-            />{" "}
+            />
           </Link>
 
           <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">

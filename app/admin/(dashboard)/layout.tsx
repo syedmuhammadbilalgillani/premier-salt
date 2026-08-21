@@ -88,7 +88,7 @@ export default function DashboardLayout({
         <SidebarHeader>
           <Link href={`/`} className="flex justify-center">
             <Image
-              src={`/premiersalt-logo.png`}
+              src={`/premiersalt-logo.webp`}
               alt="Premier Salt Logo"
               width={120}
               height={50}

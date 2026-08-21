@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getCachedCategories } from "@/lib/category";
+import { getShopProducts } from "@/lib/product";
 import { buildMetadata } from "@/lib/seo";
 import Home from "@/routes/Home";
 
@@ -16,14 +17,16 @@ export const metadata: Metadata = buildMetadata({
 });
 
 const HomePage = async ({ firstLevelCategory }: HomePageProps = {}) => {
-  const categories = await getCachedCategories({
-    limit: 6,
-    firstLevelOnly: true,
-  });
+  const [categories, products] = await Promise.all([
+    getCachedCategories({
+      limit: 6,
+      firstLevelOnly: true,
+    }),
+    getShopProducts(),
+  ]);
 
-  // console.log(categories, "categories");
-
-  return <Home categories={categories} />;
+  return <Home categories={categories} initialProducts={products} />;
 };
+
 
 export default HomePage;

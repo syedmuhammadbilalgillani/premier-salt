@@ -40,11 +40,35 @@ export const company = {
     "Private-label buyers",
   ],
   certifications: [
-    "Quality Management System",
-    "Hazard Analysis and Critical Control Point",
-    "Food Safety Management System",
-    "Halal Certified",
-    "Salt Manufacturers Registration",
-    "FDA Services",
+    {
+      name: "ISO 9001:2015",
+      subtitle: "Quality Management System",
+      image: "/certificates/1.webp",
+    },
+    {
+      name: "HACCP",
+      subtitle: "Hazard Analysis Critical Control Point",
+      image: "/certificates/2.webp",
+    },
+    {
+      name: "ISO 22000",
+      subtitle: "Food Safety Management System",
+      image: "/certificates/3.webp",
+    },
+    {
+      name: "Halal Certified",
+      subtitle: "100% Halal Compliance",
+      image: "/certificates/4.webp",
+    },
+    {
+      name: "SMAP",
+      subtitle: "Salt Manufacturers Association of Pakistan",
+      image: "/certificates/5.webp",
+    },
+    {
+      name: "U.S. FDA Services",
+      subtitle: "FDA Compliance Partner",
+      image: "/certificates/6.webp",
+    },
   ],
 } as const;
