@@ -128,7 +128,6 @@ export const footerNavigation: NavGroup[] = [
       },
       { label: "Himalayan Bath Salt", to: "/himalayan-bath-salt" },
       { label: "Animal Lick Salt", to: "/animal-lick-salt" },
-      { label: "Animal Salt Licks", to: "/salt-licks-bars" },
       { label: "Salt Lamps", to: "/salt-lamps" },
     ],
   },
