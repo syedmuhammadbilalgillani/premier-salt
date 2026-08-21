@@ -29,6 +29,9 @@ export default function Wholesale() {
       title="Wholesale & Distributor Partnerships"
       description="We work with wholesalers and distributors across edible, décor, kitchen, spa and industrial salt categories."
       crumbs={[{ label: "Wholesale & Distributor" }]}
+      // TODO: swap for a dedicated wholesale/warehouse shot — reusing the
+      // packing-line image so this hero matches every other page's treatment.
+      image="/assets/Packaging_line.webp"
       sections={[
         {
           eyebrow: "Who Can Apply",
@@ -46,9 +49,9 @@ export default function Wholesale() {
         },
       ]}
     >
-      <Reveal className="border-t border-border pt-10">
+      <Reveal className="border-t border-border pt-8 md:pt-10">
         <span className="eyebrow">Process</span>
-        <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
+        <h2 className="mt-3 mb-5 font-serif text-xl text-primary sm:text-2xl">
           Application Process
         </h2>
         <ol className="flex flex-col gap-3 text-sm text-charcoal">
@@ -67,13 +70,13 @@ export default function Wholesale() {
             </li>
           ))}
         </ol>
-        <Link href="/request-a-quote" className="mt-6 inline-block">
-          <Button>Submit an Enquiry</Button>
+        <Link href="/request-a-quote" className="mt-6 block w-full sm:inline-block sm:w-auto">
+          <Button className="w-full sm:w-auto">Submit an Enquiry</Button>
         </Link>
       </Reveal>
-      <div className="border-t border-border pt-10">
+      <div className="border-t border-border pt-8 md:pt-10">
         <span className="eyebrow">FAQ</span>
-        <h2 className="mt-3 mb-6 font-serif text-2xl text-primary">
+        <h2 className="mt-3 mb-6 font-serif text-xl text-primary sm:text-2xl">
           Partnership Questions
         </h2>
         <FAQAccordion items={faqs} />

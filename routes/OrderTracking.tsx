@@ -53,7 +53,7 @@ export default function OrderTracking() {
         description="Enter your order number and email to see its current status."
         crumbs={[{ label: "Order Tracking" }]}
       />
-      <div className="mx-auto max-w-xl px-6 py-16 md:px-8">
+      <div className="mx-auto max-w-xl px-6 py-12 sm:py-16 md:px-8">
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <FormField label="Order Number" htmlFor="orderId" required>
             <input

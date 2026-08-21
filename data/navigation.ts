@@ -87,7 +87,6 @@ export const mainNavigation: NavItem[] = [
       { label: "About Himalayan Salt", to: "/about-himalayan-salt" },
       { label: "Frequently Asked Questions", to: "/faq" },
       { label: "Blog", to: "/blog" },
-      { label: "Downloads", to: "/downloads" },
     ],
   },
   { label: "Contact", to: "/contact" },
@@ -137,7 +136,6 @@ export const footerNavigation: NavGroup[] = [
       { label: "Wholesale & Distributors", to: "/wholesale-distributor" },
       { label: "Request a Quote", to: "/request-a-quote" },
       { label: "Export Capabilities", to: "/export-capabilities" },
-      { label: "Downloads & Specs", to: "/downloads" },
     ],
   },
   {

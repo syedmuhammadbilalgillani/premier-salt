@@ -73,7 +73,7 @@ export default function Contact() {
         crumbs={[{ label: "Contact" }]}
         image="/assets/Contact-Hero-Pic.webp"
       />
-      <div className="mx-auto grid max-w-7xl w-full grid-cols-1 gap-16 px-6 py-16 md:grid-cols-2 md:px-8">
+      <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-6 py-12 sm:py-16 md:grid-cols-2 md:gap-16 md:px-8">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-4 text-sm">
             <span className="flex items-start gap-3">

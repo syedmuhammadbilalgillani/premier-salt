@@ -48,42 +48,46 @@ export default function QualityCertifications() {
         },
       ]}
     >
-      <Reveal className="border-t border-border pt-10">
+      {/* Heading and grid stay in one block — as separate children they were
+          pushed apart by the page container's section gap. */}
+      <div className="border-t border-border pt-8 md:pt-10">
         <span className="eyebrow">Certifications</span>
-        <h2 className="mt-3 font-serif text-2xl text-primary">What We Hold</h2>
-      </Reveal>
-      <Reveal
-        stagger
-        className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6"
-      >
-        {company.certifications.map((cert) => (
-          <div
-            key={cert.name}
-            className="group flex flex-col items-center gap-3 text-center"
-          >
-            <div className="relative aspect-square w-full rounded-2xl bg-white border border-border p-4 shadow-sm flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
-              <Image
-                src={cert.image}
-                alt={cert.name}
-                fill
-                className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
-              />
+        <h2 className="mt-3 mb-6 font-serif text-xl text-primary sm:text-2xl">
+          What We Hold
+        </h2>
+        <Reveal
+          stagger
+          className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-6"
+        >
+          {company.certifications.map((cert) => (
+            <div
+              key={cert.name}
+              className="group flex flex-col items-center gap-3 text-center"
+            >
+              <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-white p-4 shadow-sm transition-all duration-300 group-hover:shadow-md">
+                <Image
+                  src={cert.image}
+                  alt={`${cert.name} — ${cert.subtitle}`}
+                  fill
+                  className="object-contain p-3 transition-transform duration-300 group-hover:scale-105"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold leading-snug text-charcoal">
+                  {cert.name}
+                </span>
+                <span className="mt-0.5 text-[11px] leading-tight text-muted-foreground">
+                  {cert.subtitle}
+                </span>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-xs font-semibold leading-snug text-charcoal">
-                {cert.name}
-              </span>
-              <span className="text-[11px] leading-tight text-muted-foreground mt-0.5">
-                {cert.subtitle}
-              </span>
-            </div>
-          </div>
-        ))}
-      </Reveal>
-      <div className="border-t border-border pt-10">
+          ))}
+        </Reveal>
+      </div>
+      <div className="border-t border-border pt-8 md:pt-10">
         <span className="eyebrow">FAQ</span>
-        <h2 className="mt-3 mb-6 font-serif text-2xl text-primary">
+        <h2 className="mt-3 mb-6 font-serif text-xl text-primary sm:text-2xl">
           Documentation Questions
         </h2>
         <FAQAccordion items={faqs} />

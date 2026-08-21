@@ -133,7 +133,7 @@ export default function RequestQuote({
         description="Share your requirement and our export sales team will follow up with pricing and availability."
         crumbs={[{ label: "Request a Quote" }]}
       />
-      <div className="mx-auto max-w-2xl w-full px-6 py-16 md:px-8">
+      <div className="mx-auto w-full max-w-2xl px-6 py-12 sm:py-16 md:px-8">
         <form
           onSubmit={handleSubmit}
           noValidate

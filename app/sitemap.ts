@@ -21,7 +21,6 @@ const STATIC_ROUTES = [
   "/export-capabilities",
   "/quality-certifications",
   "/sustainability",
-  "/downloads",
   "/order-tracking",
   "/terms-conditions",
   "/privacy-policy",

@@ -489,12 +489,6 @@ export default function Home({
                 Request a Quote
               </Button>
             </Link>
-            <Link
-              href="/downloads"
-              className="text-sm font-medium underline underline-offset-4 hover:text-cream/80"
-            >
-              Download Company Profile
-            </Link>
             <Link href="/contact">
               <Button
                 variant="outline"

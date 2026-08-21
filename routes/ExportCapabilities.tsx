@@ -51,10 +51,10 @@ export default function ExportCapabilities() {
         },
       ]}
     >
-      <Reveal className="grid grid-cols-1 gap-10 border-t border-border pt-10 md:grid-cols-2">
+      <Reveal className="grid grid-cols-1 gap-8 border-t border-border pt-8 md:grid-cols-2 md:gap-10 md:pt-10">
         <div>
           <span className="eyebrow">Export Journey</span>
-          <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
+          <h2 className="mt-3 mb-5 font-serif text-xl text-primary sm:text-2xl">
             Six Steps
           </h2>
           <ol className="flex flex-col gap-4">
@@ -70,7 +70,7 @@ export default function ExportCapabilities() {
         </div>
         <div>
           <span className="eyebrow">Typical Enquiry Information</span>
-          <h2 className="mt-3 mb-5 font-serif text-2xl text-primary">
+          <h2 className="mt-3 mb-5 font-serif text-xl text-primary sm:text-2xl">
             What to Include
           </h2>
           <ul className="flex flex-col gap-2.5">

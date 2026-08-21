@@ -40,14 +40,14 @@ export default function FAQ() {
         image="/assets/FAQ-Hero-Pic.webp"
       />
 
-      <div className="mx-auto max-w-3xl w-full px-6 py-16 md:px-8">
+      <div className="mx-auto w-full max-w-3xl px-6 py-12 sm:py-16 md:px-8">
         <input
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search questions…"
           aria-label="Search frequently asked questions"
-          className="mb-10 w-full rounded-sm border border-border bg-white px-4 py-3 text-sm focus-visible:outline-primary"
+          className="mb-8 w-full rounded-sm border border-border bg-white px-4 py-3 text-sm focus-visible:outline-primary sm:mb-10"
         />
 
         {filtered.length === 0 ? (
@@ -55,10 +55,10 @@ export default function FAQ() {
             No questions match your search.
           </p>
         ) : (
-          <div className="flex flex-col gap-12">
+          <div className="flex flex-col gap-10 sm:gap-12">
             {filtered.map((group) => (
               <section key={group.group}>
-                <h2 className="mb-5 font-serif text-2xl text-primary">
+                <h2 className="mb-5 font-serif text-xl text-primary sm:text-2xl">
                   {group.group}
                 </h2>
 

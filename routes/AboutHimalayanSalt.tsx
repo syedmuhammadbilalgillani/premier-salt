@@ -59,9 +59,9 @@ export default function AboutHimalayanSalt() {
         },
       ]}
     >
-      <Reveal className="border-t border-border pt-10">
+      <Reveal className="border-t border-border pt-8 md:pt-10">
         <span className="eyebrow">FAQ</span>
-        <h2 className="mt-3 mb-6 font-serif text-2xl text-primary">
+        <h2 className="mt-3 mb-6 font-serif text-xl text-primary sm:text-2xl">
           Common Questions
         </h2>
         <FAQAccordion items={faqs} />
