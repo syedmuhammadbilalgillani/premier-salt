@@ -1,16 +1,27 @@
 import type { Metadata } from "next";
 import FAQ from "@/routes/FAQ";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getFAQPageSchema, getBreadcrumbSchema } from "@/lib/schema";
+import { faqGroups } from "@/data/faqs";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Frequently Asked Questions",
+  title: "Frequently Asked Questions | Premier Salt Industries",
   description:
-    "Answers to common questions about our company, products, wholesale, export, and retail orders.",
+    "Official answers to common questions about Premier Salt Himalayan products, Khewra mining, bulk wholesale, containerized export, private labeling, and retail orders.",
   path: "/faq",
 });
 
-const page = () => {
-  return <FAQ />;
-};
+export default function FAQPage() {
+  const allFaqs = faqGroups.flatMap((g) => g.items);
+  const faqSchema = getFAQPageSchema(allFaqs);
+  const breadcrumbs = getBreadcrumbSchema([{ name: "FAQ", url: "/faq" }]);
 
-export default page;
+  return (
+    <>
+      <JsonLd data={[faqSchema, breadcrumbs]} />
+      <FAQ />
+    </>
+  );
+}
+

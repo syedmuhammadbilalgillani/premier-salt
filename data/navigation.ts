@@ -101,7 +101,6 @@ export const headerCtas: NavSubLink[] = [
 export const retailNavigation: NavSubLink[] = [
   { label: "Search", to: "/search" },
   { label: "Wishlist", to: "/wishlist" },
-  { label: "Account", to: "/my-account" },
   { label: "Cart", to: "/cart" },
 ];
 
@@ -148,7 +147,6 @@ export const footerNavigation: NavGroup[] = [
       { label: "Shopping Cart", to: "/cart" },
       { label: "Wishlist", to: "/wishlist" },
       { label: "Track Your Order", to: "/order-tracking" },
-      { label: "My Account", to: "/my-account" },
     ],
   },
   {

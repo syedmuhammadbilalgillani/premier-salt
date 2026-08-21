@@ -12,7 +12,6 @@ import {
   Mail,
   Search,
   Heart,
-  User,
   ShoppingBag,
   X,
   ChevronDown,
@@ -24,6 +23,8 @@ import {
 } from "@/data/navigation";
 import { company } from "@/data/company";
 import { cn } from "@/lib/utils";
+import { useCart } from "@/hooks/useCart";
+import { useWishlist } from "@/hooks/useWishlist";
 import type { ProductNavNode } from "@/lib/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -193,6 +194,9 @@ export function SiteHeaderClient({
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
+  const { itemCount } = useCart();
+  const { slugs: wishlistSlugs } = useWishlist();
+  const wishlistCount = wishlistSlugs.length;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 4);
@@ -328,22 +332,46 @@ export function SiteHeaderClient({
 
             <div className="hidden items-center gap-4 border-l border-border pl-4 lg:flex">
               <Link href={retailNavigation[0].to} aria-label="Search">
-                <Search className="h-4.5 w-4.5 text-charcoal hover:text-primary" />
-              </Link>
-              <Link href={retailNavigation[1].to} aria-label="Wishlist">
-                <Heart className="h-4.5 w-4.5 text-charcoal hover:text-primary" />
-              </Link>
-              <Link href={retailNavigation[2].to} aria-label="Account">
-                <User className="h-4.5 w-4.5 text-charcoal hover:text-primary" />
+                <Search className="h-4.5 w-4.5 text-charcoal transition-colors hover:text-primary" />
               </Link>
               <Link
-                href={retailNavigation[3].to}
+                href={retailNavigation[1].to}
+                aria-label="Wishlist"
+                className="relative"
+              >
+                <Heart className="h-4.5 w-4.5 text-charcoal transition-colors hover:text-primary" />
+                {wishlistCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-cream">
+                    {wishlistCount > 99 ? "99+" : wishlistCount}
+                  </span>
+                )}
+              </Link>
+              <Link
+                href={retailNavigation[2].to}
                 aria-label="Cart"
                 className="relative"
               >
-                <ShoppingBag className="h-4.5 w-4.5 text-charcoal hover:text-primary" />
+                <ShoppingBag className="h-4.5 w-4.5 text-charcoal transition-colors hover:text-primary" />
+                {itemCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-cream">
+                    {itemCount > 99 ? "99+" : itemCount}
+                  </span>
+                )}
               </Link>
             </div>
+
+            <Link
+              href={retailNavigation[2].to}
+              aria-label="Cart"
+              className="relative p-1 lg:hidden"
+            >
+              <ShoppingBag className="h-5 w-5 text-charcoal" />
+              {itemCount > 0 && (
+                <span className="absolute -top-0.5 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-cream">
+                  {itemCount > 99 ? "99+" : itemCount}
+                </span>
+              )}
+            </Link>
 
             <button
               className="lg:hidden"

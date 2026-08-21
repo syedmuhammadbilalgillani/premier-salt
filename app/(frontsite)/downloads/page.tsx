@@ -1,16 +1,28 @@
 import type { Metadata } from "next";
 import Downloads from "@/routes/Downloads";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/schema";
+
+export const revalidate = 86400;
 
 export const metadata: Metadata = buildMetadata({
-  title: "Downloads",
+  title: "Downloads & Technical Product Catalogues | Premier Salt",
   description:
-    "Company and product documents for buyers, distributors and partners.",
+    "Download official product catalogues, private-label specification sheets, certificate summaries, and export checklists from Premier Salt Industries.",
   path: "/downloads",
 });
 
-const page = () => {
-  return <Downloads />;
-};
+export default function DownloadsPage() {
+  const breadcrumbs = getBreadcrumbSchema([
+    { name: "Downloads", url: "/downloads" },
+  ]);
 
-export default page;
+  return (
+    <>
+      <JsonLd data={breadcrumbs} />
+      <Downloads />
+    </>
+  );
+}
+

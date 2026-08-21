@@ -2,12 +2,29 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { CategoryLeafView } from "@/components/storefront/CategoryLeafView";
-import { getCachedCategoryBySlug } from "@/lib/category";
+import {
+  getCachedCategories,
+  getCachedCategoryBySlug,
+} from "@/lib/category";
 import { getCatalogProductsForCategory } from "@/lib/product";
 import { buildMetadata, toPlainDescription } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/schema";
 
-// Category content is admin-managed and cache-tagged (revalidateTag on every
-// category/product mutation) — no need to force-dynamic a public page.
+export const revalidate = 3600;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const allCategories = await getCachedCategories({});
+  const children = allCategories.filter((c) => c.parentCategoryId);
+  return children.map((sub) => {
+    const parent = allCategories.find((c) => c.id === sub.parentCategoryId);
+    return {
+      category: parent?.slug ?? "products",
+      subcategory: sub.slug,
+    };
+  });
+}
 
 export async function generateMetadata({
   params,
@@ -58,13 +75,22 @@ export default async function SubcategoryPage({
     { label: child.title },
   ];
 
+  const breadcrumbsSchema = getBreadcrumbSchema([
+    { name: "Products", url: "/products" },
+    { name: parent.title, url: `/${parent.slug}` },
+    { name: child.title, url: `/${parent.slug}/${child.slug}` },
+  ]);
+
   return (
-    <CategoryLeafView
-      eyebrow={parent.title}
-      title={child.title}
-      crumbs={crumbs}
-      category={child}
-      products={products}
-    />
+    <>
+      <JsonLd data={breadcrumbsSchema} />
+      <CategoryLeafView
+        eyebrow={parent.title}
+        title={child.title}
+        crumbs={crumbs}
+        category={child}
+        products={products}
+      />
+    </>
   );
 }

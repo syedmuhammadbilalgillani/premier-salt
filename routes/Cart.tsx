@@ -1,11 +1,13 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { X } from "lucide-react";
+import Image from "next/image";
+import { Trash2, ShoppingBag, ArrowLeft } from "lucide-react";
 import { PageHero } from "@/components/layout/PageHero";
 import { Button } from "@/components/ui/button";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { useCart } from "@/hooks/useCart";
+import { toast } from "sonner";
 import {
   calculateShipping,
   calculateDiscount,
@@ -24,12 +26,15 @@ export default function Cart() {
   const total = subtotal - discount + shipping;
 
   function applyCode() {
+    if (!code.trim()) return;
     if (calculateDiscount(subtotal, code) > 0) {
       setAppliedCode(code);
       setCodeError("");
+      toast.success(`Discount code "${code.toUpperCase()}" applied!`);
     } else {
       setCodeError("Invalid discount code.");
       setAppliedCode("");
+      toast.error("Invalid discount code.");
     }
   }
 
@@ -42,13 +47,16 @@ export default function Cart() {
           description="Your cart is currently empty."
           crumbs={[{ label: "Cart" }]}
         />
-        <div className="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-20 text-center">
-          <p className="text-muted-foreground">
-            Browse our shop to find edible salts, lamps, kitchen products and
-            more.
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-5 px-6 py-24 text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-sand/50 text-muted-foreground">
+            <ShoppingBag className="h-8 w-8" />
+          </div>
+          <h3 className="font-serif text-2xl text-charcoal">Your cart is empty</h3>
+          <p className="max-w-md text-sm text-muted-foreground">
+            Browse our shop to find premium Himalayan edible salts, handcrafted salt lamps, cooking slabs and wellness products.
           </p>
-          <Link href="/shop">
-            <Button>Shop Now</Button>
+          <Link href="/shop" className="mt-2">
+            <Button>Explore Shop</Button>
           </Link>
         </div>
       </>
@@ -65,15 +73,25 @@ export default function Cart() {
               key={`${item.productSlug}::${item.variantId ?? ""}`}
               className="flex gap-4 border-b border-border pb-6"
             >
-              <div className="w-24 shrink-0">
-                <ImagePlaceholder label={item.name} width={200} height={200} />
+              <div className="relative aspect-square w-20 sm:w-24 shrink-0 overflow-hidden rounded-md border border-border bg-sand/30">
+                {item.imageUrl ? (
+                  <Image
+                    src={item.imageUrl}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                    sizes="96px"
+                  />
+                ) : (
+                  <ImagePlaceholder label={item.name} width={200} height={200} />
+                )}
               </div>
               <div className="flex flex-1 flex-col justify-between">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <Link
                       href={`/shop/product/${item.productSlug}`}
-                      className="font-medium text-charcoal hover:text-primary"
+                      className="font-medium text-charcoal transition-colors hover:text-primary"
                     >
                       {item.product.title}
                     </Link>
@@ -82,21 +100,25 @@ export default function Cart() {
                         {item.variantLabel}
                       </p>
                     )}
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground mt-0.5">
                       PKR {item.price.toLocaleString()} each
                     </p>
                   </div>
                   <button
                     aria-label="Remove item"
-                    onClick={() => removeItem(item.productSlug, item.variantId)}
+                    onClick={() => {
+                      removeItem(item.productSlug, item.variantId);
+                      toast.success(`Removed "${item.name}" from cart`);
+                    }}
+                    className="p-1 text-muted-foreground transition-colors hover:text-error"
                   >
-                    <X className="h-4 w-4 text-muted-foregroundhover:text-error" />
+                    <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center rounded-sm border border-border">
+                <div className="flex items-center justify-between mt-3">
+                  <div className="flex items-center rounded-sm border border-border bg-white">
                     <button
-                      className="px-2.5 py-1"
+                      className="px-2.5 py-1 text-charcoal hover:bg-sand/40 transition-colors"
                       onClick={() =>
                         updateQuantity(
                           item.productSlug,
@@ -123,10 +145,10 @@ export default function Cart() {
                           ),
                         )
                       }
-                      className="w-10 border-x border-border py-1 text-center text-sm"
+                      className="w-10 border-x border-border py-1 text-center text-sm font-medium focus:outline-none"
                     />
                     <button
-                      className="px-2.5 py-1"
+                      className="px-2.5 py-1 text-charcoal hover:bg-sand/40 transition-colors"
                       onClick={() =>
                         updateQuantity(
                           item.productSlug,
@@ -139,7 +161,7 @@ export default function Cart() {
                       +
                     </button>
                   </div>
-                  <span className="font-serif text-lg text-primary">
+                  <span className="font-serif text-lg font-medium text-primary">
                     PKR {(item.price * item.quantity).toLocaleString()}
                   </span>
                 </div>
@@ -148,9 +170,10 @@ export default function Cart() {
           ))}
           <Link
             href="/shop"
-            className="text-sm font-semibold text-primary hover:text-primary"
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:underline"
           >
-            ← Continue Shopping
+            <ArrowLeft className="h-4 w-4" />
+            <span>Continue Shopping</span>
           </Link>
         </div>
 

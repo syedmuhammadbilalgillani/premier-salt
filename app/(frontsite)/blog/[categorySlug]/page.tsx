@@ -2,11 +2,22 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { BlogListingView } from "@/components/storefront/BlogListingView";
-import { getCachedBlogCategoryBySlug, getCachedPublishedBlogPosts } from "@/lib/blog";
+import {
+  getCachedBlogCategories,
+  getCachedBlogCategoryBySlug,
+  getCachedPublishedBlogPosts,
+} from "@/lib/blog";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/schema";
 
-// Blog content is admin-managed and cache-tagged (revalidateTag on every
-// blog-post mutation) — no need to force-dynamic a public page.
+export const revalidate = 3600;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const categories = await getCachedBlogCategories();
+  return categories.map((c) => ({ categorySlug: c.slug }));
+}
 
 export async function generateMetadata({
   params,
@@ -25,8 +36,8 @@ export async function generateMetadata({
   }
 
   return buildMetadata({
-    title: `${category.title} Articles`,
-    description: `Articles about ${category.title.toLowerCase()} from Premier Salt Industries.`,
+    title: `${category.title} Articles | Premier Salt Blog`,
+    description: `Expert articles and industry insights about ${category.title.toLowerCase()} from Premier Salt Industries.`,
     path: `/blog/${categorySlug}`,
   });
 }
@@ -43,11 +54,19 @@ export default async function BlogCategoryPage({
 
   const allPosts = await getCachedPublishedBlogPosts();
 
+  const breadcrumbsSchema = getBreadcrumbSchema([
+    { name: "Blog", url: "/blog" },
+    { name: category.title, url: `/blog/${category.slug}` },
+  ]);
+
   return (
-    <BlogListingView
-      allPosts={allPosts}
-      activeCategorySlug={category.slug}
-      activeCategoryTitle={category.title}
-    />
+    <>
+      <JsonLd data={breadcrumbsSchema} />
+      <BlogListingView
+        allPosts={allPosts}
+        activeCategorySlug={category.slug}
+        activeCategoryTitle={category.title}
+      />
+    </>
   );
 }

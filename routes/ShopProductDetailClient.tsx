@@ -13,6 +13,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { readStorage, writeStorage } from "@/lib/storage";
 import { track, trackClick } from "@/lib/track";
 import type { ShopProduct } from "@/lib/product";
+import { toast } from "sonner";
 
 function variantLabel(variant: ShopProduct["variants"][number]) {
   return (
@@ -180,6 +181,9 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
               onClick={() => {
                 trackClick({ entityType: "product", entityId: product.id, label: "add_to_cart" });
                 addItem(product.slug, selectedVariantId, quantity);
+                toast.success(
+                  `${quantity} × "${product.title}" added to cart`,
+                );
               }}
               className="flex-1"
             >
@@ -189,8 +193,15 @@ export function ShopProductDetailClient({ product }: { product: ShopProduct }) {
               aria-label={
                 has(product.slug) ? "Remove from wishlist" : "Add to wishlist"
               }
-              onClick={() => toggle(product.slug)}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-border"
+              onClick={() => {
+                toggle(product.slug);
+                toast.success(
+                  has(product.slug)
+                    ? "Removed from wishlist"
+                    : "Added to wishlist",
+                );
+              }}
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-sm border border-border transition-transform hover:scale-105"
             >
               <Heart
                 className={`h-4.5 w-4.5 ${has(product.slug) ? "fill-primary text-primary" : "text-charcoal"}`}

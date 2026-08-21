@@ -7,6 +7,7 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
 import Link from "next/link";
+import { toast } from "sonner";
 import { trackClick } from "@/lib/track";
 
 function priceRange(product: ShopProduct) {
@@ -60,8 +61,15 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
           aria-label={
             has(product.slug) ? "Remove from wishlist" : "Add to wishlist"
           }
-          onClick={() => toggle(product.slug)}
-          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm"
+          onClick={() => {
+            toggle(product.slug);
+            toast.success(
+              has(product.slug)
+                ? "Removed from wishlist"
+                : "Added to wishlist",
+            );
+          }}
+          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm transition-transform hover:scale-105"
         >
           <Heart
             className={`h-4 w-4 ${has(product.slug) ? "fill-primary text-primary" : "text-charcoal"}`}
@@ -91,7 +99,7 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
             : `PKR ${min.toLocaleString()} – ${max.toLocaleString()}`}
         </span>
         {!product.hasVariants && product.compareAtPrice && (
-          <span className="text-xs text-muted-foregroundline-through">
+          <span className="text-xs text-muted-foreground line-through">
             PKR {product.compareAtPrice.toLocaleString()}
           </span>
         )}
@@ -109,8 +117,9 @@ export function ShopProductCard({ product }: { product: ShopProduct }) {
           onClick={() => {
             trackClick({ entityType: "product", entityId: product.id, label: "add_to_cart" });
             addItem(product.slug, null, 1);
+            toast.success(`"${product.title}" added to cart`);
           }}
-          className="mt-3 rounded-sm border border-primary py-2 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary hover:text-cream disabled:cursor-not-allowed disabled:border-border disabled:text-muted-foregrounddisabled:hover:bg-transparent"
+          className="mt-3 rounded-sm border border-primary py-2 text-xs font-semibold uppercase tracking-wide text-primary transition-colors hover:bg-primary hover:text-cream disabled:cursor-not-allowed disabled:border-border disabled:text-muted-foreground disabled:hover:bg-transparent"
         >
           {inStock ? "Add to Cart" : "Out of Stock"}
         </button>

@@ -1,16 +1,26 @@
 import type { Metadata } from "next";
 import QualityCertifications from "@/routes/QualityCertifications";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/schema";
 
 export const metadata: Metadata = buildMetadata({
-  title: "Quality & Certifications",
+  title: "Quality Certifications & Safety Standards | ISO 9001, HACCP, FDA, Halal",
   description:
-    "Our quality approach runs from incoming material inspection through to pre-shipment checks, supported by recognized certifications.",
+    "Premier Salt Industries maintains strict food safety and manufacturing standards with ISO 9001, HACCP, ISO 22000, Halal Certified, and U.S. FDA Registered salt processing.",
   path: "/quality-certifications",
 });
 
-const page = () => {
-  return <QualityCertifications />;
-};
+export default function QualityCertificationsPage() {
+  const breadcrumbs = getBreadcrumbSchema([
+    { name: "Quality & Certifications", url: "/quality-certifications" },
+  ]);
 
-export default page;
+  return (
+    <>
+      <JsonLd data={breadcrumbs} />
+      <QualityCertifications />
+    </>
+  );
+}
+

@@ -1,16 +1,28 @@
 import type { Metadata } from "next";
 import ExportCapabilities from "@/routes/ExportCapabilities";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/schema";
+
+export const revalidate = 86400;
 
 export const metadata: Metadata = buildMetadata({
-  title: "Export Capabilities",
+  title: "Global Export Capabilities & Logistics | Premier Salt",
   description:
-    "We support importers, wholesalers, distributors and private-label buyers with coordinated export from Pakistan, start to finish.",
+    "We supply containerized bulk Himalayan salt exports to 60+ countries via Karachi Port on FOB, CIF, and CFR terms with complete regulatory documentation.",
   path: "/export-capabilities",
 });
 
-const page = () => {
-  return <ExportCapabilities />;
-};
+export default function ExportCapabilitiesPage() {
+  const breadcrumbs = getBreadcrumbSchema([
+    { name: "Export Capabilities", url: "/export-capabilities" },
+  ]);
 
-export default page;
+  return (
+    <>
+      <JsonLd data={breadcrumbs} />
+      <ExportCapabilities />
+    </>
+  );
+}
+

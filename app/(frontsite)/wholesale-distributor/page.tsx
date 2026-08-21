@@ -1,16 +1,28 @@
 import type { Metadata } from "next";
 import Wholesale from "@/routes/Wholesale";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/schema";
+
+export const revalidate = 86400;
 
 export const metadata: Metadata = buildMetadata({
-  title: "Wholesale & Distributor Partnerships",
+  title: "Wholesale & Distributor Supply | Premier Salt Industries",
   description:
-    "We work with wholesalers and distributors across edible, decor, kitchen, spa and industrial salt categories.",
+    "Partner with Premier Salt for wholesale bulk Himalayan salt supply, distributor pricing, and consistent containerized freight delivery.",
   path: "/wholesale-distributor",
 });
 
-const page = () => {
-  return <Wholesale />;
-};
+export default function WholesalePage() {
+  const breadcrumbs = getBreadcrumbSchema([
+    { name: "Wholesale & Distributors", url: "/wholesale-distributor" },
+  ]);
 
-export default page;
+  return (
+    <>
+      <JsonLd data={breadcrumbs} />
+      <Wholesale />
+    </>
+  );
+}
+

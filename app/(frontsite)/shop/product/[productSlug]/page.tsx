@@ -5,10 +5,17 @@ import { PageHero } from "@/components/layout/PageHero";
 import { ShopProductCard } from "@/components/ui/ShopProductCard";
 import { getShopProductBySlug, getShopProducts } from "@/lib/product";
 import { buildMetadata, toPlainDescription } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getProductSchema, getBreadcrumbSchema } from "@/lib/schema";
 import { ShopProductDetailClient } from "@/routes/ShopProductDetailClient";
 
-// Shop content is admin-managed and cache-tagged (revalidateTag on every
-// product mutation) — no need to force-dynamic a public page.
+export const revalidate = 3600;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const products = await getShopProducts();
+  return products.map((p) => ({ productSlug: p.slug }));
+}
 
 export async function generateMetadata({
   params,
@@ -30,10 +37,10 @@ export async function generateMetadata({
     product.images.find((img) => img.isPrimary)?.url ?? product.images[0]?.url;
 
   return buildMetadata({
-    title: product.title,
+    title: `${product.title} | Buy Himalayan Salt Online`,
     description:
       toPlainDescription(product.description) ||
-      `Buy ${product.title} online from Premier Salt — authentic Himalayan salt products with Pakistan-wide delivery.`,
+      `Buy authentic ${product.title} online from Premier Salt Industries. 100% natural Himalayan pink rock salt with Pakistan-wide delivery and export-grade quality.`,
     path: `/shop/product/${productSlug}`,
     image: primaryImage,
   });
@@ -58,8 +65,16 @@ export default async function ShopProductPage({
     )
     .slice(0, 4);
 
+  const productSchema = getProductSchema(product);
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Shop", url: "/shop" },
+    { name: product.categoryTitle ?? "Products", url: "/shop" },
+    { name: product.title, url: `/shop/product/${product.slug}` },
+  ]);
+
   return (
     <>
+      <JsonLd data={[productSchema, breadcrumbSchema]} />
       <PageHero
         eyebrow={product.categoryTitle ?? "Shop"}
         title={product.title}

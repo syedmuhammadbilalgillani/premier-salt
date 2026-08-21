@@ -2,6 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 
+import { ArrowRight, CheckCircle2 } from "lucide-react";
+
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function NewsletterForm() {
@@ -16,7 +18,7 @@ export function NewsletterForm() {
     if (honeypot) return; // silently drop bot submissions
 
     if (!EMAIL_RE.test(email)) {
-      setError("Enter a valid email address.");
+      setError("Please enter a valid email address.");
       setStatus("error");
       return;
     }
@@ -51,9 +53,10 @@ export function NewsletterForm() {
 
   if (status === "success") {
     return (
-      <p className="text-sm text-salt-pink">
-        You&apos;re subscribed. Thank you for following Premier Salt.
-      </p>
+      <div className="flex items-center gap-2.5 rounded-lg border border-salt-pink/30 bg-salt-pink/10 px-4 py-3 text-sm text-cream">
+        <CheckCircle2 className="h-5 w-5 shrink-0 text-salt-pink" />
+        <span>Thank you for subscribing! We&apos;ll keep you updated.</span>
+      </div>
     );
   }
 
@@ -72,9 +75,12 @@ export function NewsletterForm() {
           type="email"
           required
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Your email address"
-          className="w-full rounded-sm border border-white/20 bg-white/5 px-4 py-2.5 text-sm text-cream placeholder:text-cream/40 focus-visible:outline-primary"
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (error) setError(null);
+          }}
+          placeholder="Enter your email address"
+          className="w-full rounded-md border border-white/20 bg-white/10 px-4 py-2.5 text-sm text-cream placeholder:text-cream/50 transition-colors focus:border-salt-pink focus:bg-white/15 focus:outline-none focus:ring-1 focus:ring-salt-pink"
           aria-invalid={status === "error"}
           aria-describedby={error ? "newsletter-error" : undefined}
         />
@@ -97,9 +103,10 @@ export function NewsletterForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="rounded-sm bg-primary px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-cream hover:bg-salt-pink disabled:cursor-not-allowed disabled:opacity-60"
+        className="group inline-flex items-center justify-center gap-2 rounded-md bg-salt-pink px-5 py-2.5 text-xs font-semibold uppercase tracking-wider text-charcoal transition-all duration-300 hover:bg-cream hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {submitting ? "Subscribing…" : "Subscribe"}
+        <span>{submitting ? "Subscribing…" : "Subscribe"}</span>
+        <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-0.5" />
       </button>
     </form>
   );

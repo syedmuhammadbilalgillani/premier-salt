@@ -1,16 +1,28 @@
 import type { Metadata } from "next";
 import Sustainability from "@/routes/Sustainability";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/schema";
+
+export const revalidate = 86400;
 
 export const metadata: Metadata = buildMetadata({
-  title: "Sustainability",
+  title: "Environmental & Ethical Sustainability | Premier Salt",
   description:
-    "Responsible practices guide how we source, process and package Himalayan salt products.",
+    "Learn about Premier Salt's commitment to responsible Khewra mining, zero chemical additives, eco-conscious packaging, and ethical workplace practices.",
   path: "/sustainability",
 });
 
-const page = () => {
-  return <Sustainability />;
-};
+export default function SustainabilityPage() {
+  const breadcrumbs = getBreadcrumbSchema([
+    { name: "Sustainability", url: "/sustainability" },
+  ]);
 
-export default page;
+  return (
+    <>
+      <JsonLd data={breadcrumbs} />
+      <Sustainability />
+    </>
+  );
+}
+

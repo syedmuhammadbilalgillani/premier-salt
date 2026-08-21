@@ -7,17 +7,18 @@ import { Reveal } from "@/components/motion/Reveal";
 import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { getCachedCategories } from "@/lib/category";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getBreadcrumbSchema } from "@/lib/schema";
 import { ArrowRight } from "lucide-react";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = buildMetadata({
-  title: "Himalayan Salt Product Range",
+  title: "Himalayan Salt Product Range | Premier Salt",
   description:
-    "Browse our wholesale, export, distributor and private-label Himalayan salt product range — edible salt, decor, kitchenware, spa and industrial categories.",
+    "Explore our complete range of authentic Himalayan rock salt products — edible pink salt, handcrafted salt lamps, cooking slabs, animal licks, and wellness products.",
   path: "/products",
 });
-
-// Category content is admin-managed and cache-tagged (revalidateTag on every
-// category mutation) — no need to force-dynamic a public page.
 
 interface CategoryNode {
   id: string;
@@ -57,8 +58,13 @@ export default async function ProductsPage() {
   const categories = await getCachedCategories({});
   const roots = buildCategoryTree(categories);
 
+  const breadcrumbsSchema = getBreadcrumbSchema([
+    { name: "Products", url: "/products" },
+  ]);
+
   return (
     <>
+      <JsonLd data={breadcrumbsSchema} />
       <PageHero
         eyebrow="Products"
         title="Himalayan Salt Product Range"

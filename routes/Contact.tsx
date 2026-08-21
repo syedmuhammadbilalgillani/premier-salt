@@ -4,7 +4,6 @@ import { Mail, Phone, MapPin, MessageCircle } from "lucide-react";
 import { PageHero } from "@/components/layout/PageHero";
 import { FormField, inputClasses } from "@/components/ui/FormField";
 import { Button } from "@/components/ui/button";
-import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import { company } from "@/data/company";
 
 const departments = [
@@ -119,11 +118,16 @@ export default function Contact() {
               Business Hours: Monday–Saturday, 9:00 AM – 6:00 PM (PKT)
             </p>
           </div>
-          <ImagePlaceholder
-            label="Map — Lahore, Pakistan"
-            width={800}
-            height={500}
-          />
+          <div className="relative w-full overflow-hidden rounded-md border border-border shadow-xs aspect-[16/10] min-h-[320px] bg-sand/30">
+            <iframe
+              title="Premier Salt Head Office Location"
+              src={`https://maps.google.com/maps?q=${encodeURIComponent(company.office)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
+              className="h-full w-full border-0"
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
         </div>
 
         <div className="rounded-sm border border-border bg-cream p-8">

@@ -2,6 +2,7 @@
 import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
+import { Download, FileText } from "lucide-react";
 import { downloadTextFile } from "@/lib/download";
 import { company } from "@/data/company";
 
@@ -76,21 +77,25 @@ export default function Downloads() {
           {downloads.map((d) => (
             <div
               key={d.title}
-              className="flex flex-col gap-3 border border-border p-6"
+              className="flex flex-col gap-3 rounded-lg border border-border bg-cream/30 p-6 transition-all duration-300 hover:border-primary/30 hover:shadow-xs"
             >
-              <h3 className="font-serif text-lg text-primary">{d.title}</h3>
+              <div className="flex items-center gap-2 text-primary">
+                <FileText className="h-5 w-5" />
+                <h3 className="font-serif text-lg text-primary">{d.title}</h3>
+              </div>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 {d.description}
               </p>
-              <span className="text-xs uppercase tracking-wide text-muted-foreground">
+              <span className="text-xs uppercase tracking-wide text-muted-foreground/80">
                 Preview document
               </span>
               <Button
                 size="sm"
                 onClick={() => handleDownload(d.title, d.description)}
-                className="mt-1 w-fit"
+                className="mt-1 inline-flex w-fit items-center gap-2"
               >
-                Download
+                <Download className="h-3.5 w-3.5" />
+                <span>Download</span>
               </Button>
             </div>
           ))}
@@ -99,3 +104,4 @@ export default function Downloads() {
     </>
   );
 }
+

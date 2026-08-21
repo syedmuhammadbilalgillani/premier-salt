@@ -9,12 +9,23 @@ import { ImagePlaceholder } from "@/components/ui/ImagePlaceholder";
 import {
   estimateReadingTime,
   getCachedPublishedBlogPostBySlug,
+  getCachedPublishedBlogPosts,
   getCachedRelatedBlogPosts,
 } from "@/lib/blog";
 import { buildMetadata } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getArticleSchema, getBreadcrumbSchema } from "@/lib/schema";
 
-// Blog content is admin-managed and cache-tagged (revalidateTag on every
-// blog-post mutation) — no need to force-dynamic a public page.
+export const revalidate = 3600;
+export const dynamicParams = true;
+
+export async function generateStaticParams() {
+  const posts = await getCachedPublishedBlogPosts();
+  return posts.map((p) => ({
+    categorySlug: p.categorySlug,
+    postSlug: p.slug,
+  }));
+}
 
 export async function generateMetadata({
   params,
@@ -33,7 +44,7 @@ export async function generateMetadata({
   }
 
   return buildMetadata({
-    title: post.title,
+    title: `${post.title} | Premier Salt Blog`,
     description: post.excerpt,
     path: `/blog/${post.categorySlug}/${post.slug}`,
     image: post.coverImage ?? undefined,
@@ -59,8 +70,25 @@ export default async function BlogPostPage({
 
   const related = await getCachedRelatedBlogPosts(post.id, post.categoryId, 3);
 
+  const articleSchema = getArticleSchema({
+    title: post.title,
+    description: post.excerpt,
+    url: `/blog/${post.categorySlug}/${post.slug}`,
+    image: post.coverImage ?? undefined,
+    datePublished: post.publishedAt,
+    dateModified: post.updatedAt,
+    authorName: post.author,
+  });
+
+  const breadcrumbSchema = getBreadcrumbSchema([
+    { name: "Blog", url: "/blog" },
+    { name: post.categoryTitle, url: `/blog/${post.categorySlug}` },
+    { name: post.title, url: `/blog/${post.categorySlug}/${post.slug}` },
+  ]);
+
   return (
     <>
+      <JsonLd data={[articleSchema, breadcrumbSchema]} />
       <PageHero
         eyebrow={post.categoryTitle}
         title={post.title}
