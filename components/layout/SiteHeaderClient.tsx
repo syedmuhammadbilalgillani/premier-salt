@@ -28,6 +28,8 @@ import { useWishlist } from "@/hooks/useWishlist";
 import type { ProductNavNode } from "@/lib/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { HeaderSearch } from "./HeaderSearch";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -194,6 +196,8 @@ export function SiteHeaderClient({
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileGroup, setMobileGroup] = useState<string | null>(null);
+  const [mobileSearchQuery, setMobileSearchQuery] = useState("");
+  const router = useRouter();
   const { itemCount } = useCart();
   const { slugs: wishlistSlugs } = useWishlist();
   const wishlistCount = wishlistSlugs.length;
@@ -331,9 +335,7 @@ export function SiteHeaderClient({
             </Link>
 
             <div className="hidden items-center gap-4 border-l border-border pl-4 lg:flex">
-              <Link href={retailNavigation[0].to} aria-label="Search">
-                <Search className="h-4.5 w-4.5 text-charcoal transition-colors hover:text-primary" />
-              </Link>
+              <HeaderSearch productCategories={productCategories} />
               <Link
                 href={retailNavigation[1].to}
                 aria-label="Wishlist"
@@ -359,6 +361,11 @@ export function SiteHeaderClient({
                 )}
               </Link>
             </div>
+
+            <HeaderSearch
+              productCategories={productCategories}
+              className="lg:hidden"
+            />
 
             <Link
               href={retailNavigation[2].to}
@@ -404,6 +411,42 @@ export function SiteHeaderClient({
                 <X className="h-6 w-6 text-charcoal" />
               </button>
             </div>
+
+            {/* Mobile Drawer Search Bar */}
+            <div className="mb-4">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (mobileSearchQuery.trim()) {
+                    setMobileOpen(false);
+                    router.push(
+                      `/search?q=${encodeURIComponent(mobileSearchQuery.trim())}`,
+                    );
+                  }
+                }}
+                className="relative flex items-center"
+              >
+                <Search className="pointer-events-none absolute left-3 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="search"
+                  value={mobileSearchQuery}
+                  onChange={(e) => setMobileSearchQuery(e.target.value)}
+                  placeholder="Search products &amp; articles…"
+                  className="h-10 w-full rounded-sm border border-border bg-white pl-9 pr-9 text-sm text-charcoal outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary"
+                />
+                {mobileSearchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setMobileSearchQuery("")}
+                    aria-label="Clear mobile search"
+                    className="absolute right-2.5 flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground hover:text-charcoal"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </form>
+            </div>
+
             <nav className="flex flex-col gap-1" aria-label="Mobile">
               {mainNavigation.map((item) => {
                 const isProducts = item.label === "Products";
