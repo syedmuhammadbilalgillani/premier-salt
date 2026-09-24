@@ -24,6 +24,10 @@ export function Reveal({
     if (!el) return;
 
     const targets = stagger ? Array.from(el.children) : [el];
+    // Nothing to animate yet — e.g. a staggered list whose data hasn't
+    // finished loading on first client render. Animating an empty array is
+    // what triggers GSAP's "target not found" console warning.
+    if (targets.length === 0) return;
 
     const ctx = gsap.context(() => {
       gsap.set(targets, { opacity: 0, y: 28 });

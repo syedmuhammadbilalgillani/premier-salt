@@ -1,7 +1,8 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { X } from "lucide-react";
 
 import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/motion/Reveal";
@@ -68,6 +69,14 @@ function ShopContent({
   const category = searchParams.get("category") ?? "";
   const q = searchParams.get("q") ?? "";
 
+  const [searchInput, setSearchInput] = useState(q);
+  const [prevQ, setPrevQ] = useState(q);
+
+  if (q !== prevQ) {
+    setPrevQ(q);
+    setSearchInput(q);
+  }
+
   const sortParam = searchParams.get("sort");
   const sort: SortValue = isValidSort(sortParam) ? sortParam : "featured";
 
@@ -79,22 +88,36 @@ function ShopContent({
     return Array.from(titles).sort();
   }, [products]);
 
-  function updateParam(key: string, value: string) {
-    const nextParams = new URLSearchParams(searchParams.toString());
+  const updateParam = useCallback(
+    (key: string, value: string) => {
+      const nextParams = new URLSearchParams(searchParams.toString());
 
-    if (value) {
-      nextParams.set(key, value);
-    } else {
-      nextParams.delete(key);
-    }
+      if (value) {
+        nextParams.set(key, value);
+      } else {
+        nextParams.delete(key);
+      }
 
-    const queryString = nextParams.toString();
-    const nextUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      const queryString = nextParams.toString();
+      const nextUrl = queryString ? `${pathname}?${queryString}` : pathname;
 
-    router.replace(nextUrl, { scroll: false });
-  }
+      router.replace(nextUrl, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const trimmed = searchInput.trim();
+      if (trimmed !== q) {
+        updateParam("q", trimmed);
+      }
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [searchInput, q, updateParam]);
 
   function clearFilters() {
+    setSearchInput("");
     router.replace(pathname, { scroll: false });
   }
 
@@ -139,15 +162,30 @@ function ShopContent({
             Search
           </label>
 
-          <input
-            id="shop-search"
-            type="search"
-            value={q}
-            onChange={(event) => updateParam("q", event.target.value)}
-            placeholder="Search products…"
-            autoComplete="off"
-            className="w-full rounded-sm border border-border bg-white px-3 py-2 text-sm text-charcoal outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20"
-          />
+          <div className="relative flex items-center">
+            <input
+              id="shop-search"
+              type="search"
+              value={searchInput}
+              onChange={(event) => setSearchInput(event.target.value)}
+              placeholder="Search products…"
+              autoComplete="off"
+              className="w-full rounded-sm border border-border bg-white px-3 py-2 pr-8 text-sm text-charcoal outline-none transition focus-visible:border-primary focus-visible:ring-2 focus-visible:ring-primary/20"
+            />
+            {searchInput && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchInput("");
+                  updateParam("q", "");
+                }}
+                className="absolute right-2.5 text-muted-foreground hover:text-charcoal"
+                aria-label="Clear shop search"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
         </div>
 
         <div>
