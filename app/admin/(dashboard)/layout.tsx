@@ -6,6 +6,7 @@ import { signOut, useSession } from "next-auth/react";
 import {
   BarChart3,
   ChevronsUpDown,
+  DatabaseBackup,
   FolderOpen,
   LogOut,
   Mail,
@@ -52,6 +53,7 @@ const NAV_ITEMS = [
   { title: "Blog", href: "/admin/blog", icon: Newspaper },
   { title: "Newsletter", href: "/admin/newsletter", icon: Mail },
   { title: "File Manager", href: "/admin/file-manager", icon: FolderOpen },
+  { title: "Backup", href: "/admin/backup", icon: DatabaseBackup },
 ];
 
 function getInitials(name: string) {
