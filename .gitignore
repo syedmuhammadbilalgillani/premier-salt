@@ -41,3 +41,5 @@ next-env.d.ts
 /public/storage
 # backups
 /backups
+
+config.bat
