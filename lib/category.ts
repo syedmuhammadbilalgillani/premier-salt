@@ -27,7 +27,6 @@ export function getCachedCategories({
           description: categories.description,
           image_url: categories.image_url,
           parentCategoryId: categories.parentCategoryId,
-          spec: categories.spec,
           createdAt: categories.createdAt,
           updatedAt: categories.updatedAt,
           productCount: count(products.id),

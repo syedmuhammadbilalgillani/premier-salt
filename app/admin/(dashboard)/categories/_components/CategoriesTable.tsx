@@ -83,21 +83,6 @@ export function CategoriesTable({ data }: { data: Category[] }) {
     },
 
     {
-      id: "spec",
-      header: "Specs",
-      hideBelow: "lg",
-      cell: ({ row }) => {
-        const count = row.spec ? Object.keys(row.spec).length : 0;
-        return count ? (
-          <Badge variant="secondary">
-            {count} field{count === 1 ? "" : "s"}
-          </Badge>
-        ) : (
-          <span className="text-muted-foreground">—</span>
-        );
-      },
-    },
-    {
       id: "createdAt",
       header: "Created",
       type: "date",

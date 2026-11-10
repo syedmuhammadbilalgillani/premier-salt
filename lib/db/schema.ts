@@ -51,9 +51,6 @@ export const categories = pgTable("categories", {
   parentCategoryId: uuid("parent_category_id").references(
     (): AnyPgColumn => categories.id,
   ),
-  // Dynamic key-value pairs (e.g. Origin, Purity, Grain Size) shown on the
-  // category's detail page. Flat string map — see lib/validators.ts#isValidSpec.
-  spec: jsonb("spec").$type<Record<string, string>>(),
   createdAt: timestamp("created_at", {
     withTimezone: true,
   })
@@ -103,7 +100,7 @@ export const products = pgTable("products", {
 
   sku: varchar("sku", { length: 100 }).unique(),
 
-  // Flat key-value specs — same pattern as categories.spec
+  // Flat key-value specs — same shape as other key-value specs
   // e.g. { "Material": "Cotton", "Origin": "Pakistan", "Weight": "500g" }
   spec: jsonb("spec").$type<Record<string, string>>(),
 
@@ -436,7 +433,7 @@ export const enquiries = pgTable("enquiries", {
   // Flat key-value for the fields that differ per enquiry type (buyerType/
   // productCategory/quantity for quote_request; department for contact;
   // packaging/targetMarket/timeline for private_label) — same pattern as
-  // categories.spec/products.spec.
+  // products.spec.
   details: jsonb("details").$type<Record<string, string>>(),
 
   createdAt: timestamp("created_at", { withTimezone: true })

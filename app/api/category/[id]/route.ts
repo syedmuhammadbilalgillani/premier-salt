@@ -4,7 +4,7 @@ import { revalidateTag } from "next/cache";
 
 import { db } from "@/lib/db";
 import { categories } from "@/lib/db/schema";
-import { isValidSlug, isValidSpec, isValidUuid } from "@/lib/validators";
+import { isValidSlug, isValidUuid } from "@/lib/validators";
 import {
   getCachedCategory,
   hasChildCategories,
@@ -71,7 +71,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
       );
     }
 
-    const { title, slug, description, image_url, parentCategoryId, spec } =
+    const { title, slug, description, image_url, parentCategoryId } =
       body;
 
     if (typeof title !== "string" || !title.trim()) {
@@ -90,16 +90,6 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         { status: 400 },
       );
     }
-    if (spec !== undefined && spec !== null && !isValidSpec(spec)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Specifications must be a flat set of key-value pairs.",
-        },
-        { status: 400 },
-      );
-    }
-
     const [existing] = await db
       .select()
       .from(categories)
@@ -160,8 +150,6 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
           typeof description === "string" ? description.trim() || null : null,
         image_url: nextImageUrl,
         parentCategoryId: parentResult.value,
-        spec:
-          spec && isValidSpec(spec) && Object.keys(spec).length ? spec : null,
         updatedAt: new Date(),
       })
       .where(eq(categories.id, id))

@@ -57,7 +57,7 @@ const HomePage = async ({ firstLevelCategory }: HomePageProps = {}) => {
   return (
     <>
       <JsonLd data={homeFaqSchema} />
-      <Home categories={categories} initialProducts={products} />
+      <Home categories={categories} initialProducts={products} faqs={homeFaqs} />
     </>
   );
 };

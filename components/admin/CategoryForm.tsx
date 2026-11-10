@@ -12,7 +12,6 @@ export interface CategoryFormValues {
   description: string;
   image_url: string;
   parentCategoryId: string;
-  spec: Record<string, string>;
 }
 
 export interface CategoryOption {
@@ -99,16 +98,6 @@ export function CategoryForm({
       cardPreview: "category",
       uploadFolder: "categories",
     },
-    {
-      type: "keyvalue",
-      name: "spec",
-      label: "Specifications",
-      helperText: "Dynamic key-value details, e.g. Origin, Purity, Grain Size.",
-      colSpan: 12,
-      keyPlaceholder: "e.g. Purity",
-      valuePlaceholder: "e.g. 99.9%",
-      addLabel: "Add specification",
-    },
   ];
 
   async function handleSubmit(values: CategoryFormValues) {
@@ -153,7 +142,6 @@ export function CategoryForm({
         description: "",
         image_url: "",
         parentCategoryId: NO_PARENT,
-        spec: {},
         ...defaultValues,
       }}
       onSubmit={handleSubmit}

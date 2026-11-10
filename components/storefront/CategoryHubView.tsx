@@ -10,33 +10,10 @@ import { Button } from "@/components/ui/button";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { cn } from "@/lib/utils";
 
-function SpecList({ spec }: { spec: Record<string, string> }) {
-  const entries = Object.entries(spec);
-  if (!entries.length) return null;
-  return (
-    <Reveal>
-      <span className="eyebrow">Specifications</span>
-      <h2 className="mt-3 mb-4 font-serif text-xl text-primary">Overview</h2>
-      <dl className="grid grid-cols-1 gap-x-8 gap-y-2 sm:grid-cols-2">
-        {entries.map(([key, value]) => (
-          <div
-            key={key}
-            className="flex justify-between gap-4 border-b border-border py-2 text-sm"
-          >
-            <dt className="text-muted-foreground">{key}</dt>
-            <dd className="text-right text-charcoal">{value}</dd>
-          </div>
-        ))}
-      </dl>
-    </Reveal>
-  );
-}
-
 export interface CategoryHubViewCategory {
   title: string;
   description: string | null;
   image_url: string | null;
-  spec: Record<string, string> | null;
 }
 
 export interface SubcategoryCardData {
@@ -133,7 +110,6 @@ export function CategoryHubView({
             </Reveal>
           ) : null}
 
-          {category.spec ? <SpecList spec={category.spec} /> : null}
 
           <Reveal className="flex flex-col gap-6">
             <div>

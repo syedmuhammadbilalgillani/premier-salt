@@ -45,7 +45,6 @@ export default async function EditCategoryPage({
           description: category.description ?? "",
           image_url: category.image_url ?? "",
           parentCategoryId: category.parentCategoryId ?? undefined,
-          spec: category.spec ?? {},
         }}
       />
     </div>

@@ -4,7 +4,7 @@ import { revalidateTag } from "next/cache";
 
 import { db } from "@/lib/db";
 import { categories } from "@/lib/db/schema";
-import { isValidSlug, isValidSpec } from "@/lib/validators";
+import { isValidSlug } from "@/lib/validators";
 import { getCachedCategories, resolveParentCategoryId } from "@/lib/category";
 
 // Auth is enforced by middleware.ts for /api/category/*.
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { title, slug, description, image_url, parentCategoryId, spec } =
+    const { title, slug, description, image_url, parentCategoryId } =
       body;
 
     if (typeof title !== "string" || !title.trim()) {
@@ -76,16 +76,6 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    if (spec !== undefined && spec !== null && !isValidSpec(spec)) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Specifications must be a flat set of key-value pairs.",
-        },
-        { status: 400 },
-      );
-    }
-
     const [existing] = await db
       .select({ id: categories.id })
       .from(categories)
@@ -115,8 +105,6 @@ export async function POST(request: NextRequest) {
         description: description?.trim() || null,
         image_url: image_url?.trim() || null,
         parentCategoryId: parentResult.value,
-        spec:
-          spec && isValidSpec(spec) && Object.keys(spec).length ? spec : null,
       })
       .returning();
 
